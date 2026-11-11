@@ -1,0 +1,23 @@
+{
+  "name": "skoleeq",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Školeeq – statický portál výukových miniaplikací pro ZŠ (Cloudflare Pages).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "validate": "node scripts/validate-apps.mjs && node scripts/check-links.mjs && node scripts/sync-site.mjs --check",
+    "sync": "node scripts/sync-site.mjs",
+    "new-app": "node scripts/new-app.mjs",
+    "test": "node --test tests/unit/*.test.mjs && playwright test",
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:e2e": "playwright test",
+    "check": "npm run validate && npm run test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  }
+}

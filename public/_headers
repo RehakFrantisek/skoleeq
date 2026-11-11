@@ -1,0 +1,21 @@
+# Hlavičky pro Cloudflare Pages: https://developers.cloudflare.com/pages/configuration/headers/
+# Lokálně je napodobuje scripts/serve.mjs.
+# CSP zatím záměrně nenastavujeme – viz docs/ARCHITECTURE.md (inline data: favicon hry, budoucí hry).
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+/apps.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/aplikace/:app/test.html
+  X-Robots-Tag: noindex, nofollow
+
+/aplikace/:app/test
+  X-Robots-Tag: noindex, nofollow

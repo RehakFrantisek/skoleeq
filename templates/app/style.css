@@ -1,0 +1,34 @@
+/* Styly hry {{TITLE}} – samostatné, nesdílené s portálem ani s jinými hrami. */
+:root {
+  --ink: #132a32; --muted: #5b6e76; --bg: #f7f6f1; --card: #fff; --line: #e3e1d8;
+  --primary: #0f766e; --primary-edge: #0a5c55; --good: #2f7a1f; --bad: #c0262d; --focus: #1d4ed8;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--bg);
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.bar { display: flex; align-items: center; gap: 1rem; padding: .75rem 1rem; border-bottom: 1px solid var(--line); background: #fff; }
+.back { min-height: 44px; display: inline-flex; align-items: center; padding: 0 .9rem; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); font-weight: 700; text-decoration: none; }
+.bar__title { font-size: 1.1rem; }
+
+.game { width: min(720px, 100% - 2rem); margin: 2rem auto; }
+.screen { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: clamp(1.25rem, 4vw, 2rem); box-shadow: 0 8px 24px rgba(19, 42, 50, .08); }
+h1, h2 { margin: 0 0 .75rem; line-height: 1.2; }
+.lead { font-size: 1.1rem; }
+.muted { color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .7rem 1.3rem; border: 0; border-radius: 12px; font: 700 1rem/1.2 inherit; color: #fff; background: var(--primary); box-shadow: 0 3px 0 var(--primary-edge); cursor: pointer; text-decoration: none; }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--primary-edge); }
+.btn--ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); box-shadow: 0 3px 0 var(--line); }
+
+.answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; margin-top: 1rem; }
+.answers .btn { background: #fff; color: var(--ink); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--line); }
+.feedback { min-height: 1.5em; font-weight: 700; margin-top: 1rem; }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+@media (max-width: 480px) { .back span { display: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

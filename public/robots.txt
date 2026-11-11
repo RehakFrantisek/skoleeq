@@ -1,0 +1,4 @@
+# Školeeq
+User-agent: *
+Allow: /
+Disallow: /aplikace/*/test.html

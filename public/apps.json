@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "apps": [
+    {
+      "id": "klavesova-mise",
+      "title": "Klávesová mise",
+      "subtitle": "Klik a školní výlet",
+      "description": "Pomoz myšákovi Klikovi připravit školní výlet a procvič 12 klávesových zkratek – v příběhu i v tréninku na čas.",
+      "url": "/aplikace/klavesova-mise/",
+      "subject": "Informatika",
+      "grades": [6, 7, 8],
+      "topics": ["Klávesové zkratky", "Práce s textem"],
+      "difficulty": "stredni",
+      "durationMinutes": 20,
+      "icon": "keyboard",
+      "color": "violet",
+      "featured": true,
+      "requiresKeyboard": true,
+      "status": "published"
+    }
+  ]
+}

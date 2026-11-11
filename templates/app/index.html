@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{TITLE}} – výuková miniaplikace pro ZŠ.">
+  <meta name="theme-color" content="#0f766e">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Všechny hry</span></a>
+    <strong class="bar__title">{{TITLE}}</strong>
+  </header>
+
+  <main class="game" id="game">
+    <section class="screen" id="start">
+      <h1>{{TITLE}}</h1>
+      <p class="lead">Krátký popis hry pro žáky: co budou dělat a co se naučí.</p>
+      <p id="best" class="muted"></p>
+      <button class="btn" id="play" type="button">Začít</button>
+    </section>
+
+    <section class="screen" id="play-screen" hidden>
+      <p class="muted" id="progress"></p>
+      <h2 id="question"></h2>
+      <div class="answers" id="answers"></div>
+      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="screen" id="done" hidden>
+      <h2>Hotovo!</h2>
+      <p id="result" class="lead"></p>
+      <div class="row">
+        <button class="btn" id="again" type="button">Hrát znovu</button>
+        <a class="btn btn--ghost" href="/">Další hry</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
