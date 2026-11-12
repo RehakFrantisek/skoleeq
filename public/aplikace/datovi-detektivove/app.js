@@ -92,6 +92,26 @@ function initTitle() {
   });
   $('btn-home').addEventListener('click', () => { showScreen('s-title'); renderRecords(); $('title-h').focus?.(); });
   document.addEventListener('keydown', onKey);
+  initMenu();
+}
+
+/* ================= Návrat do menu hry =================
+   Tlačítko v liště během hry. Když už je něco vyřešené, nejdřív se zeptá (rozehraná mise se neukládá). */
+function goMenu() {
+  clearInterval(S.tick);
+  if ($('dlg-menu').open) $('dlg-menu').close();
+  showScreen('s-title');
+  renderRecords();
+  $('title-h').focus?.();
+}
+function initMenu() {
+  $('btn-menu').addEventListener('click', () => {
+    if (S.tutorial || !S.results.length) return goMenu();
+    $('dlg-menu').showModal();
+    $('btn-menu-no').focus();
+  });
+  $('btn-menu-yes').addEventListener('click', goMenu);
+  $('btn-menu-no').addEventListener('click', () => { $('dlg-menu').close(); $('btn-menu').focus(); });
 }
 
 function renderRecords() {

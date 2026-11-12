@@ -321,3 +321,11 @@ tr.is-broken th, tr.is-broken td { background: var(--ds-warn-soft); }
 @media print {
   .bar, .actions, .setup, .records { display: none; }
 }
+
+/* Tlačítko „Menu hry“ ve světlé liště a potvrzovací dialog */
+.menu-btn { display: inline-flex; align-items: center; gap: .35rem; min-height: var(--ds-tap); padding: 0 .9rem; border-radius: var(--ds-radius-sm); border: 1px solid var(--ds-line); background: #fff; color: var(--ds-ink-2); font: 700 .95rem var(--ds-font); cursor: pointer; }
+.menu-btn:hover { border-color: var(--ds-action); color: var(--ds-action-ink); }
+dialog { width: min(480px, calc(100% - 1.5rem)); border: 0; border-radius: var(--ds-radius); padding: 1.4rem 1.5rem; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); color: var(--ds-ink); }
+dialog::backdrop { background: rgba(19, 42, 50, .5); }
+dialog h2 { font-size: 1.3rem; }
+@media (max-width: 600px) { .menu-btn__t { display: none; } }

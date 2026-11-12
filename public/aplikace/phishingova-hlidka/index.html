@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phishingová hlídka – bezpečnost na internetu</title>
+  <meta name="description" content="Výuková hra: odhaluj podvodné e-maily, SMS a zprávy v chatu, vytvoř silné heslo a rozmysli si, co o sobě zveřejníš.">
+  <meta name="theme-color" content="#14284b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#hra">Přeskočit na hru</a>
+
+  <header class="bar">
+    <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Všechny hry</span></a>
+    <p class="brand"><span class="brand__mark" aria-hidden="true">🛡</span> <span>Phishingová hlídka</span></p>
+    <div class="hud" id="hud" hidden>
+      <label class="sr-only" for="progress">Postup</label>
+      <progress id="progress" max="1" value="0"></progress>
+      <span class="chip" id="hud-task"></span>
+      <span class="chip"><span aria-hidden="true">🔍</span> <span class="sr-only">Použité nápovědy:</span> <b id="hint-count">0</b></span>
+      <span class="chip" id="timer" hidden><span aria-hidden="true">⏱</span> <span class="sr-only">Čas:</span> <b>0:00</b></span>
+      <button class="menu-btn" id="btn-menu" type="button" aria-label="Menu hry"><span aria-hidden="true">☰</span> <span class="menu-btn__t">Menu hry</span></button>
+    </div>
+  </header>
+
+  <main id="hra" tabindex="-1">
+    <!-- ===== 1) Titulní obrazovka ===== -->
+    <section class="screen" id="s-title" aria-labelledby="title-h">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Bezpečnostní tým ZŠ Lipová</p>
+          <h1 id="title-h">Phishingová hlídka</h1>
+          <p class="lead">Do školy se valí podvodné e-maily, SMS a zprávy v chatu. Přidej se k hlídce: najdi stopy, odhal podvodníky, ochraň své heslo a rozmysli si, co o sobě zveřejníš.</p>
+        </div>
+        <div class="hero__art" aria-hidden="true">
+          <div class="hero__mail">
+            <span class="hero__line hero__line--from">@zs-lipova-schranka.test</span>
+            <span class="hero__line"></span>
+            <span class="hero__line hero__line--short"></span>
+            <span class="hero__flag">🚩</span>
+          </div>
+          <div class="hero__shield">✓</div>
+        </div>
+      </div>
+      <div class="info-grid">
+        <article class="info">
+          <h2>Co se naučíš</h2>
+          <ul>
+            <li>poznat podvodnou adresu podle domény za zavináčem</li>
+            <li>zjistit, kam odkaz opravdu vede, ještě než klikneš</li>
+            <li>odhalit nátlak, „výhru“ a nebezpečnou přílohu</li>
+            <li>vytvořit silné heslo a vědět, k čemu je kód z SMS</li>
+            <li>rozmyslet si, co o sobě zveřejníš na sociální síti</li>
+          </ul>
+        </article>
+        <article class="info">
+          <h2>Jak se hraje</h2>
+          <p><b>4 úrovně.</b> Klikáním označuješ podezřelé části zprávy 🚩 a pak vyneseš verdikt: bezpečné, podvod, nebo ověřit jinou cestou.</p>
+          <p>Ovládání myší, dotykem i klávesnicí. Chyba nevadí – hra napíše proč a ty opravíš. Nápověda výsledek nesnižuje.</p>
+          <p class="small muted">Všechny adresy, firmy a zprávy ve hře jsou vymyšlené a končí na <b>.test</b>.</p>
+        </article>
+      </div>
+      <fieldset class="opts">
+        <legend>Nastavení</legend>
+        <div class="seg" role="radiogroup" aria-label="Délka mise">
+          <label><input type="radio" name="mode" value="cela" checked> <span><b>Celá služba</b> 12 úloh · asi 20 min</span></label>
+          <label><input type="radio" name="mode" value="rychly"> <span><b>Rychlá služba</b> 6 úloh · asi 10 min</span></label>
+        </div>
+        <div class="seg seg--small" role="radiogroup" aria-label="Varianta zadání">
+          <span class="seg__label">Varianta zadání:</span>
+          <label><input type="radio" name="variant" value="A" checked> <span>A</span></label>
+          <label><input type="radio" name="variant" value="B"> <span>B</span></label>
+          <label><input type="radio" name="variant" value="C"> <span>C</span></label>
+        </div>
+        <label class="switch"><input type="checkbox" id="opt-timer"> <span>Zobrazit stopky (bez časového limitu)</span></label>
+      </fieldset>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-start" type="button">Začít ukázkou</button>
+        <button class="btn btn--ghost" id="btn-skip" type="button">Přeskočit ukázku</button>
+      </div>
+      <div class="best-box">
+        <p class="small" id="best"></p>
+        <p class="muted small">Výsledky se ukládají jen v tomto prohlížeči. Nikam se neodesílají.</p>
+        <div class="row row--tight" id="reset-box"><button class="btn btn--ghost btn--small" id="btn-reset" type="button">Smazat moje výsledky</button></div>
+      </div>
+      <p class="teacher-link"><a href="/pro-ucitele/#phishingova-hlidka">Pro učitele: cíle, tipy do hodiny a otázky k reflexi →</a></p>
+    </section>
+
+    <!-- ===== 2) Úvod úrovně ===== -->
+    <section class="screen screen--intro" id="s-intro" hidden aria-labelledby="intro-h">
+      <p class="intro-icon" id="intro-icon" aria-hidden="true"></p>
+      <p class="eyebrow" id="intro-num"></p>
+      <h2 id="intro-h" tabindex="-1"></h2>
+      <p class="lead" id="intro-focus"></p>
+      <p class="muted" id="intro-count"></p>
+      <div class="row"><button class="btn btn--primary" id="btn-intro" type="button">Pustit se do toho →</button></div>
+    </section>
+
+    <!-- ===== 3) Úloha ===== -->
+    <section class="play" id="s-play" hidden aria-labelledby="task-h">
+      <article class="screen task">
+        <p class="task__meta"><span class="badge" id="task-level"></span> <span id="task-meta"></span></p>
+        <h2 id="task-h" tabindex="-1"></h2>
+        <p class="task__prompt" id="task-prompt"></p>
+        <div class="tour" id="tour"></div>
+        <div class="tool" id="tool"></div>
+        <div id="hints" aria-live="polite"></div>
+        <div class="row">
+          <button class="btn btn--primary" id="btn-check" type="button">Zkontrolovat</button>
+          <button class="btn btn--ghost" id="btn-hint" type="button">🔍 Nápověda</button>
+        </div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+        <div id="debrief"></div>
+        <div class="row">
+          <button class="btn btn--ghost" id="btn-reveal" type="button" hidden>Ukázat řešení</button>
+          <button class="btn btn--success" id="btn-next" type="button" hidden>Další úkol →</button>
+        </div>
+      </article>
+      <aside class="screen inbox-panel" aria-labelledby="inbox-h">
+        <h2 id="inbox-h">Hlášení hlídky</h2>
+        <ol class="inbox" id="inbox"></ol>
+        <p class="small muted" id="inbox-note"></p>
+      </aside>
+    </section>
+
+    <!-- ===== 4) Závěr ===== -->
+    <section class="screen" id="s-end" hidden aria-labelledby="end-h">
+      <p class="eyebrow">Služba skončila</p>
+      <h2 id="end-h" tabindex="-1">Hlídka splnila úkol!</h2>
+      <div class="end-grid">
+        <div class="badge-card" id="badge-card">
+          <div class="badge-card__shield" aria-hidden="true"><span>✓</span></div>
+          <p class="badge-card__title" id="badge-title">Člen phishingové hlídky</p>
+          <p class="small muted" id="badge-sub"></p>
+        </div>
+        <div>
+          <p class="lead" id="result"></p>
+          <dl class="stats" id="stats"></dl>
+          <h3>Co umíš</h3>
+          <ul class="skills" id="skills"></ul>
+          <h3>Pravidla hlídky do života</h3>
+          <ul class="rules">
+            <li>Než klikneš, zkontroluj adresu odesílatele i odkazu.</li>
+            <li>Heslo a kód z SMS nikdy nikomu nedávej.</li>
+            <li>Spěch, strach nebo výhra = zpomal a zeptej se dospělého.</li>
+            <li>Neobvyklou žádost ověř jinou cestou – zavolej nebo se zeptej osobně.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted small">Výsledek je uložený jen v tomto prohlížeči.</p>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-again" type="button">Hrát jinou variantu</button>
+        <button class="btn btn--ghost" id="btn-home" type="button">Na začátek</button>
+        <a class="btn btn--ghost" href="/">Další hry</a>
+      </div>
+    </section>
+  </main>
+  <dialog id="dlg-menu" aria-labelledby="dlg-menu-h">
+    <h2 id="dlg-menu-h">Odejít do menu hry?</h2>
+    <p>Rozehraná služba se neuloží. Tvůj dosavadní nejlepší výsledek zůstane.</p>
+    <div class="row">
+      <button class="btn btn--primary" id="btn-menu-yes" type="button">Ano, do menu</button>
+      <button class="btn btn--ghost" id="btn-menu-no" type="button">Hrát dál</button>
+    </div>
+  </dialog>
+</body>
+</html>

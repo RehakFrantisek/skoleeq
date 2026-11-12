@@ -155,6 +155,37 @@ test.describe('Grafový navigátor', () => {
     await expect(page.locator('#feedback')).toContainText(/musí počkat|dvě práce zároveň/);
   });
 
+  test('tlačítko Menu hry: bez postupu rovnou, po vyřešené úloze se zeptá; Hrát dál / Ano, do menu', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto(URL);
+    await expect(page.getByRole('button', { name: 'Menu hry' })).toBeHidden(); // na úvodu není potřeba
+    await page.getByRole('button', { name: 'Přeskočit ukázku' }).click();
+    await passIntro(page);
+    // nic vyřešeno → rovnou do menu hry (ne do katalogu)
+    await page.getByRole('button', { name: 'Menu hry' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Grafový navigátor' })).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(URL));
+    // znovu a jednu úlohu vyřešit
+    await page.getByRole('button', { name: 'Přeskočit ukázku' }).click();
+    await passIntro(page);
+    await solve(page, L.buildGame('A')[0]);
+    await page.getByRole('button', { name: 'Zkontrolovat' }).click();
+    await expect(page.locator('#feedback')).toContainText('Správně');
+    await page.locator('#btn-next').click();
+    await passIntro(page);
+    const title = await page.locator('#task-h').innerText();
+    await page.getByRole('button', { name: 'Menu hry' }).click();
+    await expect(page.getByRole('dialog', { name: 'Odejít do menu hry?' })).toBeVisible();
+    await page.getByRole('button', { name: 'Hrát dál' }).click();
+    await expect(page.getByRole('dialog')).toBeHidden();
+    await expect(page.locator('#task-h')).toHaveText(title);
+    await page.getByRole('button', { name: 'Menu hry' }).click();
+    await page.getByRole('button', { name: 'Ano, do menu' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Grafový navigátor' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Menu hry' })).toBeHidden();
+    expect(errors).toEqual([]);
+  });
+
   test('smazání výsledků jen této hry', async ({ page }) => {
     await page.goto(URL);
     await page.evaluate(k => {

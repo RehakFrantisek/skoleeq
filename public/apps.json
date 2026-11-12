@@ -328,6 +328,63 @@
         "differentiation": "Rychlí žáci: celá mise bez nápověd, pak jiná varianta; navíc mohou na papír nakreslit vlastní automat (např. semafor). Začínající: rychlá mise s ukázkou; trasa ukazuje průběžný součet a nápovědy výsledek nesnižují.",
         "gradeNote": "Modelování a grafy jsou ve ŠVP v 6. ročníku. Hodí se i jako opakování algoritmizace v 9. ročníku – ročník lze v katalogu upravit."
       }
+    },
+    {
+      "id": "phishingova-hlidka",
+      "title": "Phishingová hlídka",
+      "subtitle": "Bezpečnost na internetu",
+      "description": "Odhaluj podvodné e-maily, SMS a zprávy v chatu: označ stopy (falešná doména, odkaz, příloha, nátlak) a vynes verdikt. Pak vytvoř silné heslo a rozmysli si, co o sobě zveřejníš.",
+      "url": "/aplikace/phishingova-hlidka/",
+      "subject": "Informatika",
+      "grades": [7, 8, 9],
+      "topics": ["Bezpečnost na internetu", "Digitální gramotnost"],
+      "difficulty": "lehka",
+      "durationMinutes": 20,
+      "icon": "globe",
+      "color": "yellow",
+      "featured": false,
+      "requiresKeyboard": false,
+      "thumbnail": "nahled.svg",
+      "status": "published",
+      "skills": [
+        "Ověřit odesílatele podle domény za zavináčem",
+        "Zjistit, kam vede odkaz, ještě před kliknutím",
+        "Poznat nebezpečnou přílohu (.exe, dvojitá přípona)",
+        "Poznat nátlak, strašení a falešnou výhru",
+        "Nesdělovat heslo, kód z SMS ani číslo karty",
+        "Ověřit neobvyklou žádost jinou cestou",
+        "Vytvořit silné heslo (dlouhá fráze) a chápat druhý krok přihlášení",
+        "Rozmyslet, co o sobě zveřejním a komu"
+      ],
+      "teacher": {
+        "goals": [
+          "Žák u e-mailu, SMS a zprávy v chatu najde konkrétní znaky podvodu (podvržená doména, odkaz vedoucí jinam, příloha .exe, nátlak, žádost o heslo či kód) a svůj verdikt zdůvodní.",
+          "Žák rozliší podvod, bezpečnou zprávu a situaci, kterou je třeba ověřit jinou cestou (telefonem, osobně).",
+          "Žák vytvoří silné heslo bez osobních údajů a vysvětlí, proč délka pomáhá víc než speciální znaky a proč nepoužívat jedno heslo všude.",
+          "Žák vysvětlí, k čemu je druhý krok přihlášení a proč kód z SMS nikomu neposílá.",
+          "Žák posoudí, které informace (adresa, škola, poloha, nepřítomnost doma) do veřejného příspěvku nepatří."
+        ],
+        "svp": [
+          { "grade": 7, "text": "používá el. komunikaci" },
+          { "grade": 7, "text": "dokáže usměrnit svojí činnost tak, aby minimalizoval riziko ztráty či zneužití dat, popíše fungování a diskutuje o omezení zabezpečovacích řešení." },
+          { "grade": 7, "text": "autorské právo a ochrana osobních údajů" },
+          { "grade": 8, "text": "je schopný využívat bezpečně internet a běžné komunikační nástroje" },
+          { "grade": 9, "text": "je schopný využívat bezpečně internet a běžné komunikační nástroje" }
+        ],
+        "lesson": "Rychlá služba (6 úloh, z každé úrovně aspoň jedna) zabere asi 10 minut – vhodná jako rozcvička. Celá služba (12 úloh ve 4 úrovních) asi 20 minut; zbytek hodiny lze věnovat reflexi a ukázkám skutečných podvodných zpráv, které žáci viděli (bez odkazů a osobních údajů). Varianty A/B/C mají jiný výběr zpráv; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Všechny adresy jsou smyšlené (.test). Hra nic neodesílá a heslo z úlohy se nikam neukládá.",
+        "prerequisites": [
+          "Žák ví, co je e-mailová adresa a webová adresa (odkaz).",
+          "Základní zkušenost s mobilem, chatem nebo sociální sítí."
+        ],
+        "reflection": [
+          "Která stopa podvodu je podle tebe nejnápadnější a která se nejsnáz přehlédne?",
+          "Kdy je lepší zprávu „ověřit jinou cestou“ než ji rovnou označit za podvod? Komu bys zavolal(a)?",
+          "Proč je dlouhá fráze silnější heslo než krátké heslo s @ a čísly?",
+          "Co bys udělal(a), kdyby ti přišel přihlašovací kód, o který jsi nežádal(a)?"
+        ],
+        "differentiation": "Rychlí žáci: celá služba bez nápověd, pak jiná varianta s cílem vše napoprvé; mohou sepsat vlastní „podvodnou zprávu“ se třemi stopami pro spolužáka. Začínající: rychlá služba s ukázkou; nápovědy (2–3 na úlohu) výsledek nesnižují a po dvou pokusech jde zobrazit řešení s rozborem všech stop.",
+        "gradeNote": "Ve ŠVP je internet a elektronická komunikace v 7. ročníku, bezpečné využívání internetu se opakuje v 8. a 9. ročníku. Hra je lehká, hodí se i do 6. ročníku – ročník lze v katalogu upravit."
+      }
     }
   ]
 }

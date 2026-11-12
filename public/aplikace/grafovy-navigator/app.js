@@ -528,6 +528,23 @@ function restoreReset() {
 }
 $('btn-reset').addEventListener('click', askReset);
 
+/* ================= Návrat do menu hry =================
+   Tlačítko v liště během hry. Když už je něco vyřešené, nejdřív se zeptá (rozehraná mise se neukládá). */
+function goMenu() {
+  clearInterval(S.tick);
+  if ($('dlg-menu').open) $('dlg-menu').close();
+  show('s-title');
+  renderBest();
+  $('title-h').focus();
+}
+$('btn-menu').addEventListener('click', () => {
+  if (S.tutorial || !S.results.length) return goMenu();
+  $('dlg-menu').showModal();
+  $('btn-menu-no').focus();
+});
+$('btn-menu-yes').addEventListener('click', goMenu);
+$('btn-menu-no').addEventListener('click', () => { $('dlg-menu').close(); $('btn-menu').focus(); });
+
 /* Parametry URL: ?varianta=B&rezim=rychly (pro učitele – stejné zadání pro celou třídu) */
 const params = new URLSearchParams(location.search);
 const pv = (params.get('varianta') || '').toUpperCase();

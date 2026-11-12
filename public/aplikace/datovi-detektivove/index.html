@@ -27,6 +27,7 @@
       </div>
       <span class="chip" id="hint-count" title="Použité nápovědy"><span aria-hidden="true">🔍</span> <span class="sr-only">Použité nápovědy:</span> <b>0</b></span>
       <span class="chip" id="timer" hidden><span aria-hidden="true">⏱</span> <span class="sr-only">Čas:</span> <b>0:00</b></span>
+      <button class="menu-btn" id="btn-menu" type="button" aria-label="Menu hry"><span aria-hidden="true">☰</span> <span class="menu-btn__t">Menu hry</span></button>
     </div>
   </header>
 
@@ -168,5 +169,13 @@
 
     <noscript><p class="screen">Hra potřebuje zapnutý JavaScript.</p></noscript>
   </main>
+  <dialog id="dlg-menu" aria-labelledby="dlg-menu-h">
+    <h2 id="dlg-menu-h">Odejít do menu hry?</h2>
+    <p>Rozehraná mise se neuloží. Tvůj dosavadní nejlepší výsledek zůstane.</p>
+    <div class="row">
+      <button class="btn btn--primary" id="btn-menu-yes" type="button">Ano, do menu</button>
+      <button class="btn btn--ghost" id="btn-menu-no" type="button">Hrát dál</button>
+    </div>
+  </dialog>
 </body>
 </html>
