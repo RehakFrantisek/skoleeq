@@ -182,7 +182,8 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
     await expect(section).toBeHidden();
     await page.goto('/?rocnik=7');
     await expect(section.locator('.plan-card[data-id="prezentacni-studio"]')).toBeVisible();
-    await expect(section.locator('.plan-card[data-id="roboti-dilna"]')).toBeHidden();
+    await page.goto('/?rocnik=6');
+    await expect(section).toBeHidden(); // prezentace jsou až od 7. ročníku
   });
 
   test('karta Pro učitele jde otevřít přímým odkazem a cituje ŠVP', async ({ page }) => {
@@ -197,10 +198,47 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
     await expect(art.locator('h3', { hasText: 'Otázky k reflexi' }).locator('+ ul li')).toHaveCount(3);
     await expect(art).toContainText('Rychlí a začínající žáci');
     await expect(art).toContainText('Ve 45minutové hodině');
-    await page.goto('/pro-ucitele/#roboti-dilna');
-    await expect(page.locator('article#roboti-dilna')).toContainText('Připravujeme');
-    await expect(page.locator('article#roboti-dilna')).toContainText('Pracovní návrh');
+    await page.goto('/pro-ucitele/#prezentacni-studio');
+    await expect(page.locator('article#prezentacni-studio')).toContainText('Připravujeme');
+    await expect(page.locator('article#prezentacni-studio')).toContainText('Pracovní návrh');
+    for (const id of ['dokumentova-zachranka', 'roboti-dilna']) {
+      await page.goto(`/pro-ucitele/#${id}`);
+      await expect(page.locator(`article#${id}`)).toContainText('Hratelné');
+      await expect(page.locator(`article#${id}`).getByRole('link', { name: /Otevřít hru/ })).toHaveAttribute('href', `/aplikace/${id}/`);
+    }
     expect(errors).toEqual([]);
+  });
+});
+
+test.describe('Nové hry v katalogu', () => {
+  test('katalog načte obě nové hry, přímé URL fungují a odkazují zpět @smoke', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto('/');
+    for (const [id, title] of [['dokumentova-zachranka', 'Dokumentová záchranka'], ['roboti-dilna', 'Robotí dílna']]) {
+      await expect(card(page, id)).toBeVisible();
+      await card(page, id).getByRole('link', { name: `Spustit hru ${title}` }).click();
+      await expect(page).toHaveURL(`/aplikace/${id}/`);
+      await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+      await page.getByRole('link', { name: 'Zpět do katalogu her' }).click();
+      await expect(page).toHaveURL('/');
+    }
+    // přímý odkaz na konkrétní misi
+    await page.goto('/aplikace/roboti-dilna/#start-motoru');
+    await expect(page.locator('#m-title')).toHaveText('Start motorů');
+    await page.goto('/aplikace/dokumentova-zachranka/#ztraceny-titulek');
+    await expect(page.locator('#m-title')).toHaveText('Ztracený titulek');
+    expect(errors).toEqual([]);
+  });
+
+  test('hry mají oddělené klíče v localStorage', async ({ page }) => {
+    await page.goto('/aplikace/dokumentova-zachranka/');
+    await page.getByRole('checkbox', { name: /Odemknout všechny mise/ }).check();
+    await page.goto('/aplikace/roboti-dilna/');
+    await page.getByRole('checkbox', { name: /Odemknout všechny mise/ }).check();
+    await page.goto('/aplikace/datovi-detektivove/');
+    await page.getByRole('button', { name: 'Přeskočit ukázku' }).click();
+    const keys = await page.evaluate(() => Object.keys(localStorage).sort());
+    expect(keys).toEqual(['vyukovy-portal:datovi-detektivove:v1', 'vyukovy-portal:dokumentova-zachranka:v1', 'vyukovy-portal:roboti-dilna:v1']);
   });
 });
 
@@ -245,7 +283,7 @@ test.describe('Mobil', () => {
   for (const width of [320, 360, 390]) {
     test(`bez vodorovného scrollu na ${width} px @mobile`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 });
-      for (const url of ['/', '/o-projektu/', '/pro-ucitele/', '/tohle-neexistuje/', '/aplikace/klavesova-mise/', '/aplikace/datovi-detektivove/']) {
+      for (const url of ['/', '/o-projektu/', '/pro-ucitele/', '/tohle-neexistuje/', '/aplikace/klavesova-mise/', '/aplikace/datovi-detektivove/', '/aplikace/dokumentova-zachranka/', '/aplikace/roboti-dilna/']) {
         await page.goto(url);
         if (url === '/') await expect(page.locator('.app-card').first()).toBeVisible();
         await expectNoHorizontalScroll(page);

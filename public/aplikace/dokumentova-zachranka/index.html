@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dokumentová záchranka – formátování dokumentu</title>
+  <meta name="description" content="Výuková hra: oprav špatně naformátované články školního časopisu – nadpisy, seznamy, zarovnání, obrázky a typografie.">
+  <meta name="theme-color" content="#1d5fd6">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#hra">Přeskočit na hru</a>
+
+  <header class="bar">
+    <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Katalog</span></a>
+    <p class="brand"><span class="brand__mark" aria-hidden="true">¶</span> <span>Dokumentová záchranka</span></p>
+    <div class="hud" id="hud">
+      <span class="chip" id="hud-mission" hidden></span>
+      <span class="chip"><span aria-hidden="true">★</span> <span class="sr-only">Hvězdy celkem:</span> <b id="hud-stars">0</b></span>
+      <span class="chip"><span class="sr-only">Body celkem:</span> <b id="hud-points">0</b> <span aria-hidden="true">b.</span></span>
+      <button class="btn btn--ghost btn--small" id="btn-overview" type="button" hidden>Přehled misí</button>
+    </div>
+  </header>
+
+  <main id="hra" tabindex="-1">
+    <!-- ===== Přehled misí ===== -->
+    <section class="screen" id="s-home" aria-labelledby="home-h">
+      <div class="home-hero">
+        <div>
+          <p class="eyebrow">Redakce školního časopisu</p>
+          <h1 id="home-h">Dokumentová záchranka</h1>
+          <p class="lead">Redakce nestíhá vydat časopis. Články mají rozbité nadpisy, seznamy, zarovnání, obrázky i mezery. Jako redaktor je opravíš ve skutečném editoru – a kontrola ti řekne, co už sedí a co ještě ne.</p>
+          <ul class="facts">
+            <li><b>Co se naučíš:</b> styly nadpisů, zvýraznění, seznamy, zarovnání, obrázky s popiskem a české typografické mezery.</li>
+            <li><b>Čas:</b> 10 misí, každá 2–5 minut (celkem 20–30 min). Bez časového limitu.</li>
+            <li><b>Ovládání:</b> myš i klávesnice (Ctrl+B/I/U, Ctrl+Z/Y, Alt+Shift+↑/↓ přesune odstavec).</li>
+          </ul>
+        </div>
+        <img class="home-hero__art" src="nahled.svg" alt="" width="320" height="140">
+      </div>
+      <p class="phone-note">Na telefonu hra funguje, ale s myší a klávesnicí na počítači se pracuje pohodlněji.</p>
+
+      <div id="mission-groups"></div>
+
+      <section class="progress-box" aria-labelledby="prog-h">
+        <h2 id="prog-h">Tvůj postup</h2>
+        <p id="progress-summary"></p>
+        <p class="muted small">Postup se ukládá jen v tomto prohlížeči na tomto počítači. Nikam se neodesílá.</p>
+        <label class="switch"><input type="checkbox" id="opt-unlock"> <span>Odemknout všechny mise (pro učitele nebo opakování)</span></label>
+        <div class="row" id="reset-box"><button class="btn btn--ghost btn--small" id="btn-reset" type="button">Smazat postup této hry</button></div>
+        <p class="teacher-link"><a href="/pro-ucitele/#dokumentova-zachranka">Pro učitele: cíle, návaznost na ŠVP a tipy do hodiny →</a></p>
+      </section>
+    </section>
+
+    <!-- ===== Mise ===== -->
+    <section class="screen screen--work" id="s-mission" hidden aria-labelledby="m-title">
+      <div class="work">
+        <aside class="panel brief" aria-labelledby="m-title">
+          <p class="brief__meta"><span class="badge" id="m-level"></span> <span id="m-num"></span></p>
+          <h2 id="m-title" tabindex="-1"></h2>
+          <p id="m-story" class="brief__story"></p>
+          <p id="m-instr" class="brief__instr"></p>
+          <h3>Kontrolní seznam</h3>
+          <ul class="checklist" id="checklist"></ul>
+          <div class="row">
+            <button class="btn btn--primary" id="btn-check" type="button">Zkontrolovat práci</button>
+          </div>
+          <div class="row row--tight">
+            <button class="btn btn--ghost btn--small" id="btn-instr" type="button">Zobrazit instrukce</button>
+            <button class="btn btn--ghost btn--small" id="btn-restart" type="button">Nový pokus</button>
+          </div>
+        </aside>
+
+        <section class="editor" aria-label="Editor dokumentu">
+          <div class="toolbar" role="toolbar" aria-label="Formátování" id="toolbar">
+            <div class="tb-group">
+              <label class="sr-only" for="tb-style">Styl odstavce</label>
+              <select id="tb-style" title="Styl odstavce">
+                <option value="heading1">Nadpis 1</option>
+                <option value="heading2">Nadpis 2</option>
+                <option value="paragraph">Odstavec</option>
+                <option value="bullet" hidden>Odrážka</option>
+                <option value="number" hidden>Číslovaný seznam</option>
+              </select>
+            </div>
+            <div class="tb-group" aria-label="Písmo">
+              <button type="button" class="tb" data-mark="b" aria-pressed="false" title="Tučně (Ctrl+B)"><b>B</b><span class="sr-only"> Tučně</span></button>
+              <button type="button" class="tb" data-mark="i" aria-pressed="false" title="Kurzíva (Ctrl+I)"><i>I</i><span class="sr-only"> Kurzíva</span></button>
+              <button type="button" class="tb" data-mark="u" aria-pressed="false" title="Podtržení (Ctrl+U)"><u>U</u><span class="sr-only"> Podtržení</span></button>
+            </div>
+            <div class="tb-group" aria-label="Zarovnání">
+              <button type="button" class="tb" data-align="left" aria-pressed="false" title="Zarovnat vlevo"><span aria-hidden="true" class="ico ico-left"></span><span class="sr-only">Vlevo</span></button>
+              <button type="button" class="tb" data-align="center" aria-pressed="false" title="Na střed"><span aria-hidden="true" class="ico ico-center"></span><span class="sr-only">Na střed</span></button>
+              <button type="button" class="tb" data-align="right" aria-pressed="false" title="Zarovnat vpravo"><span aria-hidden="true" class="ico ico-right"></span><span class="sr-only">Vpravo</span></button>
+              <button type="button" class="tb" data-align="justify" aria-pressed="false" title="Do bloku"><span aria-hidden="true" class="ico ico-justify"></span><span class="sr-only">Do bloku</span></button>
+            </div>
+            <div class="tb-group" aria-label="Seznamy">
+              <button type="button" class="tb tb--text" data-list="bullet" aria-pressed="false" title="Odrážkový seznam">• Odrážky</button>
+              <button type="button" class="tb tb--text" data-list="number" aria-pressed="false" title="Číslovaný seznam">1. Číslování</button>
+            </div>
+            <div class="tb-group" aria-label="Přesun">
+              <button type="button" class="tb" id="tb-up" title="Posunout nahoru (Alt+Shift+↑)"><span aria-hidden="true">↑</span><span class="sr-only">Posunout nahoru</span></button>
+              <button type="button" class="tb" id="tb-down" title="Posunout dolů (Alt+Shift+↓)"><span aria-hidden="true">↓</span><span class="sr-only">Posunout dolů</span></button>
+            </div>
+            <div class="tb-group" aria-label="Obrázek">
+              <button type="button" class="tb tb--text" id="tb-image" title="Vložit obrázek za aktuální blok">🖼 Vložit obrázek</button>
+              <button type="button" class="tb tb--text" id="tb-remove" title="Odebrat vybraný obrázek">Odebrat</button>
+            </div>
+            <div class="tb-group" aria-label="Historie">
+              <button type="button" class="tb" id="tb-undo" title="Zpět (Ctrl+Z)"><span aria-hidden="true">↶</span><span class="sr-only">Zpět</span></button>
+              <button type="button" class="tb" id="tb-redo" title="Znovu (Ctrl+Y)"><span aria-hidden="true">↷</span><span class="sr-only">Znovu</span></button>
+            </div>
+          </div>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <div class="paper-wrap">
+            <article class="paper" id="paper" aria-label="Dokument"></article>
+          </div>
+          <div class="row row--tight export">
+            <button class="btn btn--ghost btn--small" id="btn-print" type="button">Tisk / uložit jako PDF</button>
+            <button class="btn btn--ghost btn--small" id="btn-html" type="button">Stáhnout jako HTML</button>
+          </div>
+        </section>
+
+        <aside class="panel side" aria-label="Nápověda a vyhodnocení">
+          <section aria-labelledby="hint-h">
+            <h3 id="hint-h">Nápověda</h3>
+            <div id="hints" aria-live="polite"></div>
+            <button class="btn btn--ghost btn--small" id="btn-hint" type="button">Ukázat nápovědu</button>
+          </section>
+          <section aria-labelledby="res-h">
+            <h3 id="res-h">Vyhodnocení</h3>
+            <div id="results" role="status" aria-live="polite"><p class="muted small">Až budeš chtít, stiskni „Zkontrolovat práci“. Kontrolovat můžeš kolikrát chceš.</p></div>
+          </section>
+          <section aria-labelledby="log-h">
+            <h3 id="log-h">Historie kroků</h3>
+            <ol class="log" id="log"></ol>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Instrukce -->
+  <dialog id="dlg-instr" aria-labelledby="dlg-instr-h">
+    <h2 id="dlg-instr-h"></h2>
+    <p id="dlg-instr-story"></p>
+    <p id="dlg-instr-text" class="brief__instr"></p>
+    <form method="dialog"><button class="btn btn--primary" type="submit">Pustit se do práce</button></form>
+  </dialog>
+
+  <!-- Výběr ilustrace -->
+  <dialog id="dlg-img" aria-labelledby="dlg-img-h">
+    <h2 id="dlg-img-h">Vyber ilustraci</h2>
+    <p class="muted small">Obrázek se vloží za blok, ve kterém máš kurzor.</p>
+    <div class="pick" id="pick"></div>
+    <form method="dialog"><button class="btn btn--ghost" type="submit">Zrušit</button></form>
+  </dialog>
+
+  <!-- Mise splněna -->
+  <dialog id="dlg-done" class="dlg-wide" aria-labelledby="dlg-done-h">
+    <div class="stamp" aria-hidden="true">OPRAVENO</div>
+    <h2 id="dlg-done-h">Mise splněna!</h2>
+    <p class="stars-big" id="done-stars"></p>
+    <p id="done-stats"></p>
+    <p class="rule" id="done-rule"></p>
+    <div class="beforeafter">
+      <figure><figcaption>Před</figcaption><div class="paper paper--mini" id="done-before"></div></figure>
+      <figure><figcaption>Po</figcaption><div class="paper paper--mini" id="done-after"></div></figure>
+    </div>
+    <div class="row">
+      <button class="btn btn--primary" id="btn-next" type="button">Další mise →</button>
+      <button class="btn btn--ghost" id="btn-stay" type="button">Zůstat u dokumentu</button>
+      <button class="btn btn--ghost" id="btn-done-overview" type="button">Přehled misí</button>
+    </div>
+  </dialog>
+
+  <div id="print-root" class="print-root" aria-hidden="true"></div>
+</body>
+</html>

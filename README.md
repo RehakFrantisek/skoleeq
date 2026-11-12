@@ -5,8 +5,12 @@ Statický web bez backendu a bez databáze, hostovaný na **Cloudflare Pages** p
 
 - Katalog her se generuje z registru [`public/apps.json`](public/apps.json) – hledání (i bez diakritiky) a filtry podle ročníku, předmětu, tématu a obtížnosti.
 - Každá hra je samostatná stránka ve složce `public/aplikace/<slug>/` – žádné iframy, žádné sdílené herní jádro.
-- Hratelné hry: **Klávesová mise – Klik a školní výlet** (`/aplikace/klavesova-mise/`) a **Datoví detektivové – tabulky a grafy** (`/aplikace/datovi-detektivove/`).
-- Připravované hry (karty „Připravujeme“): Dokumentová záchranka, Robotí dílna, Prezentační studio.
+- Hratelné hry:
+  - **Klávesová mise – Klik a školní výlet** (`/aplikace/klavesova-mise/`)
+  - **Datoví detektivové – tabulky a grafy** (`/aplikace/datovi-detektivove/`)
+  - **Dokumentová záchranka** – formátování dokumentu ve skutečném mini-editoru, 10 misí (`/aplikace/dokumentova-zachranka/`)
+  - **Robotí dílna: Záchrana sondy** – programování z bloků, interpret s krokováním, 12 misí (`/aplikace/roboti-dilna/`)
+- Připravovaná hra (karta „Připravujeme“): Prezentační studio.
 - Stránka **Pro učitele** (`/pro-ucitele/`, přímé odkazy `/pro-ucitele/#<id>`): cíle, doslovné citace ŠVP, tipy do 45min hodiny, otázky k reflexi.
 - Bez přihlašování, bez analytiky a cookies. Postup her jen v `localStorage` prohlížeče.
 
@@ -30,7 +34,7 @@ Otevři <http://localhost:8080/>. Server je bez závislostí (`scripts/serve.mjs
 |---|---|
 | `npm run dev` | statický HTTP server nad `public/` |
 | `npm run validate` | validace `apps.json` (schéma, unikátní id, existence `index.html`), kontrola interních odkazů, synchronizace se `site.config.json` |
-| `npm run test` | unit testy (validátor, logika Datových detektivů) + Playwright (katalog, Pro učitele, mobil, Klávesová mise vč. `test.html`, Datoví detektivové) |
+| `npm run test` | unit testy (validátor, logika všech nových her) + Playwright (katalog, Pro učitele, mobil, Klávesová mise vč. `test.html`, Datoví detektivové, Dokumentová záchranka, Robotí dílna) |
 | `npm run check` | `validate` + `test` – spusť před každým commitem |
 | `npm run new-app -- <slug> "Název"` | založí novou hru ze šablony a přidá ji do registru jako `draft` |
 | `npm run sync` | po změně `site.config.json` přepíše název webu, `robots.txt` a `sitemap.xml` |
@@ -98,7 +102,7 @@ Zadání vlny her se v několika bodech lišilo od pravidel repozitáře. Platí
 
 | Zadání | Zvoleno | Proč |
 |---|---|---|
-| klíč `edu:<game-id>:v1` | `vyukovy-portal:<slug>:v1` | pravidlo repozitáře; Klávesová mise dál `klavesova-mise-v2` |
+| klíč `edu:<game-id>:v1`, `edu.doc-rescue.v1`, `edu.robot-workshop.v1` | `vyukovy-portal:<slug>:v1` | pravidlo repozitáře (jeden formát pro všechny hry); Klávesová mise dál `klavesova-mise-v2` |
 | pole `summary`, `estimatedMinutes` | stávající `description`, `durationMinutes` | beze změny schématu a starých záznamů |
 | `skills`, karta Pro učitele | nová volitelná pole `skills`, `teacher` | validována v `registry.js` |
 | stav „Připravujeme“ | nový stav `planned` | karta bez odkazu, složka hry nemusí existovat |
@@ -110,9 +114,9 @@ Zadání vlny her se v několika bodech lišilo od pravidel repozitáře. Platí
 
 ## Další kroky
 
-1. **Ověřit ve třídě** Datové detektivy (délky režimů, srozumitelnost zadání) a s učitelem potvrdit ročníky v `apps.json`.
-2. **Dokumentová záchranka** (vlna 1, `planned`): editor s ošetřeným výběrem, vkládáním a Zpět; volitelně statický `.docx` k otevření ve Wordu.
-3. **Robotí dílna** (vlna 1, `planned`): deterministický interpret bloků s limitem kroků, krokování, bez `eval`.
-4. **Prezentační studio** (vlna 1, `planned`): plátno 16:9, ověřování principů (množství textu, kontrast, pořadí).
+1. **Ověřit ve třídě** všechny tři nové hry (délky misí, srozumitelnost zadání a nápověd) a s učitelem potvrdit ročníky v `apps.json`.
+2. **Prezentační studio – další hra na řadě** (`planned`): plátno 16:9 s miniaturami snímků, panel oprav. Mise: označ 3 chyby na snímku, zkrať přetížený text na klíčové body, oprav velikost písma a kontrast, vyber vhodný graf/obrázek, seřaď snímky do příběhu. Hodnotit konkrétní principy (počet slov, kontrastní poměr, pořadí), ne vkus. Výstup: náhled před/po. Lze převzít model bloků a historii z Dokumentové záchranky.
+3. Dokumentová záchranka: volitelně export `.docx` (zatím jen tisk/PDF a HTML, které Word umí otevřít), mise na záhlaví/zápatí.
+4. Robotí dílna: proměnné a cyklus „opakuj, dokud“ pro 9. ročník; přetahování bloků myší jako doplněk ke klávesnici.
 5. Vlna 2 (zatím ne v katalogu): Šifrovací laboratoř, Souborový detektiv, Grafový navigátor, Internetový ověřovatel, Excelová výzva.
 6. Změřit Lighthouse na produkční URL (zatím neměřeno).

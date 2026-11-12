@@ -49,11 +49,24 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
 - `app.js`: UI – stylizovaný tabulkový editor (`<table>` s tlačítky v buňkách, roving tabindex, šipky, řádek vzorců), nástroje Seřadit („Rozšířit výběr / Jen sloupec“, Zpět) a Filtr, SVG grafy bez knihoven (sloupcový, čárový, kruhový se vzory), klikací sloupce s `role="button"`.
 - Zachytává jen `Ctrl/⌘+Z`, a to jen v úloze s řazením mimo textová pole.
 
+## Dokumentová záchranka
+
+- `missions.js` (obsah) · `model.js` (dokument jako pole bloků, značky tučně/kurzíva/podtržení po znacích, čisté operace, historie Zpět/Znovu se slučováním psaní) · `checks.js` (vyhodnocení stavu dokumentu) · `app.js` (UI).
+- Editor: každý textový blok je samostatný `contenteditable`; po každé změně se DOM vykreslí znovu z modelu a obnoví se kurzor podle pozic znaků. `beforeinput` zachytí Enter, formátovací příkazy, Zpět/Znovu a vkládání (jen `text/plain`). Psaní se do modelu promítá rozdílem (LCS), takže značky zůstanou u svých znaků i po opravě mezer.
+- Kontroly hodnotí stav: sémantické bloky (`heading1`, `heading2`, `paragraph`, seskupené `bulletedList`/`numberedList`, `image`), přesný úsek se značkou, pořadí, obrázek a popisek, typografická pravidla. Automaticky se přidává kontrola zachování textu (podpis bez mezer).
+
+## Robotí dílna
+
+- `missions.js` (obsah, mapy v ASCII, reference) · `engine.js` (simulátor, interpret jako generátor, cíle, vyhodnocení na všech mapách) · `app.js` (UI).
+- Program je strom uzlů; interpret vrací událost po každém příkazu a vyhodnocení podmínky, UI ji jen vykreslí (krokování, pozastavení, zvýraznění bloku). Limit 400 instrukcí, max. 3 úrovně vnoření, max. 20 opakování – nekonečný běh nevznikne.
+- Testy pro každou misi: dosažitelnost všech políček (BFS), referenční řešení projde na všech mapách, prázdný a výchozí program neprojde, alternativní řešení projdou.
+
 ## Audit před vlnou 1 (2026-11-11)
 
 - Repozitář: statický portál, registr `apps.json` + schéma `registry.js` sdílené katalogem i CI, generátor `new-app`, testy `node:test` + Playwright, Cloudflare Pages bez buildu. Zadání šlo splnit bez změny architektury.
 - Klávesová mise zůstala beze změny (`app.js`, klíč `klavesova-mise-v2`, `test.html` PASS v testech). V registru jí přibyla jen karta `teacher`.
 - Rozdíly zadání vs. pravidla repozitáře a zvolené řešení: tabulka v [README](../README.md#rozhodnutí-a-výchozí-hodnoty-vlna-1-2026-11).
+- Druhá iterace (Dokumentová záchranka, Robotí dílna): hry už byly v registru jako `planned`, takže se jen přepnuly na `published` – žádná duplicitní karta. Zadání chtělo klíče `edu.doc-rescue.v1` a `edu.robot-workshop.v1`; ponechán formát repozitáře `vyukovy-portal:<slug>:v1`.
 - Test `expectNoHorizontalScroll` nově hlídá i šířku layout viewportu – na mobilní emulaci se při přetečení rozšíří i `innerWidth`, takže původní kontrola přetečení nepoznala.
 
 ## Integrace Klávesové mise

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Robotí dílna: Záchrana sondy – programování</title>
+  <meta name="description" content="Výuková hra: naprogramuj servisního robota z bloků příkazů. Posloupnost, cykly, podmínky, krokování a ladění.">
+  <meta name="theme-color" content="#5b2fc9">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#hra">Přeskočit na hru</a>
+
+  <header class="bar">
+    <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Katalog</span></a>
+    <p class="brand"><span class="brand__mark" aria-hidden="true">⚙</span> <span>Robotí dílna</span></p>
+    <div class="hud">
+      <span class="chip" id="hud-mission" hidden></span>
+      <span class="chip"><span aria-hidden="true">★</span> <span class="sr-only">Hvězdy celkem:</span> <b id="hud-stars">0</b></span>
+      <span class="chip"><span class="sr-only">Body celkem:</span> <b id="hud-points">0</b> <span aria-hidden="true">b.</span></span>
+      <button class="btn btn--ghost btn--small" id="btn-overview" type="button" hidden>Přehled misí</button>
+    </div>
+  </header>
+
+  <main id="hra" tabindex="-1">
+    <!-- ===== Přehled misí ===== -->
+    <section class="screen" id="s-home" aria-labelledby="home-h">
+      <div class="home-hero">
+        <div>
+          <p class="eyebrow">Mise: Záchrana sondy</p>
+          <h1 id="home-h">Robotí dílna</h1>
+          <p class="lead">Sonda na cizí planetě ztratila spojení. Naprogramuj servisního robota, aby přivezl baterie, zkontroloval anténu a vyhnul se překážkám. Program skládáš z bloků, spouštíš, krokuješ a ladíš.</p>
+          <ul class="facts">
+            <li><b>Co se naučíš:</b> posloupnost příkazů, cyklus Opakuj, podmínka Když, krokování a hledání chyb.</li>
+            <li><b>Čas:</b> 12 misí ve 3 kapitolách, celkem 20–30 min. Bez časového limitu.</li>
+            <li><b>Ovládání:</b> bloky přidáváš tlačítky (myš i klávesnice), přesouváš šipkami ↑ ↓, mažeš ✕.</li>
+          </ul>
+        </div>
+        <img class="home-hero__art" src="nahled.svg" alt="" width="320" height="140">
+      </div>
+      <p class="phone-note">Na telefonu hra funguje, ale na počítači je program i mapa přehlednější.</p>
+      <div id="mission-groups"></div>
+      <section class="progress-box" aria-labelledby="prog-h">
+        <h2 id="prog-h">Tvůj postup</h2>
+        <p id="progress-summary"></p>
+        <p class="muted small">Postup se ukládá jen v tomto prohlížeči na tomto počítači. Nikam se neodesílá.</p>
+        <label class="switch"><input type="checkbox" id="opt-unlock"> <span>Odemknout všechny mise (pro učitele nebo opakování)</span></label>
+        <div class="row" id="reset-box"><button class="btn btn--ghost btn--small" id="btn-reset" type="button">Smazat postup této hry</button></div>
+        <p class="teacher-link"><a href="/pro-ucitele/#roboti-dilna">Pro učitele: cíle, návaznost na ŠVP a tipy do hodiny →</a></p>
+      </section>
+    </section>
+
+    <!-- ===== Mise ===== -->
+    <section class="screen screen--work" id="s-mission" hidden aria-labelledby="m-title">
+      <div class="work">
+        <!-- vlevo: zadání a mapa -->
+        <section class="panel col-map" aria-labelledby="m-title">
+          <p class="brief__meta"><span class="badge" id="m-chapter"></span> <span id="m-num"></span></p>
+          <h2 id="m-title" tabindex="-1"></h2>
+          <p id="m-story" class="muted"></p>
+          <p id="m-task" class="task"></p>
+          <div class="variants" id="variants" role="group" aria-label="Varianty mapy"></div>
+          <div class="map-wrap"><svg id="map" class="map" role="img"></svg></div>
+          <p class="legend small" id="legend"></p>
+        </section>
+
+        <!-- uprostřed: program -->
+        <section class="panel col-prog" aria-labelledby="prog-title">
+          <h3 id="prog-title">Program</h3>
+          <div class="palette" id="palette" role="group" aria-label="Přidat blok"></div>
+          <p class="insert-hint small" id="insert-hint" aria-live="polite"></p>
+          <div class="program" id="program" aria-label="Program robota"></div>
+          <div class="row row--tight">
+            <button class="btn btn--ghost btn--small" id="btn-clear" type="button">Vymazat program</button>
+            <span class="muted small" id="prog-count"></span>
+          </div>
+        </section>
+
+        <!-- vpravo: běh, stav, log, nápověda, vyhodnocení -->
+        <aside class="panel col-run" aria-label="Spuštění a stav">
+          <div class="controls" role="group" aria-label="Ovládání běhu">
+            <button class="btn btn--run" id="btn-run" type="button">▶ Spustit</button>
+            <button class="btn btn--ghost" id="btn-step" type="button">⏭ Krokovat</button>
+            <button class="btn btn--ghost" id="btn-pause" type="button" disabled>⏸ Pozastavit</button>
+            <button class="btn btn--ghost" id="btn-reset-run" type="button">↺ Reset</button>
+          </div>
+          <label class="speed"><span>Rychlost</span> <input type="range" id="speed" min="1" max="5" value="3" aria-valuetext="střední"></label>
+          <dl class="state" id="state"></dl>
+          <div id="results" role="status" aria-live="polite"></div>
+          <section aria-labelledby="log-h">
+            <h3 id="log-h">Záznam běhu</h3>
+            <ol class="log" id="log"></ol>
+          </section>
+          <section aria-labelledby="hint-h">
+            <h3 id="hint-h">Nápověda</h3>
+            <div id="hints" aria-live="polite"></div>
+            <button class="btn btn--ghost btn--small" id="btn-hint" type="button">Ukázat nápovědu</button>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="dlg-done" aria-labelledby="dlg-done-h">
+    <h2 id="dlg-done-h">Mise splněna!</h2>
+    <p class="stars-big" id="done-stars"></p>
+    <p id="done-stats"></p>
+    <p class="rule" id="done-rule"></p>
+    <div class="row">
+      <button class="btn btn--run" id="btn-next" type="button">Další mise →</button>
+      <button class="btn btn--ghost" id="btn-stay" type="button">Zůstat u programu</button>
+      <button class="btn btn--ghost" id="btn-done-overview" type="button">Přehled misí</button>
+    </div>
+  </dialog>
+</body>
+</html>
