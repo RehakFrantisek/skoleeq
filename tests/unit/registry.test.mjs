@@ -107,3 +107,33 @@ test('validate-apps.mjs skončí chybou (exit 1) při neplatném registru', asyn
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+test('planned: připravovaná hra nemusí mít složku, published ano', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'skoleeq-'));
+  try {
+    const planned = { ...good(), status: 'planned' };
+    assert.deepEqual((await checkRegistry(dir, { schemaVersion: 1, apps: [planned] })).errors, []);
+    assert.ok((await checkRegistry(dir, { schemaVersion: 1, apps: [good()] })).errors.length > 0);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('teacher a skills: platná karta projde, chyby se odhalí', () => {
+  const teacher = {
+    goals: ['Žák čte data z tabulky.'], svp: [{ grade: 6, text: 'odpoví na otázky na základě dat v tabulce' }],
+    lesson: 'Rychlý režim 10 minut.', prerequisites: ['Čtení.'], reflection: ['A?', 'B?', 'C?'],
+    differentiation: 'Rychlí: dlouhá mise.', gradeNote: 'Orientačně.'
+  };
+  assert.deepEqual(validateApp({ ...good(), skills: ['Řazení'], teacher }), []);
+  const bad = {
+    'teacher neznámé pole': { ...teacher, cile: [] },
+    'teacher HTML': { ...teacher, lesson: '<b>x</b>' },
+    'svp bez ročníku': { ...teacher, svp: [{ text: 'x' }] },
+    'svp ročník 10': { ...teacher, svp: [{ grade: 10, text: 'x' }] },
+    'prázdné cíle': { ...teacher, goals: [] }
+  };
+  for (const [name, t] of Object.entries(bad)) assert.ok(validateApp({ ...good(), teacher: t }).length > 0, name);
+  assert.ok(validateApp({ ...good(), skills: [] }).length > 0, 'prázdné skills');
+  assert.ok(validateApp({ ...good(), status: 'planned' }).length === 0, 'status planned je povolený');
+});

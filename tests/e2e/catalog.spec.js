@@ -151,6 +151,59 @@ test.describe('Katalog', () => {
   });
 });
 
+test.describe('Datoví detektivové a připravované hry v katalogu', () => {
+  test('katalog → hra → zpět do katalogu @smoke', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto('/');
+    await expect(card(page, 'datovi-detektivove')).toContainText('6. ročník');
+    await card(page, 'datovi-detektivove').getByRole('link', { name: 'Spustit hru Datoví detektivové' }).click();
+    await expect(page).toHaveURL('/aplikace/datovi-detektivove/');
+    await expect(page.getByRole('heading', { level: 1, name: 'Datoví detektivové' })).toBeVisible();
+    await page.getByRole('link', { name: 'Zpět do katalogu her' }).click();
+    await expect(page).toHaveURL('/');
+    await expect(card(page, 'datovi-detektivove')).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test('připravované hry jsou vidět, ale nejdou spustit; filtr podle tématu', async ({ page }) => {
+    const planned = registry().apps.filter(a => a.status === 'planned');
+    await page.goto('/');
+    const section = page.locator('#planned');
+    await expect(section.getByRole('heading', { name: 'Připravujeme' })).toBeVisible();
+    await expect(section.locator('.plan-card')).toHaveCount(planned.length);
+    for (const app of planned) {
+      const c = section.locator(`.plan-card[data-id="${app.id}"]`);
+      await expect(c).toContainText('Připravujeme');
+      await expect(c.locator(`a[href="${app.url}"]`)).toHaveCount(0);
+    }
+    await page.getByLabel('Téma', { exact: true }).selectOption('Tabulky a grafy');
+    await expect(page.locator('.app-card')).toHaveCount(1);
+    await expect(card(page, 'datovi-detektivove')).toBeVisible();
+    await expect(section).toBeHidden();
+    await page.goto('/?rocnik=7');
+    await expect(section.locator('.plan-card[data-id="prezentacni-studio"]')).toBeVisible();
+    await expect(section.locator('.plan-card[data-id="roboti-dilna"]')).toBeHidden();
+  });
+
+  test('karta Pro učitele jde otevřít přímým odkazem a cituje ŠVP', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto('/');
+    await card(page, 'datovi-detektivove').getByRole('link', { name: 'Pro učitele: Datoví detektivové' }).click();
+    await expect(page).toHaveURL('/pro-ucitele/#datovi-detektivove');
+    const art = page.locator('article#datovi-detektivove');
+    await expect(art.getByRole('heading', { name: 'Datoví detektivové' })).toBeFocused();
+    await expect(art).toContainText('„odpoví na otázky na základě dat v tabulce“');
+    await expect(art).toContainText('Otázky k reflexi');
+    await expect(art.locator('h3', { hasText: 'Otázky k reflexi' }).locator('+ ul li')).toHaveCount(3);
+    await expect(art).toContainText('Rychlí a začínající žáci');
+    await expect(art).toContainText('Ve 45minutové hodině');
+    await page.goto('/pro-ucitele/#roboti-dilna');
+    await expect(page.locator('article#roboti-dilna')).toContainText('Připravujeme');
+    await expect(page.locator('article#roboti-dilna')).toContainText('Pracovní návrh');
+    expect(errors).toEqual([]);
+  });
+});
+
 test.describe('Ostatní stránky', () => {
   test('O projektu @smoke', async ({ page }) => {
     const errors = watchErrors(page);
@@ -192,7 +245,7 @@ test.describe('Mobil', () => {
   for (const width of [320, 360, 390]) {
     test(`bez vodorovného scrollu na ${width} px @mobile`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 });
-      for (const url of ['/', '/o-projektu/', '/tohle-neexistuje/', '/aplikace/klavesova-mise/']) {
+      for (const url of ['/', '/o-projektu/', '/pro-ucitele/', '/tohle-neexistuje/', '/aplikace/klavesova-mise/', '/aplikace/datovi-detektivove/']) {
         await page.goto(url);
         if (url === '/') await expect(page.locator('.app-card').first()).toBeVisible();
         await expectNoHorizontalScroll(page);

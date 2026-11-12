@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pro učitele – Školeeq</title>
+  <meta name="application-name" content="Školeeq">
+  <meta name="description" content="Cíle her, návaznost na výstupy ŠVP, vhodnost pro 45minutovou hodinu, otázky k reflexi a varianty pro rychlé i začínající žáky.">
+  <meta name="theme-color" content="#0f766e">
+  <meta property="og:site_name" content="Školeeq">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/portal.css">
+  <link rel="modulepreload" href="/assets/registry.js">
+  <script type="module" src="/assets/teachers.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="/" aria-label="Školeeq – úvod">
+        <img class="logo__mark" src="/favicon.svg" alt="" width="36" height="36">
+        <span class="logo__word" data-site-name>Školeeq</span>
+      </a>
+      <nav class="site-nav" aria-label="Hlavní navigace">
+        <a href="/">Úvod</a>
+        <a href="/pro-ucitele/" aria-current="page">Pro učitele</a>
+        <a href="/o-projektu/">O projektu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="page">
+    <div class="wrap page__inner">
+      <h1>Pro učitele</h1>
+      <p class="lead">Ke každé hře najdete cíle, návaznost na výstupy ŠVP, tipy do 45minutové hodiny, otázky k reflexi a variantu pro rychlé i začínající žáky.</p>
+
+      <div class="t-intro">
+        <p><strong>Odkud jsou citace ŠVP:</strong> z přepisu ŠVP „Škola – základ života“ 2024–25, informatika 6.–9. ročník (str. 120–125), který nám škola poskytla. Citujeme doslova, včetně původního znění. Nejde o ověřený opis oficiálního dokumentu.</p>
+        <p><strong>Ročníky jsou pracovní návrh.</strong> Aktuálně se v 6. ročníku probírají tabulky a grafy; dále formátování dokumentu, programování a pravděpodobně tvorba prezentací. Rozdělení do ostatních ročníků zatím není potvrzené, proto je u her uvádíme jako orientační.</p>
+        <p><strong>Bez účtů a bez sledování:</strong> hry lze promítat i hrát bez přihlášení. Výsledky si každá hra ukládá jen do prohlížeče na daném počítači – jiný počítač ve třídě je nezná a nikam se neodesílají. Žebříčky ani srovnávání žáků nejsou.</p>
+      </div>
+
+      <h2>Hry</h2>
+      <ul class="t-toc" id="toc" aria-label="Rychlé odkazy na hry"></ul>
+
+      <div id="cards" aria-busy="true"></div>
+
+      <div class="state state--error" id="error" role="alert" hidden>
+        <p class="state__title">Informace se nepodařilo načíst.</p>
+        <p>Zkontrolujte připojení a obnovte stránku.</p>
+      </div>
+      <noscript><p>Seznam her se načítá pomocí JavaScriptu. Zapněte ho prosím v prohlížeči.</p></noscript>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p><strong data-site-name>Školeeq</strong> – škola, školení a kolega v jednom. Hravé výukové miniaplikace pro základní školy.</p>
+      <nav aria-label="Odkazy v patičce">
+        <a href="/">Úvod</a>
+        <a href="/pro-ucitele/">Pro učitele</a>
+        <a href="/o-projektu/">O projektu</a>
+      </nav>
+      <p class="site-footer__small">Bez registrace, bez reklam a bez sledovacích cookies.</p>
+    </div>
+  </footer>
+</body>
+</html>

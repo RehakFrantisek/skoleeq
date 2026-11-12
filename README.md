@@ -5,7 +5,9 @@ Statický web bez backendu a bez databáze, hostovaný na **Cloudflare Pages** p
 
 - Katalog her se generuje z registru [`public/apps.json`](public/apps.json) – hledání (i bez diakritiky) a filtry podle ročníku, předmětu, tématu a obtížnosti.
 - Každá hra je samostatná stránka ve složce `public/aplikace/<slug>/` – žádné iframy, žádné sdílené herní jádro.
-- První hra: **Klávesová mise – Klik a školní výlet** (`/aplikace/klavesova-mise/`).
+- Hratelné hry: **Klávesová mise – Klik a školní výlet** (`/aplikace/klavesova-mise/`) a **Datoví detektivové – tabulky a grafy** (`/aplikace/datovi-detektivove/`).
+- Připravované hry (karty „Připravujeme“): Dokumentová záchranka, Robotí dílna, Prezentační studio.
+- Stránka **Pro učitele** (`/pro-ucitele/`, přímé odkazy `/pro-ucitele/#<id>`): cíle, doslovné citace ŠVP, tipy do 45min hodiny, otázky k reflexi.
 - Bez přihlašování, bez analytiky a cookies. Postup her jen v `localStorage` prohlížeče.
 
 ## Rychlý start
@@ -28,7 +30,7 @@ Otevři <http://localhost:8080/>. Server je bez závislostí (`scripts/serve.mjs
 |---|---|
 | `npm run dev` | statický HTTP server nad `public/` |
 | `npm run validate` | validace `apps.json` (schéma, unikátní id, existence `index.html`), kontrola interních odkazů, synchronizace se `site.config.json` |
-| `npm run test` | unit testy validátoru + Playwright smoke testy (katalog, mobil, Klávesová mise vč. `test.html`) |
+| `npm run test` | unit testy (validátor, logika Datových detektivů) + Playwright (katalog, Pro učitele, mobil, Klávesová mise vč. `test.html`, Datoví detektivové) |
 | `npm run check` | `validate` + `test` – spusť před každým commitem |
 | `npm run new-app -- <slug> "Název"` | založí novou hru ze šablony a přidá ji do registru jako `draft` |
 | `npm run sync` | po změně `site.config.json` přepíše název webu, `robots.txt` a `sitemap.xml` |
@@ -52,12 +54,13 @@ Původní prohlížečový test hry je na <http://localhost:8080/aplikace/klaves
 ```
 public/                  ← jediná složka, která se nasazuje (Cloudflare Pages: output directory)
   index.html             katalog
-  apps.json              registr her
-  assets/                portal.css, portal.js, registry.js (sdílené schéma registru)
+  apps.json              registr her (published / planned / draft / hidden)
+  assets/                portal.css, portal.js, teachers.js, registry.js (sdílené schéma registru)
   aplikace/<slug>/       samostatné hry
+  pro-ucitele/           karty pro učitele (generované z apps.json)
   o-projektu/, 404.html, _headers, robots.txt, favicon.svg
 scripts/                 serve, validate-apps, check-links, sync-site, new-app
-templates/app/           šablona nové hry
+templates/app/           šablona nové hry (podle design systému)
 tests/unit, tests/e2e    node:test a Playwright
 docs/                    DEPLOYMENT, ADD_NEW_APP, ARCHITECTURE
 site.config.json         název webu, doména (siteUrl), odkaz na repozitář – jediné místo
@@ -67,6 +70,8 @@ site.config.json         název webu, doména (siteUrl), odkaz na repozitář �
 
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) – GitHub → Cloudflare Pages → vlastní doména, rollback
 - [docs/ADD_NEW_APP.md](docs/ADD_NEW_APP.md) – jak přidat hru za pár minut
+- [docs/GAME_TEMPLATE.md](docs/GAME_TEMPLATE.md) – šablona nové hry a záznam v katalogu
+- [docs/GAME_DESIGN_SYSTEM.md](docs/GAME_DESIGN_SYSTEM.md) – tokeny, komponenty, herní průběh, přístupnost
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) – rozhodnutí a jejich důvody
 - [CLAUDE.md](CLAUDE.md) – trvalá pravidla pro generování dalších her
 
@@ -74,3 +79,40 @@ site.config.json         název webu, doména (siteUrl), odkaz na repozitář �
 
 Název a doména jsou v [`site.config.json`](site.config.json). Po změně spusť `npm run sync` a změny commitni.
 Dokud není známá finální doména, nech `siteUrl` prázdné – `sitemap.xml` se nevygeneruje (nepoužíváme vymyšlené URL).
+
+## Nasazení (GitHub → Cloudflare Pages), doména, rollback – stručně
+
+Podrobný postup je v [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Shrnutí:
+
+1. Repozitář na GitHubu, `git push` do `main`. GitHub Actions spustí workflow **Kontrola** (`npm run validate` + testy).
+2. Cloudflare → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**, vybrat repozitář. Framework preset **None**, build command prázdný, **output directory `public`**, produkční větev `main`.
+3. Každý push do `main` = nové produkční nasazení. Pull request = náhledová URL.
+4. Vlastní doména: v projektu Pages → **Custom domains** → přidat doménu a nastavit DNS podle průvodce. Pak doplnit `siteUrl` do `site.config.json` a spustit `npm run sync`.
+5. Rollback: v projektu Pages → **Deployments** → u starší verze **Rollback to this deployment**. Případně `git revert` a push.
+
+Žádná hesla, tokeny ani API klíče se do repozitáře nevkládají – nejsou potřeba (statický web, propojení přes GitHub aplikaci Cloudflare).
+
+## Rozhodnutí a výchozí hodnoty (vlna 1, 2026-11)
+
+Zadání vlny her se v několika bodech lišilo od pravidel repozitáře. Platí pravidla repozitáře ([CLAUDE.md](CLAUDE.md)), rozdíly:
+
+| Zadání | Zvoleno | Proč |
+|---|---|---|
+| klíč `edu:<game-id>:v1` | `vyukovy-portal:<slug>:v1` | pravidlo repozitáře; Klávesová mise dál `klavesova-mise-v2` |
+| pole `summary`, `estimatedMinutes` | stávající `description`, `durationMinutes` | beze změny schématu a starých záznamů |
+| `skills`, karta Pro učitele | nová volitelná pole `skills`, `teacher` | validována v `registry.js` |
+| stav „Připravujeme“ | nový stav `planned` | karta bez odkazu, složka hry nemusí existovat |
+| složka `_template` | `templates/app/` | mimo `public/` (nenasadí se), používá ji `npm run new-app` |
+| Vite | ne | hra je vanilla ES modul; bundler by nic nepřinesl |
+| ročníky | DD 6. (aktuální výuka), ostatní podle ŠVP | v `apps.json` jdou změnit; v `teacher.gradeNote` označeno jako pracovní návrh |
+| hodnocení | napoprvé → nápovědy → (volitelně) čas | nápověda nesnižuje „vyřešeno“; stopky ve výchozím stavu vypnuté |
+| varianty | A/B/C (pevný seed) + náhodná | sousedé mají jiná čísla, učitel může promítat stejnou variantu |
+
+## Další kroky
+
+1. **Ověřit ve třídě** Datové detektivy (délky režimů, srozumitelnost zadání) a s učitelem potvrdit ročníky v `apps.json`.
+2. **Dokumentová záchranka** (vlna 1, `planned`): editor s ošetřeným výběrem, vkládáním a Zpět; volitelně statický `.docx` k otevření ve Wordu.
+3. **Robotí dílna** (vlna 1, `planned`): deterministický interpret bloků s limitem kroků, krokování, bez `eval`.
+4. **Prezentační studio** (vlna 1, `planned`): plátno 16:9, ověřování principů (množství textu, kontrast, pořadí).
+5. Vlna 2 (zatím ne v katalogu): Šifrovací laboratoř, Souborový detektiv, Grafový navigátor, Internetový ověřovatel, Excelová výzva.
+6. Změřit Lighthouse na produkční URL (zatím neměřeno).

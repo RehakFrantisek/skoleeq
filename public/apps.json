@@ -16,7 +16,161 @@
       "color": "violet",
       "featured": true,
       "requiresKeyboard": true,
-      "status": "published"
+      "status": "published",
+      "skills": ["Kopírování, vyjmutí a vložení (Ctrl+C/X/V)", "Zpět a Znovu (Ctrl+Z/Y)", "Označení, uložení, tisk a hledání"],
+      "teacher": {
+        "goals": ["Žák používá základní klávesové zkratky pro práci s textem a souborem.", "Žák rozliší Zpět a Znovu a ví, kdy je použít."],
+        "svp": [
+          { "grade": 7, "text": "používá klávesové zkratky a příkazy Zpět a znovu" },
+          { "grade": 7, "text": "používá některé klávesové zkratky" }
+        ],
+        "lesson": "Příběh trvá asi 15–20 minut, trénink na čas 3–5 minut. Hodí se jako rozcvička nebo samostatná práce v učebně; zbytek hodiny lze navázat prací ve skutečném textovém editoru.",
+        "prerequisites": ["Orientace na klávesnici (Ctrl, Shift, písmena).", "Základní práce s textem: psaní a označení myší."],
+        "reflection": ["Kterou zkratku použiješ nejčastěji a proč?", "Čím se liší Ctrl+X a Ctrl+C?", "Co uděláš, když omylem smažeš odstavec?"],
+        "differentiation": "Rychlejší žáci: trénink na čas a překonání vlastního rekordu. Začínající: jen příběhový režim, klávesy hledat podle nápovědy na obrazovce.",
+        "gradeNote": "Ročníky jsou orientační; ve ŠVP jsou zkratky uvedené v 7. ročníku."
+      }
+    },
+    {
+      "id": "datovi-detektivove",
+      "title": "Datoví detektivové",
+      "subtitle": "Tabulky a grafy pod lupou",
+      "description": "Vyšetřuj případy školní redakce: čti tabulky, řaď a filtruj data, vyber vhodný graf a odhal graf, který klame.",
+      "url": "/aplikace/datovi-detektivove/",
+      "subject": "Informatika",
+      "grades": [6],
+      "topics": ["Tabulky a grafy", "Práce s daty"],
+      "difficulty": "stredni",
+      "durationMinutes": 20,
+      "icon": "chart",
+      "color": "teal",
+      "featured": false,
+      "requiresKeyboard": false,
+      "thumbnail": "nahled.svg",
+      "status": "published",
+      "skills": ["Čtení hodnot a adres buněk", "Řazení celých řádků", "Filtr se dvěma podmínkami", "Doplnění údaje podle pravidla", "Volba vhodného grafu", "Odhalení zkresleného grafu"],
+      "teacher": {
+        "goals": [
+          "Žák najde v tabulce hodnotu podle řádku, sloupce i adresy buňky (např. C4).",
+          "Žák seřadí tabulku tak, aby záznamy (řádky) zůstaly celé, a vyfiltruje data podle dvou podmínek zároveň.",
+          "Žák doplní chybějící údaj podle pravidla a porovná hodnoty v různých jednotkách.",
+          "Žák zvolí typ grafu podle účelu (vývoj v čase, část celku, porovnání).",
+          "Žák odhalí rozpor mezi tabulkou a grafem a vysvětlí, proč osa nezačínající nulou zkresluje."
+        ],
+        "svp": [
+          { "grade": 6, "text": "odpoví na otázky na základě dat v tabulce" },
+          { "grade": 6, "text": "popíše pravidla uspořádání v existující tabulce" },
+          { "grade": 6, "text": "doplní podle pravidel do tabulky prvky, záznamy" },
+          { "grade": 6, "text": "najde a opraví chyby u různých interpretací týchž dat (tabulka versus graf)" },
+          { "grade": 6, "text": "propojí data z více tabulek či grafů" },
+          { "grade": 6, "text": "filtrování, řazení a třídění dat" },
+          { "grade": 6, "text": "porovnání dat v tabulce a grafu" },
+          { "grade": 8, "text": "nastavuje zobrazení, řazení a filtrování dat v tabulce" }
+        ],
+        "lesson": "Rychlý režim (6 úloh) zabere asi 10 minut – vhodný jako rozcvička. Celá mise (15 úloh) asi 20 minut, zbytek 45min hodiny lze věnovat reflexi a práci ve skutečném tabulkovém editoru. Dlouhá mise (18 úloh) vyplní asi 35 minut. Varianty A/B/C mají jiná čísla, takže sousedé nemají stejné výsledky. Pro promítání stačí otevřít hru – účet není potřeba.",
+        "prerequisites": ["Čtení s porozuměním krátkého zadání.", "Sčítání a násobení do tisíců, porovnání desetinných čísel.", "Převod cm na m (pro úlohu s jednotkami)."],
+        "reflection": ["Proč se při řazení musí řadit celé řádky, a ne jen jeden sloupec?", "Kdy je lepší čárový graf a kdy kruhový?", "Našel(a) jsi někdy v novinách nebo na internetu graf, který mohl klamat? Čím?"],
+        "differentiation": "Rychlí žáci: dlouhá mise s velkým případem nebo druhá varianta zadání bez nápověd. Začínající: rychlý režim s ukázkou na začátku, nápovědy použít bez obav – nesnižují výsledek, jen se zobrazí v přehledu.",
+        "gradeNote": "Zařazení do 6. ročníku odpovídá aktuální výuce (tabulky a grafy). Ve ŠVP je práce s tabulkovým editorem i v 8. ročníku – ročník lze v katalogu upravit."
+      }
+    },
+    {
+      "id": "dokumentova-zachranka",
+      "title": "Dokumentová záchranka",
+      "subtitle": "Oprav chaotický školní leták",
+      "description": "Simulátor redakce: rozliš nadpis a odstavec, oprav zarovnání a mezery, přesuň text vyjmutím a vložením a připrav leták k tisku.",
+      "url": "/aplikace/dokumentova-zachranka/",
+      "subject": "Informatika",
+      "grades": [7],
+      "topics": ["Formátování dokumentu", "Klávesové zkratky"],
+      "difficulty": "stredni",
+      "durationMinutes": 20,
+      "icon": "document",
+      "color": "blue",
+      "featured": false,
+      "requiresKeyboard": true,
+      "status": "planned",
+      "skills": ["Nadpisy a odstavce", "Zarovnání a mezery", "Vyjmout, kopírovat, vložit", "Typografická pravidla"],
+      "teacher": {
+        "goals": ["Žák rozliší nadpis a odstavec a sjednotí formát textu.", "Žák opraví zarovnání, odsazení a dvojité mezery.", "Žák přesune a zkopíruje text pomocí schránky a klávesových zkratek.", "Žák dodrží základní typografická pravidla."],
+        "svp": [
+          { "grade": 7, "text": "používá klávesové zkratky a příkazy Zpět a znovu" },
+          { "grade": 7, "text": "vytváří a formátuje odstavce" },
+          { "grade": 7, "text": "dodržuje základní typografická pravidla" },
+          { "grade": 7, "text": "vloží do textu vhodně obrázek" },
+          { "grade": 7, "text": "vkládá a upravuje záhlaví a zápatí" }
+        ],
+        "lesson": "Připravujeme. Plánovaná délka 15–25 minut. Prohlížečový editor nenahrazuje Word – hra trénuje postupy a pojmy, ne konkrétní program.",
+        "prerequisites": ["Psaní na klávesnici a označení textu myší."],
+        "reflection": ["Podle čeho poznáš nadpis od odstavce?", "Proč nepoužívat mezery k zarovnání textu?", "Kdy použiješ Ctrl+X a kdy Ctrl+C?"],
+        "differentiation": "Připravujeme.",
+        "gradeNote": "Pracovní návrh: ve ŠVP je formátování dokumentu v 7. ročníku, aktuální rozvržení výuky není potvrzené."
+      }
+    },
+    {
+      "id": "roboti-dilna",
+      "title": "Robotí dílna",
+      "subtitle": "Posloupnost, cykly a podmínky",
+      "description": "Naprogramuj robota z bloků příkazů: dojdi k cíli, použij cyklus a podmínku a krokováním najdi chybu v cizím programu.",
+      "url": "/aplikace/roboti-dilna/",
+      "subject": "Informatika",
+      "grades": [6, 9],
+      "topics": ["Programování", "Algoritmizace"],
+      "difficulty": "stredni",
+      "durationMinutes": 20,
+      "icon": "robot",
+      "color": "orange",
+      "featured": false,
+      "requiresKeyboard": false,
+      "status": "planned",
+      "skills": ["Posloupnost příkazů", "Cyklus s pevným počtem opakování", "Podmínka", "Krokování a hledání chyby"],
+      "teacher": {
+        "goals": ["Žák sestaví posloupnost příkazů, která dovede robota k cíli.", "Žák nahradí opakující se příkazy cyklem.", "Žák krokováním najde a opraví chybu v programu.", "Žák porovná dvě řešení podle délky a spolehlivosti."],
+        "svp": [
+          { "grade": 6, "text": "používá cyklus s pevným počtem opakování, rozezná, zda má být příkaz uvnitř nebo vně opakování" },
+          { "grade": 6, "text": "po přečtení programu vysvětlí, co vykoná" },
+          { "grade": 6, "text": "ověří správnost programu, najde a opraví v něm chyby" },
+          { "grade": 9, "text": "navrhne algoritmus pro řešení problému" },
+          { "grade": 9, "text": "pracuje v blokově orientovaném programovacím jazyku" }
+        ],
+        "lesson": "Připravujeme. Plánovaná délka 10–25 minut, bez závislosti na Scratchi.",
+        "prerequisites": ["Orientace vlevo/vpravo, otočení o 90°."],
+        "reflection": ["Proč je program s cyklem kratší?", "Jak jsi poznal(a), ve kterém kroku je chyba?", "Které ze dvou řešení je spolehlivější a proč?"],
+        "differentiation": "Připravujeme.",
+        "gradeNote": "Pracovní návrh: ŠVP uvádí algoritmizaci v 6. a blokové programování v 9. ročníku. Zařazení potvrďte podle aktuální výuky."
+      }
+    },
+    {
+      "id": "prezentacni-studio",
+      "title": "Prezentační studio",
+      "subtitle": "Zachraň katastrofální prezentaci",
+      "description": "Oprav přeplněné snímky: zkrať text na klíčové body, oprav kontrast a velikost písma, vyber vhodný graf a seřaď snímky do příběhu.",
+      "url": "/aplikace/prezentacni-studio/",
+      "subject": "Informatika",
+      "grades": [7, 8, 9],
+      "topics": ["Prezentace"],
+      "difficulty": "stredni",
+      "durationMinutes": 15,
+      "icon": "slides",
+      "color": "pink",
+      "featured": false,
+      "requiresKeyboard": false,
+      "status": "planned",
+      "skills": ["Výstižný text na snímku", "Kontrast a čitelnost", "Vhodný graf či obrázek", "Logické pořadí snímků"],
+      "teacher": {
+        "goals": ["Žák pozná přeplněný snímek a zkrátí text na klíčové body.", "Žák upraví velikost písma a kontrast pro čitelnost.", "Žák seřadí snímky do logického celku a zkontroluje jednotný vzhled."],
+        "svp": [
+          { "grade": 7, "text": "vkládá, upravuje a formátuje text v prezentacích" },
+          { "grade": 7, "text": "vytvoří vlastní prezentaci na zvolené téma, upraví ji, uloží a odprezentuje před spolužáky" },
+          { "grade": 8, "text": "vytváří prezentace a podle zadaných pokynů je formátuje" },
+          { "grade": 9, "text": "uplatňuje estetická a typografická pravidla pro práci s textem a obrazem při tvorbě prezentace" }
+        ],
+        "lesson": "Připravujeme. Plánovaná délka 10–20 minut. Hodnotí se konkrétní principy (čitelnost, kontrast, množství textu), ne „jediný správný vkus“.",
+        "prerequisites": ["Zkušenost s prohlížením prezentace."],
+        "reflection": ["Kolik textu snese jeden snímek?", "Proč záleží na kontrastu písma a pozadí?", "Podle čeho jsi zvolil(a) pořadí snímků?"],
+        "differentiation": "Připravujeme.",
+        "gradeNote": "Pracovní návrh: tvorba prezentací je ve ŠVP v 7.–9. ročníku, aktuálně „pravděpodobně“ probíraná – ročník lze upravit."
+      }
     }
   ]
 }

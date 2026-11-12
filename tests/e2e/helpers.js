@@ -17,8 +17,12 @@ export function watchErrors(page, { allow404 = [] } = {}) {
 }
 
 export async function expectNoHorizontalScroll(page) {
+  // Na mobilní emulaci se při přetečení rozšíří i layout viewport (innerWidth), proto
+  // porovnáváme i s nastavenou šířkou okna.
+  const vw = page.viewportSize()?.width ?? Infinity;
   const { sw, w } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, w: window.innerWidth }));
   expect(sw, `scrollWidth ${sw} > innerWidth ${w}`).toBeLessThanOrEqual(w);
+  expect(w, `layout viewport ${w} px je širší než okno ${vw} px (obsah přetéká)`).toBeLessThanOrEqual(vw);
 }
 
 export const card = (page, id) => page.locator(`.app-card[data-id="${id}"]`);

@@ -7,7 +7,9 @@ GitHub (1 repozitář)
 Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
         ├── /                            katalog (index.html + assets/portal.js načte /apps.json)
         ├── /aplikace/klavesova-mise/   samostatná hra
+        ├── /aplikace/datovi-detektivove/ samostatná hra (ES moduly: logic.js + app.js)
         ├── /aplikace/<další-hra>/      samostatná hra
+        ├── /pro-ucitele/               karty pro učitele (assets/teachers.js čte /apps.json)
         ├── /o-projektu/                informace o portálu
         └── 404.html                    skutečná 404 (žádný SPA fallback)
 ```
@@ -34,6 +36,25 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
   - Malý katalog (1–2 hry bez filtru) doplní dlaždice „Další hry se připravují“, ať nepůsobí rozbitě.
   - Dotykové zařízení bez jemného ukazatele + hra s `requiresKeyboard` → nenásilné upozornění. Hra zůstává v katalogu.
 - `public/assets/registry.js`: schéma, whitelisty (`difficulty`, `status`, `color`, `icon`), pravidla URL (`/aplikace/<id>/`, bez `..`).
+
+## Připravované hry a karty Pro učitele
+
+- Stav `planned` v registru: katalog je vykreslí v sekci **Připravujeme** jako `.plan-card` bez odkazu na hru (počty „her v katalogu“ počítají jen `published`). Na stejné filtry reagují i připravované karty.
+- Volitelné pole `teacher` → stránka `/pro-ucitele/` (`assets/teachers.js`) vykreslí kartu s kotvou `#<id>`; přímý odkaz zaostří nadpis karty. Citace ŠVP jsou data v `apps.json`, ne HTML.
+- Volitelné `skills` – krátký seznam dovedností (zatím jen data, katalog je nezobrazuje).
+
+## Datoví detektivové
+
+- `logic.js`: čistý ES modul bez DOM – seedovaný generátor (`mulberry32`), datové operace (řazení celých řádků vs. jen sloupce, filtr se dvěma podmínkami, adresy buněk, jednotky, zkreslení osy), 18 úloh ve 4 úrovních, `checkAnswer()` s konkrétní zpětnou vazbou. Importují ho unit i E2E testy.
+- `app.js`: UI – stylizovaný tabulkový editor (`<table>` s tlačítky v buňkách, roving tabindex, šipky, řádek vzorců), nástroje Seřadit („Rozšířit výběr / Jen sloupec“, Zpět) a Filtr, SVG grafy bez knihoven (sloupcový, čárový, kruhový se vzory), klikací sloupce s `role="button"`.
+- Zachytává jen `Ctrl/⌘+Z`, a to jen v úloze s řazením mimo textová pole.
+
+## Audit před vlnou 1 (2026-11-11)
+
+- Repozitář: statický portál, registr `apps.json` + schéma `registry.js` sdílené katalogem i CI, generátor `new-app`, testy `node:test` + Playwright, Cloudflare Pages bez buildu. Zadání šlo splnit bez změny architektury.
+- Klávesová mise zůstala beze změny (`app.js`, klíč `klavesova-mise-v2`, `test.html` PASS v testech). V registru jí přibyla jen karta `teacher`.
+- Rozdíly zadání vs. pravidla repozitáře a zvolené řešení: tabulka v [README](../README.md#rozhodnutí-a-výchozí-hodnoty-vlna-1-2026-11).
+- Test `expectNoHorizontalScroll` nově hlídá i šířku layout viewportu – na mobilní emulaci se při přetečení rozšíří i `innerWidth`, takže původní kontrola přetečení nepoznala.
 
 ## Integrace Klávesové mise
 

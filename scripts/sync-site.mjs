@@ -54,7 +54,7 @@ const sitemapPath = path.join(PUBLIC, 'sitemap.xml');
 if (siteUrl) {
   const { validateRegistry } = await import(pathToFileURL(path.join(PUBLIC, 'assets/registry.js')).href);
   const { apps } = validateRegistry(JSON.parse(await readFile(path.join(PUBLIC, 'apps.json'), 'utf8')));
-  const urls = ['/', '/o-projektu/', ...apps.filter(a => a.status === 'published').map(a => a.url)];
+  const urls = ['/', '/pro-ucitele/', '/o-projektu/', ...apps.filter(a => a.status === 'published').map(a => a.url)];
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     urls.map(u => `  <url><loc>${siteUrl}${u}</loc></url>`).join('\n') + '\n</urlset>\n';
   if (!existsSync(sitemapPath) || (await readFile(sitemapPath, 'utf8')) !== xml) changes.push({ file: sitemapPath, content: xml });

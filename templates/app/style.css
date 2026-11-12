@@ -1,34 +1,67 @@
-/* Styly hry {{TITLE}} – samostatné, nesdílené s portálem ani s jinými hrami. */
+/* Styly hry {{TITLE}} – samostatné, nesdílené s portálem ani s jinými hrami.
+   Tokeny --ds-* jsou z docs/GAME_DESIGN_SYSTEM.md. Barvy motivu hry přidej jako --game-*. */
 :root {
-  --ink: #132a32; --muted: #5b6e76; --bg: #f7f6f1; --card: #fff; --line: #e3e1d8;
-  --primary: #0f766e; --primary-edge: #0a5c55; --good: #2f7a1f; --bad: #c0262d; --focus: #1d4ed8;
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--bg);
+  --ds-bg: #f4f6f2; --ds-surface: #fff; --ds-surface-2: #f8faf8;
+  --ds-ink: #132a32; --ds-ink-2: #34505b; --ds-muted: #52656d; --ds-line: #d9e0dc;
+  --ds-success: #0f766e; --ds-success-ink: #0a5c55; --ds-success-soft: #dff3ef;   /* úspěch */
+  --ds-action: #1d5fd6; --ds-action-ink: #1747a6; --ds-action-soft: #e6efff;      /* interakce */
+  --ds-warn: #b8480f; --ds-warn-ink: #8a3409; --ds-warn-soft: #ffeedd;            /* upozornění */
+  --ds-focus: #1d4ed8; --ds-radius: 16px; --ds-radius-sm: 10px; --ds-tap: 44px;
+  --ds-shadow: 0 1px 2px rgba(19, 42, 50, .06), 0 8px 24px rgba(19, 42, 50, .08);
+  --ds-font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
 }
-* { box-sizing: border-box; }
-body { margin: 0; min-height: 100vh; overflow-x: hidden; }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; overflow-x: hidden; font: 400 1rem/1.55 var(--ds-font); color: var(--ds-ink); background: var(--ds-bg); }
+h1, h2 { line-height: 1.2; margin: 0 0 .75rem; }
+:focus-visible { outline: 3px solid var(--ds-focus); outline-offset: 3px; }
 [hidden] { display: none !important; }
-
-.bar { display: flex; align-items: center; gap: 1rem; padding: .75rem 1rem; border-bottom: 1px solid var(--line); background: #fff; }
-.back { min-height: 44px; display: inline-flex; align-items: center; padding: 0 .9rem; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); font-weight: 700; text-decoration: none; }
-.bar__title { font-size: 1.1rem; }
-
-.game { width: min(720px, 100% - 2rem); margin: 2rem auto; }
-.screen { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: clamp(1.25rem, 4vw, 2rem); box-shadow: 0 8px 24px rgba(19, 42, 50, .08); }
-h1, h2 { margin: 0 0 .75rem; line-height: 1.2; }
-.lead { font-size: 1.1rem; }
-.muted { color: var(--muted); }
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: .5rem; top: -4rem; background: var(--ds-ink); color: #fff; padding: .6rem 1rem; border-radius: 8px; }
+.skip:focus { top: .5rem; }
+.muted { color: var(--ds-muted); } .small { font-size: .9rem; } .lead { font-size: 1.1rem; }
 .row { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .7rem 1.3rem; border: 0; border-radius: 12px; font: 700 1rem/1.2 inherit; color: #fff; background: var(--primary); box-shadow: 0 3px 0 var(--primary-edge); cursor: pointer; text-decoration: none; }
-.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--primary-edge); }
-.btn--ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); box-shadow: 0 3px 0 var(--line); }
+/* Lišta + HUD */
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: .5rem 1rem; background: #fff; border-bottom: 1px solid var(--ds-line); }
+.back { min-height: var(--ds-tap); display: inline-flex; align-items: center; gap: .3rem; padding: 0 .9rem; border-radius: var(--ds-radius-sm); border: 1px solid var(--ds-line); color: var(--ds-ink-2); font-weight: 700; text-decoration: none; }
+.bar__title { font-size: 1.05rem; }
+.hud { display: flex; align-items: center; gap: .6rem; margin-left: auto; }
+progress { width: 120px; height: 12px; appearance: none; border: 0; border-radius: 99px; background: var(--ds-line); overflow: hidden; }
+progress::-webkit-progress-bar { background: var(--ds-line); }
+progress::-webkit-progress-value { background: var(--ds-success); }
+progress::-moz-progress-bar { background: var(--ds-success); }
+.chip { display: inline-flex; gap: .3rem; padding: .2rem .7rem; border-radius: 99px; border: 1px solid var(--ds-line); background: var(--ds-surface-2); }
 
-.answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; margin-top: 1rem; }
-.answers .btn { background: #fff; color: var(--ink); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--line); }
-.feedback { min-height: 1.5em; font-weight: 700; margin-top: 1rem; }
-.feedback.good { color: var(--good); }
-.feedback.bad { color: var(--bad); }
+/* Obrazovky a karty */
+main { width: min(760px, 100% - 1.5rem); margin: 1.5rem auto 3rem; }
+main:focus, h2:focus { outline: none; }
+.screen { background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius); box-shadow: var(--ds-shadow); padding: clamp(1rem, 4vw, 2rem); }
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.info { background: var(--ds-surface-2); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-sm); padding: 1rem; }
+.info h2 { font-size: 1.05rem; }
+.switch { display: flex; gap: .5rem; align-items: center; min-height: var(--ds-tap); }
+.switch input { width: 22px; height: 22px; accent-color: var(--ds-action); }
 
-@media (max-width: 480px) { .back span { display: none; } }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+/* Tlačítka */
+.btn { --b: var(--ds-action); --b-edge: var(--ds-action-ink); --b-ink: #fff; display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .65rem 1.25rem; border: 0; border-radius: 12px; font: 700 1rem/1.2 var(--ds-font); color: var(--b-ink); background: var(--b); box-shadow: 0 3px 0 var(--b-edge); cursor: pointer; text-decoration: none; }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--b-edge); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn--success { --b: var(--ds-success); --b-edge: var(--ds-success-ink); }
+.btn--ghost { --b: #fff; --b-edge: var(--ds-line); --b-ink: var(--ds-ink); border: 1px solid var(--ds-line); }
+.btn--small { min-height: var(--ds-tap); padding: .4rem .9rem; font-size: .95rem; }
+
+/* Volby, nápověda, zpětná vazba */
+.choices { border: 0; padding: 0; margin: 1rem 0 0; display: grid; gap: .5rem; }
+.choice { display: flex; align-items: center; gap: .7rem; min-height: var(--ds-tap); padding: .55rem .8rem; border: 2px solid var(--ds-line); border-radius: 12px; background: #fff; cursor: pointer; }
+.choice input { width: 20px; height: 20px; accent-color: var(--ds-action); }
+.choice:has(input:checked) { border-color: var(--ds-action); background: var(--ds-action-soft); }
+.hint { margin: .75rem 0 0; padding: .6rem .8rem; border-left: 4px solid #c99a2e; background: #fff8e1; border-radius: var(--ds-radius-sm); }
+.feedback:empty { display: none; }
+.feedback { margin-top: 1rem; padding: .8rem 1rem; border-radius: var(--ds-radius-sm); border: 2px solid; }
+.feedback.is-good { background: var(--ds-success-soft); border-color: var(--ds-success); }
+.feedback.is-bad { background: var(--ds-warn-soft); border-color: var(--ds-warn); }
+.feedback.is-solution { background: var(--ds-action-soft); border-color: var(--ds-action); }
+
+@media (max-width: 480px) { .back span { display: none; } .hud { margin-left: 0; width: 100%; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

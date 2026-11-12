@@ -25,6 +25,7 @@ export async function checkRegistry(publicDir, registryJson) {
   }
   for (const app of apps) {
     const dir = path.join(publicDir, 'aplikace', app.id);
+    if (app.status === 'planned') continue; // připravovaná hra: složka zatím nemusí existovat
     if (!existsSync(path.join(dir, 'index.html'))) errors.push(`"${app.id}": chybí soubor public/aplikace/${app.id}/index.html`);
     if (app.thumbnail && !existsSync(path.join(dir, app.thumbnail))) errors.push(`"${app.id}": chybí náhled public/aplikace/${app.id}/${app.thumbnail}`);
   }

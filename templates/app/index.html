@@ -1,4 +1,9 @@
 <!doctype html>
+<!--
+  Šablona hry {{TITLE}} (Školeeq). Struktura podle docs/GAME_DESIGN_SYSTEM.md:
+  titulní obrazovka → ukázka (1 úkol) → úrovně → závěrečná rekapitulace.
+  Pravidla: relativní cesty (style.css, app.js), žádné CDN, žádné importy z jiných her ani z /assets/.
+-->
 <html lang="cs">
 <head>
   <meta charset="utf-8">
@@ -8,38 +13,69 @@
   <meta name="theme-color" content="#0f766e">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
+  <a class="skip" href="#hra">Přeskočit na hru</a>
+
+  <!-- Horní lišta: zpět do katalogu + název + HUD (postup, nápovědy, volitelné stopky) -->
   <header class="bar">
     <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Všechny hry</span></a>
     <strong class="bar__title">{{TITLE}}</strong>
+    <div class="hud" id="hud" hidden>
+      <label class="sr-only" for="progress">Postup</label>
+      <progress id="progress" max="1" value="0"></progress>
+      <span class="chip"><span aria-hidden="true">🔍</span> <span class="sr-only">Použité nápovědy:</span> <b id="hint-count">0</b></span>
+      <span class="chip" id="timer" hidden><span aria-hidden="true">⏱</span> <b>0:00</b></span>
+    </div>
   </header>
 
-  <main class="game" id="game">
-    <section class="screen" id="start">
-      <h1>{{TITLE}}</h1>
-      <p class="lead">Krátký popis hry pro žáky: co budou dělat a co se naučí.</p>
-      <p id="best" class="muted"></p>
-      <button class="btn" id="play" type="button">Začít</button>
-    </section>
-
-    <section class="screen" id="play-screen" hidden>
-      <p class="muted" id="progress"></p>
-      <h2 id="question"></h2>
-      <div class="answers" id="answers"></div>
-      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
-    </section>
-
-    <section class="screen" id="done" hidden>
-      <h2>Hotovo!</h2>
-      <p id="result" class="lead"></p>
+  <main id="hra" tabindex="-1">
+    <!-- 1) Titulní obrazovka: co se naučíš, čas, ovládání, nastavení -->
+    <section class="screen" id="s-title" aria-labelledby="title-h">
+      <h1 id="title-h">{{TITLE}}</h1>
+      <p class="lead">DOPLŇ: jedna věta o příběhu hry.</p>
+      <div class="info-grid">
+        <article class="info"><h2>Co se naučíš</h2><ul><li>DOPLŇ dovednost 1</li><li>DOPLŇ dovednost 2</li></ul></article>
+        <article class="info"><h2>Čas a ovládání</h2><p>Asi 10 minut. Myš, dotyk i klávesnice (Tab, Enter, mezerník). Chyba nevadí – zkus to znovu.</p></article>
+      </div>
+      <label class="switch"><input type="checkbox" id="opt-timer"> <span>Zobrazit stopky (bez časového limitu)</span></label>
       <div class="row">
-        <button class="btn" id="again" type="button">Hrát znovu</button>
+        <button class="btn btn--primary" id="btn-start" type="button">Začít ukázkou</button>
+      </div>
+      <p class="muted small" id="best"></p>
+      <p class="muted small">Výsledky se ukládají jen v tomto prohlížeči. Jiný počítač je znát nebude.</p>
+      <button class="btn btn--ghost btn--small" id="btn-reset" type="button">Smazat moje výsledky</button>
+    </section>
+
+    <!-- 2) Hrací obrazovka: úkol, odpovědi, nápověda, kontrola, zpětná vazba -->
+    <section class="screen" id="s-play" hidden aria-labelledby="task-h">
+      <p class="muted" id="task-meta"></p>
+      <h2 id="task-h" tabindex="-1"></h2>
+      <fieldset class="choices" id="choices"><legend class="sr-only">Možnosti</legend></fieldset>
+      <div id="hints" aria-live="polite"></div>
+      <div class="row">
+        <button class="btn btn--ghost" id="btn-hint" type="button">🔍 Nápověda</button>
+        <button class="btn btn--primary" id="btn-check" type="button">Zkontrolovat</button>
+      </div>
+      <!-- role=status: čtečka přečte zpětnou vazbu; barva + ikona + text (ne jen barva) -->
+      <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+      <div class="row">
+        <button class="btn btn--ghost" id="btn-reveal" type="button" hidden>Ukázat řešení</button>
+        <button class="btn btn--success" id="btn-next" type="button" hidden>Další úkol →</button>
+      </div>
+    </section>
+
+    <!-- 3) Závěr: konkrétní osvojené dovednosti, žádné veřejné srovnání -->
+    <section class="screen" id="s-end" hidden aria-labelledby="end-h">
+      <h2 id="end-h" tabindex="-1">Hotovo!</h2>
+      <p class="lead" id="result"></p>
+      <ul id="skills"></ul>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-again" type="button">Hrát znovu</button>
         <a class="btn btn--ghost" href="/">Další hry</a>
       </div>
     </section>
   </main>
-
-  <script src="app.js"></script>
 </body>
 </html>

@@ -21,11 +21,11 @@
 npm run new-app -- <slug> "Název hry"
 ```
 
-Pak podle [docs/ADD_NEW_APP.md](docs/ADD_NEW_APP.md):
+Pak podle [docs/ADD_NEW_APP.md](docs/ADD_NEW_APP.md); vzhled a průběh podle [docs/GAME_DESIGN_SYSTEM.md](docs/GAME_DESIGN_SYSTEM.md) (titulní obrazovka → ukázka → úrovně → závěr, nápověda bez trestu, oprava chyb, stopky volitelné). Vzor složitější hry: `public/aplikace/datovi-detektivove/` (logika v `logic.js` bez DOM, testovaná v `tests/unit/`).
 
 1. Naprogramuj hru v `public/aplikace/<slug>/`. Šablona už obsahuje odkaz „← Všechny hry“, `lang="cs"`, viewport a správný localStorage klíč.
 2. Lokální soubory odkazuj **relativně** (`style.css`, ne `/style.css`).
-3. Doplň metadata v `apps.json` (popis, předmět, ročníky, témata, obtížnost, délka, ikona, barva, `requiresKeyboard`) a nastav `"status": "published"`.
+3. Doplň metadata v `apps.json` (popis, předmět, ročníky, témata, obtížnost, délka, ikona, barva, `requiresKeyboard`, ideálně `skills` a `teacher` s doslovnými citacemi ŠVP) a nastav `"status": "published"`. Rozpracovaná hra může mít `"status": "planned"` (karta „Připravujeme“).
 4. U složitější hry přidej `tests/e2e/<slug>.spec.js`. Přímou URL testuje automaticky `catalog.spec.js`.
 5. `npm run check`, pak `npm run dev` a ověř 320 px i desktop, klávesnici a konzoli bez chyb.
 

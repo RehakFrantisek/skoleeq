@@ -25,7 +25,9 @@ const ICON_SVG = {
   book: `<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" ${P}/>`,
   calculator: `<rect x="5" y="2.5" width="14" height="19" rx="2.5" ${P}/><path d="M8.5 6.5h7M9 11h.01M12 11h.01M15 11h.01M9 14.5h.01M12 14.5h.01M15 14.5h.01M9 18h.01M12 18h.01M15 18h.01" ${P}/>`,
   chart: `<path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6" ${P}/>`,
-  robot: `<rect x="4.5" y="8" width="15" height="11" rx="3" ${P}/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16h5M2.5 13v2M21.5 13v2" ${P}/><circle cx="12" cy="3.5" r="1" ${P}/>`
+  robot: `<rect x="4.5" y="8" width="15" height="11" rx="3" ${P}/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16h5M2.5 13v2M21.5 13v2" ${P}/><circle cx="12" cy="3.5" r="1" ${P}/>`,
+  slides: `<rect x="3" y="4" width="18" height="12" rx="2" ${P}/><path d="M12 16v4M8 20h8M7 12l3-3 2 2 4-4" ${P}/>`,
+  document: `<path d="M6 3h8l4 4v14H6z" ${P}/><path d="M14 3v4h4M9 11h6M9 14.5h6M9 18h4" ${P}/>`
 };
 function icon(name, cls = 'icon') {
   const span = el('span', cls);
@@ -60,6 +62,7 @@ const FILTERS = [
   { key: 'obtiznost', input: '#f-obtiznost' }
 ];
 let APPS = [];
+let PLANNED = [];
 
 function readUrl() {
   const p = new URLSearchParams(location.search);
@@ -171,9 +174,39 @@ function card(app) {
   link.href = app.url;
   link.setAttribute('aria-label', `Spustit hru ${app.title}`);
   foot.append(link);
+  if (app.teacher) foot.append(teacherLink(app));
   body.append(foot);
 
   a.append(media, body);
+  return a;
+}
+
+function teacherLink(app) {
+  const t = el('a', 'teacher-link', 'Pro učitele');
+  t.href = `/pro-ucitele/#${app.id}`;
+  t.setAttribute('aria-label', `Pro učitele: ${app.title}`);
+  return t;
+}
+
+/** Připravovaná hra: stejné informace, ale bez odkazu na spuštění. */
+function plannedCard(app) {
+  const a = el('article', 'plan-card');
+  a.dataset.color = app.color;
+  a.dataset.id = app.id;
+  const head = el('div', 'plan-card__head');
+  head.append(icon(app.icon, 'plan-card__icon'));
+  const t = el('div');
+  t.append(el('p', 'plan-card__badge', 'Připravujeme'));
+  t.append(el('h4', 'plan-card__title', app.title));
+  head.append(t);
+  a.append(head);
+  a.append(el('p', 'plan-card__grades', `${gradesLabel(app.grades)} · asi ${app.durationMinutes} min`));
+  a.append(el('p', 'plan-card__desc', app.description));
+  const tags = el('ul', 'tags');
+  tags.setAttribute('aria-label', 'Témata');
+  for (const x of app.topics) tags.append(el('li', 'tag', x));
+  a.append(tags);
+  if (app.teacher) a.append(teacherLink(app));
   return a;
 }
 
@@ -215,8 +248,11 @@ function render() {
   const list = APPS.filter(a => matches(a, s));
   const grid = $('#grid');
   grid.replaceChildren(...list.map(card));
-  // Malý katalog bez filtrů: dlaždice „připravujeme“, ať jediná karta nepůsobí osaměle
-  if (!isActive(s) && list.length > 0 && list.length < 3) grid.append(soonTile());
+  const planned = PLANNED.filter(a => matches(a, s));
+  $('#planned').hidden = planned.length === 0;
+  $('#planned-grid').replaceChildren(...planned.map(plannedCard));
+  // Malý katalog bez filtrů a bez připravovaných her: dlaždice „připravujeme“, ať jediná karta nepůsobí osaměle
+  if (!isActive(s) && list.length > 0 && list.length < 3 && !PLANNED.length) grid.append(soonTile());
   grid.setAttribute('aria-busy', 'false');
   grid.hidden = list.length === 0;
   $('#empty').hidden = list.length !== 0;
@@ -248,6 +284,7 @@ async function load() {
     const { apps, problems } = validateRegistry(await res.json());
     for (const p of problems) console.warn('[katalog] přeskočen neplatný záznam', p.id ?? `#${p.index}`, p.errors);
     APPS = apps.filter(a => a.status === 'published');
+    PLANNED = apps.filter(a => a.status === 'planned');
     buildFilterOptions();
     applyStateToForm(readUrl());
     renderFeatured();
