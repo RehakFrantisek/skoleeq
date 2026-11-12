@@ -310,11 +310,11 @@ function choiceList(options, name) {
 
 function letterTable() {
   return el('details', { class: 'ref', open: true }, el('summary', { text: 'Tabulka: pořadí písmen (A = 1 … Z = 26)' }),
-    el('div', { class: 'ref__grid' }, [...L.ALPHABET].map((ch, i) => el('span', { class: 'ref__cell' }, el('b', { text: ch }), el('small', { text: `${i + 1} · ${L.toBits(i + 1)}` })))));
+    el('div', { class: 'ref__grid' }, [...L.ALPHABET].map((ch, i) => el('span', { class: 'ref__cell' }, el('b', { text: ch }), el('small', { text: String(i + 1) })))));
 }
 function asciiTable() {
   return el('details', { class: 'ref', open: true }, el('summary', { text: 'Znaková sada laboratoře (výřez ASCII)' }),
-    el('div', { class: 'ref__grid' }, el('span', { class: 'ref__cell' }, el('b', { text: '␣' }), el('small', { text: '32 mezera' })),
+    el('div', { class: 'ref__grid' }, el('span', { class: 'ref__cell' }, el('b', { text: '␣' }), el('small', { text: '32 = mezera' })),
       [...L.ALPHABET].map(ch => el('span', { class: 'ref__cell' }, el('b', { text: ch }), el('small', { text: String(L.charCode(ch)) })))));
 }
 function morseTable() {
@@ -388,7 +388,7 @@ const TOOLS = {
     if (t.tool === 'morse') parts.push(el('p', { class: 'chips' }, t.morse.split(' ').map(c => el('span', { class: 'code-chip mono', text: c.replace(/\./g, '·').replace(/-/g, '–') }))), morseTable());
     let w = null;
     if (t.tool === 'wheel') { w = wheel(t, { preview: false }); parts.push(w.node); }
-    const f = textInput('ans', 'Rozluštěná zpráva', { placeholder: 'piš velkými nebo malými písmeny' });
+    const f = textInput('ans', 'Rozluštěná zpráva', { placeholder: 'sem napiš zprávu' });
     parts.push(f.node);
     return {
       node: el('div', { class: 'tool-stack' }, parts), get: () => ({ value: f.input.value }), set: a => { f.input.value = a.value; if (w) w.shift = t.key; },

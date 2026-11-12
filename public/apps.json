@@ -278,6 +278,56 @@
         "differentiation": "Rychlí žáci: celá mise bez nápověd, pak druhá varianta s cílem vše napoprvé. Začínající: rychlá mise s ukázkou; nápovědy (2–3 na úlohu) výsledek nesnižují a po dvou pokusech jde zobrazit řešení s vysvětlením.",
         "gradeNote": "Výstupy jsou ve ŠVP v 6. ročníku (kódování a přenos dat). Hodí se i jako opakování v 7.–9. ročníku – ročník lze v katalogu upravit."
       }
+    },
+    {
+      "id": "grafovy-navigator",
+      "title": "Grafový navigátor",
+      "subtitle": "Síť základen",
+      "description": "Plánuj trasy roveru a síť základen: sousedé v grafu, nejkratší cesta, nejlevnější propojení (kostra), jednosměrné tunely, automat dveří a souběžná práce dvou robotů.",
+      "url": "/aplikace/grafovy-navigator/",
+      "subject": "Informatika",
+      "grades": [6],
+      "topics": ["Modelování a grafy", "Algoritmizace"],
+      "difficulty": "stredni",
+      "durationMinutes": 25,
+      "icon": "network",
+      "color": "violet",
+      "featured": false,
+      "requiresKeyboard": false,
+      "thumbnail": "nahled.svg",
+      "status": "published",
+      "skills": ["Mapa jako graf: uzly, hrany, sousedé", "Cesta s nejméně přestupy", "Nejkratší cesta v ohodnoceném grafu", "Kostra grafu: nejlevnější propojení", "Orientovaný graf a dosažitelnost", "Automat: stavy a přechody", "Plán souběžných činností"],
+      "teacher": {
+        "goals": [
+          "Žák převede mapu na graf a najde v něm odpověď na otázku (sousedé, cesta s nejméně úseky).",
+          "Žák najde nejkratší cestu v ohodnoceném grafu a vysvětlí, proč to nemusí být cesta s nejméně úseky.",
+          "Žák propojí všechna místa nejlevněji (kostra grafu) a pozná zbytečný okruh.",
+          "Žák řeší úlohy v orientovaném grafu a projde jednoduchý automat podle posloupnosti vstupů.",
+          "Žák naplánuje souběžnou práci dvou robotů se závislostmi a určí nejkratší dobu dokončení."
+        ],
+        "svp": [
+          { "grade": 6, "text": "modelování: schéma, myšlenková mapa, vývojový diagram, ohodnocený a orientovaný graf; základní grafové úlohy" },
+          { "grade": 6, "text": "v mapě a dalších schématech najde odpověď na otázku" },
+          { "grade": 6, "text": "pomocí ohodnocených grafů řeší problémy" },
+          { "grade": 6, "text": "ohodnocené grafy, minimální cesta grafu, kostra grafu" },
+          { "grade": 6, "text": "orientované grafy, automaty" },
+          { "grade": 6, "text": "pomocí orientovaných grafů řeší problémy" },
+          { "grade": 6, "text": "vytvoří model, ve kterém znázorní více souběžných činností" }
+        ],
+        "lesson": "Rychlá mise (5 úloh, z každé úrovně jedna) zabere asi 12 minut. Celá mise (11 úloh v 5 úrovních) asi 25 minut. Úlohu na nejlevnější síť a plánování robotů se vyplatí po hře rozebrat společně na projektoru – žáci porovnají různé postupy. Varianty A/B/C mají jiné ceny cest a jiné zadání; pro společnou práci otevřete stejnou variantu (?varianta=B).",
+        "prerequisites": [
+          "Sčítání malých čísel a porovnání součtů.",
+          "Orientace v mapě a ve schématu."
+        ],
+        "reflection": [
+          "Proč nejkratší trasa nemusí mít nejméně úseků?",
+          "Kde se ve skutečnosti hledá nejlevnější propojení? (elektřina, vodovod, internet)",
+          "Co se změní, když tunel vede jen jedním směrem?",
+          "Jak poznáš, že dva roboti mohou pracovat zároveň?"
+        ],
+        "differentiation": "Rychlí žáci: celá mise bez nápověd, pak jiná varianta; navíc mohou na papír nakreslit vlastní automat (např. semafor). Začínající: rychlá mise s ukázkou; trasa ukazuje průběžný součet a nápovědy výsledek nesnižují.",
+        "gradeNote": "Modelování a grafy jsou ve ŠVP v 6. ročníku. Hodí se i jako opakování algoritmizace v 9. ročníku – ročník lze v katalogu upravit."
+      }
     }
   ]
 }

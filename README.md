@@ -11,6 +11,7 @@ Statický web bez backendu a bez databáze, hostovaný na **Cloudflare Pages** p
   - **Dokumentová záchranka** – formátování dokumentu ve skutečném mini-editoru, 10 misí (`/aplikace/dokumentova-zachranka/`)
   - **Robotí dílna: Záchrana sondy** – programování z bloků, interpret s krokováním, 12 misí (`/aplikace/roboti-dilna/`)
   - **Šifrovací laboratoř: Signál ze sondy** – bity, znaková sada, Caesar, Morseovka, kódování obrázků a barev, kontrolní součty; 17 úloh v 5 úrovních (`/aplikace/sifrovaci-laborator/`)
+  - **Grafový navigátor: Síť základen** – grafy, nejkratší cesta, kostra grafu, orientované grafy, automat, souběžná práce dvou robotů; 11 úloh v 5 úrovních (`/aplikace/grafovy-navigator/`)
 - Připravovaná hra (karta „Připravujeme“): Prezentační studio.
 - Stránka **Pro učitele** (`/pro-ucitele/`, přímé odkazy `/pro-ucitele/#<id>`): cíle, doslovné citace ŠVP, tipy do 45min hodiny, otázky k reflexi.
 - Bez přihlašování, bez analytiky a cookies. Postup her jen v `localStorage` prohlížeče.
@@ -35,7 +36,7 @@ Otevři <http://localhost:8080/>. Server je bez závislostí (`scripts/serve.mjs
 |---|---|
 | `npm run dev` | statický HTTP server nad `public/` |
 | `npm run validate` | validace `apps.json` (schéma, unikátní id, existence `index.html`), kontrola interních odkazů, synchronizace se `site.config.json` |
-| `npm run test` | unit testy (validátor, logika všech nových her) + Playwright (katalog, Pro učitele, mobil, Klávesová mise vč. `test.html`, Datoví detektivové, Dokumentová záchranka, Robotí dílna, Šifrovací laboratoř) |
+| `npm run test` | unit testy (validátor, logika všech nových her) + Playwright (katalog, Pro učitele, mobil, Klávesová mise vč. `test.html`, Datoví detektivové, Dokumentová záchranka, Robotí dílna, Šifrovací laboratoř, Grafový navigátor) |
 | `npm run check` | `validate` + `test` – spusť před každým commitem |
 | `npm run new-app -- <slug> "Název"` | založí novou hru ze šablony a přidá ji do registru jako `draft` |
 | `npm run sync` | po změně `site.config.json` přepíše název webu, `robots.txt` a `sitemap.xml` |
@@ -119,5 +120,5 @@ Zadání vlny her se v několika bodech lišilo od pravidel repozitáře. Platí
 2. **Prezentační studio – další hra na řadě** (`planned`): plátno 16:9 s miniaturami snímků, panel oprav. Mise: označ 3 chyby na snímku, zkrať přetížený text na klíčové body, oprav velikost písma a kontrast, vyber vhodný graf/obrázek, seřaď snímky do příběhu. Hodnotit konkrétní principy (počet slov, kontrastní poměr, pořadí), ne vkus. Výstup: náhled před/po. Lze převzít model bloků a historii z Dokumentové záchranky.
 3. Dokumentová záchranka: volitelně export `.docx` (zatím jen tisk/PDF a HTML, které Word umí otevřít), mise na záhlaví/zápatí.
 4. Robotí dílna: proměnné a cyklus „opakuj, dokud“ pro 9. ročník. (Přetahování bloků myší i dotykem je hotové – 2026-11-12.)
-5. Vlna 2 (zatím ne v katalogu): Souborový detektiv, Grafový navigátor, Internetový ověřovatel, Excelová výzva.
+5. Vlna 2 (zatím ne v katalogu): Souborový detektiv, Internetový ověřovatel, Excelová výzva.
 6. Změřit Lighthouse na produkční URL (zatím neměřeno).

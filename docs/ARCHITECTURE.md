@@ -68,6 +68,12 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
 - Odpověď má pro každý typ úlohy pevný tvar; stejný tvar posílá UI, `solution()` i testy. Unit test ověří všechny úlohy všech variant (řešení projde, prázdná odpověď ne), E2E test dohraje celou misi přes skutečné ovládací prvky.
 - Fotka ze sondy je inline SVG zakryté mřížkou dílků; každá kopie má vlastní id přechodů (skrytá kopie v `display: none` by je jinak vypnula).
 
+## Grafový navigátor
+
+- `logic.js` (grafové algoritmy: Dijkstra, dosažitelnost, Kruskal, automat, rozvrh dvou robotů hrubou silou přes pořadí a přiřazení; generátor úloh ze seedu varianty) · `app.js` (průběh podle design systému, SVG nástroje).
+- Hodnotí se optimalita, ne konkrétní řešení: trasa/kostra se stejnou cenou nebo rozvrh se stejnou dobou projdou.
+- Hrany v SVG mají klikací plochu jako obdélník kolem úsečky (vodorovná či svislá čára má jinak nulový rozměr a nejde na ni kliknout ani v testech).
+
 ## Audit před vlnou 1 (2026-11-11)
 
 - Repozitář: statický portál, registr `apps.json` + schéma `registry.js` sdílené katalogem i CI, generátor `new-app`, testy `node:test` + Playwright, Cloudflare Pages bez buildu. Zadání šlo splnit bez změny architektury.

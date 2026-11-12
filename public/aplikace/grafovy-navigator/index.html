@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grafový navigátor: Síť základen – grafy a modely</title>
+  <meta name="description" content="Výuková hra: plánuj trasy roveru a síť základen. Grafy, nejkratší cesta, kostra grafu, orientované grafy, automaty a souběžná práce.">
+  <meta name="theme-color" content="#3b2a8f">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#hra">Přeskočit na hru</a>
+
+  <header class="bar">
+    <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Všechny hry</span></a>
+    <p class="brand"><span class="brand__mark" aria-hidden="true">⬡</span> <span>Grafový navigátor</span></p>
+    <div class="hud" id="hud" hidden>
+      <label class="sr-only" for="progress">Postup</label>
+      <progress id="progress" max="1" value="0"></progress>
+      <span class="chip" id="hud-task"></span>
+      <span class="chip"><span aria-hidden="true">🔍</span> <span class="sr-only">Použité nápovědy:</span> <b id="hint-count">0</b></span>
+      <span class="chip" id="timer" hidden><span aria-hidden="true">⏱</span> <span class="sr-only">Čas:</span> <b>0:00</b></span>
+    </div>
+  </header>
+
+  <main id="hra" tabindex="-1">
+    <!-- ===== 1) Titulní obrazovka ===== -->
+    <section class="screen" id="s-title" aria-labelledby="title-h">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Mise: Síť základen</p>
+          <h1 id="title-h">Grafový navigátor</h1>
+          <p class="lead">Na planetě vyrůstá síť základen. Plánuj trasy roveru, natahuj kabely co nejlevněji, projeď jednosměrnými tunely a rozděl práci mezi dva roboty. Každá vyřešená úloha rozsvítí další základnu v síti.</p>
+        </div>
+        <div class="hero__art" aria-hidden="true">
+          <svg class="hero__graph" viewBox="0 0 200 140" width="200" height="140">
+            <g class="hg-edges"><path d="M30 40 L100 20 L170 50 L140 115 L60 110 Z M100 20 L100 75 L60 110 M100 75 L170 50 M100 75 L140 115"/></g>
+            <g class="hg-route"><path d="M30 40 L100 20 L100 75 L140 115"/></g>
+            <g class="hg-nodes"><circle cx="30" cy="40" r="9"/><circle cx="100" cy="20" r="9"/><circle cx="170" cy="50" r="9"/><circle cx="140" cy="115" r="9"/><circle cx="60" cy="110" r="9"/><circle cx="100" cy="75" r="9"/></g>
+          </svg>
+        </div>
+      </div>
+      <div class="info-grid">
+        <article class="info">
+          <h2>Co se naučíš</h2>
+          <ul>
+            <li>číst mapu jako graf: uzly, hrany, sousedé</li>
+            <li>najít nejkratší trasu v ohodnoceném grafu</li>
+            <li>propojit všechna místa nejlevněji (kostra grafu)</li>
+            <li>řešit úlohy s jednosměrkami a projít automat</li>
+            <li>naplánovat souběžnou práci dvou robotů</li>
+          </ul>
+        </article>
+        <article class="info">
+          <h2>Jak se hraje</h2>
+          <p><b>5 úrovní</b>, každá s krátkým úvodem. Za každou vyřešenou úlohu se rozsvítí další základna v síti.</p>
+          <p>Ovládání myší, dotykem i klávesnicí. Chyba nevadí – hra napíše proč a ty opravíš. Nápověda výsledek nesnižuje.</p>
+        </article>
+      </div>
+      <fieldset class="opts">
+        <legend>Nastavení</legend>
+        <div class="seg" role="radiogroup" aria-label="Délka mise">
+          <label><input type="radio" name="mode" value="cela" checked> <span><b>Celá mise</b> 11 úloh · asi 25 min</span></label>
+          <label><input type="radio" name="mode" value="rychly"> <span><b>Rychlá mise</b> 5 úloh · asi 12 min</span></label>
+        </div>
+        <div class="seg seg--small" role="radiogroup" aria-label="Varianta zadání">
+          <span class="seg__label">Varianta zadání:</span>
+          <label><input type="radio" name="variant" value="A" checked> <span>A</span></label>
+          <label><input type="radio" name="variant" value="B"> <span>B</span></label>
+          <label><input type="radio" name="variant" value="C"> <span>C</span></label>
+        </div>
+        <label class="switch"><input type="checkbox" id="opt-timer"> <span>Zobrazit stopky (bez časového limitu)</span></label>
+      </fieldset>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-start" type="button">Začít ukázkou</button>
+        <button class="btn btn--ghost" id="btn-skip" type="button">Přeskočit ukázku</button>
+      </div>
+      <div class="best-box">
+        <p class="small" id="best"></p>
+        <p class="muted small">Výsledky se ukládají jen v tomto prohlížeči. Nikam se neodesílají.</p>
+        <div class="row row--tight" id="reset-box"><button class="btn btn--ghost btn--small" id="btn-reset" type="button">Smazat moje výsledky</button></div>
+      </div>
+      <p class="teacher-link"><a href="/pro-ucitele/#grafovy-navigator">Pro učitele: cíle, návaznost na ŠVP a tipy do hodiny →</a></p>
+    </section>
+
+    <!-- ===== 2) Úvod úrovně ===== -->
+    <section class="screen screen--intro" id="s-intro" hidden aria-labelledby="intro-h">
+      <p class="eyebrow" id="intro-num"></p>
+      <h2 id="intro-h" tabindex="-1"></h2>
+      <p class="lead" id="intro-focus"></p>
+      <p class="muted" id="intro-count"></p>
+      <div class="row"><button class="btn btn--primary" id="btn-intro" type="button">Pustit se do toho →</button></div>
+    </section>
+
+    <!-- ===== 3) Úloha ===== -->
+    <section class="play" id="s-play" hidden aria-labelledby="task-h">
+      <article class="screen task">
+        <p class="task__meta"><span class="badge" id="task-level"></span> <span id="task-meta"></span></p>
+        <h2 id="task-h" tabindex="-1"></h2>
+        <p class="task__prompt" id="task-prompt"></p>
+        <div class="tool" id="tool"></div>
+        <div id="hints" aria-live="polite"></div>
+        <div class="row">
+          <button class="btn btn--primary" id="btn-check" type="button">Zkontrolovat</button>
+          <button class="btn btn--ghost" id="btn-hint" type="button">🔍 Nápověda</button>
+        </div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+        <div class="row">
+          <button class="btn btn--ghost" id="btn-reveal" type="button" hidden>Ukázat řešení</button>
+          <button class="btn btn--success" id="btn-next" type="button" hidden>Další úkol →</button>
+        </div>
+      </article>
+      <aside class="screen photo-panel" aria-labelledby="photo-h">
+        <h2 id="photo-h">Síť základen</h2>
+        <div class="photo" id="photo" role="img" aria-label="Síť základen, zatím zhasnutá"></div>
+        <p class="small muted" id="photo-note"></p>
+      </aside>
+    </section>
+
+    <!-- ===== 4) Závěr ===== -->
+    <section class="screen" id="s-end" hidden aria-labelledby="end-h">
+      <p class="eyebrow">Mise dokončena</p>
+      <h2 id="end-h" tabindex="-1">Síť základen svítí!</h2>
+      <div class="end-grid">
+        <div class="photo photo--big" id="photo-end" role="img" aria-label="Celá síť základen svítí."></div>
+        <div>
+          <p class="lead" id="result"></p>
+          <dl class="stats" id="stats"></dl>
+          <h3>Co umíš</h3>
+          <ul class="skills" id="skills"></ul>
+        </div>
+      </div>
+      <p class="muted small">Výsledek je uložený jen v tomto prohlížeči.</p>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-again" type="button">Hrát jinou variantu</button>
+        <button class="btn btn--ghost" id="btn-home" type="button">Na začátek</button>
+        <a class="btn btn--ghost" href="/">Další hry</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
