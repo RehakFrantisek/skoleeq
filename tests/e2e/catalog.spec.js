@@ -13,7 +13,7 @@ test.describe('Katalog', () => {
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     await expect(card(page, 'klavesova-mise').getByRole('heading', { name: 'Klávesová mise' })).toBeVisible();
     await expect(card(page, 'klavesova-mise')).toContainText('Vyžaduje klávesnici');
-    await expect(card(page, 'klavesova-mise')).toContainText('6.–8. ročník');
+    await expect(card(page, 'klavesova-mise')).toContainText('7. ročník');
     await expect(page.locator('#featured')).toContainText('Klávesová mise');
     await expect(page.locator('#count')).toHaveText(`${hry(N)} v katalogu`);
     await expect(page.locator('.app-card')).toHaveCount(N);
@@ -71,11 +71,11 @@ test.describe('Katalog', () => {
     await page.goto('/?rocnik=1');
     await expect(page.getByLabel('Ročník', { exact: true })).toHaveValue('1');
     await expect(page.locator('#empty')).toBeVisible();
-    await page.goto('/?q=klav&rocnik=8');
+    await page.goto('/?q=klav&rocnik=7');
     await expect(page.getByLabel('Hledat', { exact: true })).toHaveValue('klav');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     await page.reload();
-    await expect(page.getByLabel('Ročník', { exact: true })).toHaveValue('8');
+    await expect(page.getByLabel('Ročník', { exact: true })).toHaveValue('7');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     // neplatná hodnota v URL nerozbije katalog
     await page.goto('/?tema=neexistuje');

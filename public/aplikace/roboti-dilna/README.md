@@ -1,6 +1,6 @@
 # Robotí dílna: Záchrana sondy
 
-Výuková hra portálu Školeeq (algoritmizace a programování, 6.–9. ročník s odstupňovanou obtížností). Statická, bez serveru, bez Scratche a bez `eval`.
+Výuková hra portálu Školeeq (algoritmizace a programování; podle tematického plánu ICT školy 6. a 9. ročník, obtížnost misí je odstupňovaná). Statická, bez serveru, bez Scratche a bez `eval`.
 
 - **URL:** `/aplikace/roboti-dilna/`, přímo na misi `#<id-mise>` (např. `#dve-cesty`), `?vse=1` odemkne všechny mise
 - **localStorage:** `vyukovy-portal:roboti-dilna:v1`

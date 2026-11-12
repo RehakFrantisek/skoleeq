@@ -1,6 +1,6 @@
 # Phishingová hlídka
 
-Výuková hra portálu Školeeq (bezpečnost na internetu; ve ŠVP 7. ročník, opakování v 8. a 9.). Statická, bez serveru a bez knihoven, bez `eval`.
+Výuková hra portálu Školeeq (bezpečnost na internetu; podle tematického plánu ICT školy 7. ročník, opakování v 9.). Statická, bez serveru a bez knihoven, bez `eval`.
 Žák je členem bezpečnostního týmu fiktivní ZŠ Lipová: v e-mailech, SMS, chatech a konceptech příspěvků označuje podezřelé části 🚩 a vynáší verdikt.
 
 - **URL:** `/aplikace/phishingova-hlidka/`, parametry `?varianta=A|B|C` a `?rezim=rychly` (stejné zadání pro celou třídu)

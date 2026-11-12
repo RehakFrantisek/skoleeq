@@ -8,7 +8,7 @@
       "description": "Pomoz myšákovi Klikovi připravit školní výlet a procvič 12 klávesových zkratek – v příběhu i v tréninku na čas.",
       "url": "/aplikace/klavesova-mise/",
       "subject": "Informatika",
-      "grades": [6, 7, 8],
+      "grades": [7],
       "topics": ["Klávesové zkratky", "Práce s textem"],
       "difficulty": "stredni",
       "durationMinutes": 20,
@@ -38,7 +38,7 @@
           "Co uděláš, když omylem smažeš odstavec?"
         ],
         "differentiation": "Rychlejší žáci: trénink na čas a překonání vlastního rekordu. Začínající: jen příběhový režim, klávesy hledat podle nápovědy na obrazovce.",
-        "gradeNote": "Ročníky jsou orientační; ve ŠVP jsou zkratky uvedené v 7. ročníku."
+        "gradeNote": "Podle tematického plánu ICT školy jsou klávesové zkratky v 7. ročníku (listopad, textový editor). Jako rozcvička se hodí i v jiných ročnících."
       }
     },
     {
@@ -74,8 +74,7 @@
           { "grade": 6, "text": "najde a opraví chyby u různých interpretací týchž dat (tabulka versus graf)" },
           { "grade": 6, "text": "propojí data z více tabulek či grafů" },
           { "grade": 6, "text": "filtrování, řazení a třídění dat" },
-          { "grade": 6, "text": "porovnání dat v tabulce a grafu" },
-          { "grade": 8, "text": "nastavuje zobrazení, řazení a filtrování dat v tabulce" }
+          { "grade": 6, "text": "porovnání dat v tabulce a grafu" }
         ],
         "lesson": "Rychlý režim (6 úloh) zabere asi 10 minut – vhodný jako rozcvička. Celá mise (15 úloh) asi 20 minut, zbytek 45min hodiny lze věnovat reflexi a práci ve skutečném tabulkovém editoru. Dlouhá mise (18 úloh) vyplní asi 35 minut. Varianty A/B/C mají jiná čísla, takže sousedé nemají stejné výsledky. Pro promítání stačí otevřít hru – účet není potřeba.",
         "prerequisites": [
@@ -89,7 +88,7 @@
           "Našel(a) jsi někdy v novinách nebo na internetu graf, který mohl klamat? Čím?"
         ],
         "differentiation": "Rychlí žáci: dlouhá mise s velkým případem nebo druhá varianta zadání bez nápověd. Začínající: rychlý režim s ukázkou na začátku, nápovědy použít bez obav – nesnižují výsledek, jen se zobrazí v přehledu.",
-        "gradeNote": "Zařazení do 6. ročníku odpovídá aktuální výuce (tabulky a grafy). Ve ŠVP je práce s tabulkovým editorem i v 8. ročníku – ročník lze v katalogu upravit."
+        "gradeNote": "Podle tematického plánu ICT školy patří do 6. ročníku (listopad: data v tabulce a grafu). V 9. ročníku (duben–květen, tabulkový editor) se hodí jako opakování."
       }
     },
     {
@@ -99,7 +98,7 @@
       "description": "Oprav rozbité články ve skutečném editoru: styly nadpisů, zvýraznění, seznamy, zarovnání, obrázek s popiskem a české mezery. 10 misí ve 3 obtížnostech.",
       "url": "/aplikace/dokumentova-zachranka/",
       "subject": "Informatika",
-      "grades": [7],
+      "grades": [7, 9],
       "topics": ["Formátování dokumentu", "Typografie"],
       "difficulty": "stredni",
       "durationMinutes": 25,
@@ -122,7 +121,9 @@
           { "grade": 7, "text": "vytváří a formátuje odstavce" },
           { "grade": 7, "text": "dodržuje základní typografická pravidla" },
           { "grade": 7, "text": "vloží do textu vhodně obrázek" },
-          { "grade": 7, "text": "vkládá a upravuje záhlaví a zápatí" }
+          { "grade": 7, "text": "vkládá a upravuje záhlaví a zápatí" },
+          { "grade": 9, "text": "používá textový editor k vytvoření textového dokumentu" },
+          { "grade": 9, "text": "uplatňuje estetická a typografická pravidla pro práci s textem a obrazem" }
         ],
         "lesson": "10 misí po 2–5 minutách (celkem 20–30 min). Začátečnické mise 1–4 zvládne většina žáků za 10 minut; pokročilé 5–8 a expertní 9–10 se hodí pro rychlejší žáky nebo druhou část hodiny. Kontrola hodnotí stav dokumentu, ne kliknutí, a žák může kontrolovat opakovaně. Výsledek jde vytisknout, uložit jako PDF nebo stáhnout jako HTML. Hra trénuje postupy, nenahrazuje Word.",
         "prerequisites": [
@@ -135,7 +136,7 @@
           "Jaká typografická pravidla pro mezery a datum si pamatuješ?"
         ],
         "differentiation": "Začínající: mise 1–4, nápověda ve třech úrovních (princip → kde hledat → postup). Rychlí: expertní mise 9 a 10 (v mise 10 není nápověda a kontrola řekne jen počet chyb). Učitel může v přehledu odemknout všechny mise.",
-        "gradeNote": "Pracovní návrh: ve ŠVP jsou textové editory v 7. ročníku a formátování dokumentu se aktuálně probírá. Ročník lze v katalogu upravit."
+        "gradeNote": "Podle tematického plánu ICT školy: textový editor v 7. ročníku (září–prosinec) a znovu v 9. ročníku (říjen–listopad) při psaní absolventských prací."
       },
       "thumbnail": "nahled.svg"
     },
@@ -146,7 +147,7 @@
       "description": "Naprogramuj servisního robota z bloků: posloupnost, cyklus Opakuj a podmínka Když. Program spouštíš, krokuješ a ladíš na mřížce. 12 misí ve 3 kapitolách.",
       "url": "/aplikace/roboti-dilna/",
       "subject": "Informatika",
-      "grades": [6, 7, 8, 9],
+      "grades": [6, 9],
       "topics": ["Programování", "Algoritmizace"],
       "difficulty": "stredni",
       "durationMinutes": 25,
@@ -170,7 +171,8 @@
           { "grade": 6, "text": "ověří správnost programu, najde a opraví v něm chyby" },
           { "grade": 6, "text": "kontrola: ověření algoritmu, programu (například změnou vstupů, kontrolou výstupů, opakovaným spuštěním); nalezení chyby (například krokováním); úprava algoritmu a programu" },
           { "grade": 9, "text": "navrhne algoritmus pro řešení problému" },
-          { "grade": 9, "text": "blokově orientovaný jazyk, cykly, větvení, proměnné" }
+          { "grade": 9, "text": "Pracuje v blokově orientovaném programovacím jazyku" },
+          { "grade": 9, "text": "Vytváří jednoduchý program a orientuje se v něm, upravuje existující programy" }
         ],
         "lesson": "Kapitola 1 (posloupnost) asi 8 minut, kapitola 2 (opakování) asi 8 minut, kapitola 3 (podmínky a ladění) 10–15 minut. Vhodné jako samostatná práce v učebně; mise 11 (oprav chybný program) se dobře hodí ke společnému krokování na projektoru. Hra nepotřebuje Scratch ani účet.",
         "prerequisites": [
@@ -183,7 +185,7 @@
           "Proč musí jeden program fungovat na obou mapách – co by se stalo bez podmínky?"
         ],
         "differentiation": "Začínající (6. roč.): kapitola 1 a 2 s nápovědou. Rychlí (8.–9. roč.): kapitola 3, snaha o 3 hvězdy (program nejvýš tak dlouhý jako autorské řešení, bez nápovědy). Učitel může v přehledu odemknout všechny mise.",
-        "gradeNote": "Pracovní návrh: ŠVP uvádí algoritmizaci a cykly v 6. a blokové programování v 9. ročníku; obtížnost misí je odstupňovaná. Ročníky lze v katalogu upravit."
+        "gradeNote": "Podle tematického plánu ICT školy: algoritmizace a cykly v 6. ročníku (prosinec–březen), blokové programování ve Scratchi v 9. ročníku (prosinec–březen). V 7. ročníku programování v plánu není."
       },
       "thumbnail": "nahled.svg"
     },
@@ -194,7 +196,7 @@
       "description": "Oprav přeplněné snímky: zkrať text na klíčové body, oprav kontrast a velikost písma, vyber vhodný graf a seřaď snímky do příběhu.",
       "url": "/aplikace/prezentacni-studio/",
       "subject": "Informatika",
-      "grades": [7, 8, 9],
+      "grades": [7, 9],
       "topics": ["Prezentace"],
       "difficulty": "stredni",
       "durationMinutes": 15,
@@ -213,7 +215,7 @@
         "svp": [
           { "grade": 7, "text": "vkládá, upravuje a formátuje text v prezentacích" },
           { "grade": 7, "text": "vytvoří vlastní prezentaci na zvolené téma, upraví ji, uloží a odprezentuje před spolužáky" },
-          { "grade": 8, "text": "vytváří prezentace a podle zadaných pokynů je formátuje" },
+          { "grade": 9, "text": "vytváří prezentace a podle zadaných pokynů je formátuje" },
           { "grade": 9, "text": "uplatňuje estetická a typografická pravidla pro práci s textem a obrazem při tvorbě prezentace" }
         ],
         "lesson": "Připravujeme jako další hru. Plánovaná délka 10–20 minut. Hodnotit se budou konkrétní principy (čitelnost, kontrast, množství textu, pořadí snímků), ne „jediný správný vkus“.",
@@ -226,7 +228,7 @@
           "Podle čeho jsi zvolil(a) pořadí snímků?"
         ],
         "differentiation": "Připravujeme.",
-        "gradeNote": "Pracovní návrh: tvorba prezentací je ve ŠVP v 7.–9. ročníku, aktuálně „pravděpodobně“ probíraná – ročník lze upravit."
+        "gradeNote": "Pracovní návrh hry. Podle tematického plánu ICT školy jsou prezentace v 7. ročníku (leden–březen) a v 9. ročníku (prosinec–leden)."
       }
     },
     {
@@ -276,7 +278,7 @@
           "Proč si počítač k datům přidává kontrolní součet? Co se stane, když se převrátí dva bity?"
         ],
         "differentiation": "Rychlí žáci: celá mise bez nápověd, pak druhá varianta s cílem vše napoprvé. Začínající: rychlá mise s ukázkou; nápovědy (2–3 na úlohu) výsledek nesnižují a po dvou pokusech jde zobrazit řešení s vysvětlením.",
-        "gradeNote": "Výstupy jsou ve ŠVP v 6. ročníku (kódování a přenos dat). Hodí se i jako opakování v 7.–9. ročníku – ročník lze v katalogu upravit."
+        "gradeNote": "Podle tematického plánu ICT školy patří do 6. ročníku (říjen, kódování a přenos dat). Do hloubky barvy, tvary, zkrácený zápis a kontrolní součet procvičuje Signál ze sondy."
       }
     },
     {
@@ -326,7 +328,7 @@
           "Jak poznáš, že dva roboti mohou pracovat zároveň?"
         ],
         "differentiation": "Rychlí žáci: celá mise bez nápověd, pak jiná varianta; navíc mohou na papír nakreslit vlastní automat (např. semafor). Začínající: rychlá mise s ukázkou; trasa ukazuje průběžný součet a nápovědy výsledek nesnižují.",
-        "gradeNote": "Modelování a grafy jsou ve ŠVP v 6. ročníku. Hodí se i jako opakování algoritmizace v 9. ročníku – ročník lze v katalogu upravit."
+        "gradeNote": "Podle tematického plánu ICT školy patří do 6. ročníku (duben–květen: modelování, ohodnocené a orientované grafy, automaty)."
       }
     },
     {
@@ -336,7 +338,7 @@
       "description": "Odhaluj podvodné e-maily, SMS a zprávy v chatu: označ stopy (falešná doména, odkaz, příloha, nátlak) a vynes verdikt. Pak vytvoř silné heslo a rozmysli si, co o sobě zveřejníš.",
       "url": "/aplikace/phishingova-hlidka/",
       "subject": "Informatika",
-      "grades": [7, 8, 9],
+      "grades": [7, 9],
       "topics": ["Bezpečnost na internetu", "Digitální gramotnost"],
       "difficulty": "lehka",
       "durationMinutes": 20,
@@ -368,7 +370,7 @@
           { "grade": 7, "text": "používá el. komunikaci" },
           { "grade": 7, "text": "dokáže usměrnit svojí činnost tak, aby minimalizoval riziko ztráty či zneužití dat, popíše fungování a diskutuje o omezení zabezpečovacích řešení." },
           { "grade": 7, "text": "autorské právo a ochrana osobních údajů" },
-          { "grade": 8, "text": "je schopný využívat bezpečně internet a běžné komunikační nástroje" },
+                    { "grade": 9, "text": "rozumí základním principům bezpečnosti při využívání služeb Internetu" },
           { "grade": 9, "text": "je schopný využívat bezpečně internet a běžné komunikační nástroje" }
         ],
         "lesson": "Rychlá služba (6 úloh, z každé úrovně aspoň jedna) zabere asi 10 minut – vhodná jako rozcvička. Celá služba (12 úloh ve 4 úrovních) asi 20 minut; zbytek hodiny lze věnovat reflexi a ukázkám skutečných podvodných zpráv, které žáci viděli (bez odkazů a osobních údajů). Varianty A/B/C mají jiný výběr zpráv; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Všechny adresy jsou smyšlené (.test). Hra nic neodesílá a heslo z úlohy se nikam neukládá.",
@@ -383,7 +385,54 @@
           "Co bys udělal(a), kdyby ti přišel přihlašovací kód, o který jsi nežádal(a)?"
         ],
         "differentiation": "Rychlí žáci: celá služba bez nápověd, pak jiná varianta s cílem vše napoprvé; mohou sepsat vlastní „podvodnou zprávu“ se třemi stopami pro spolužáka. Začínající: rychlá služba s ukázkou; nápovědy (2–3 na úlohu) výsledek nesnižují a po dvou pokusech jde zobrazit řešení s rozborem všech stop.",
-        "gradeNote": "Ve ŠVP je internet a elektronická komunikace v 7. ročníku, bezpečné využívání internetu se opakuje v 8. a 9. ročníku. Hra je lehká, hodí se i do 6. ročníku – ročník lze v katalogu upravit."
+        "gradeNote": "Podle tematického plánu ICT školy: internet a elektronická komunikace v 7. ročníku (duben–květen), bezpečný internet znovu v 9. ročníku (září, únor–březen). 4. úroveň (co prozradí fotka) odpovídá i 4. ročníku."
+      }
+    },
+    {
+      "id": "signal-ze-sondy",
+      "title": "Signál ze sondy",
+      "subtitle": "Barvy, tvary a úsporný zápis obrázku",
+      "description": "Pošli snímky ze sondy na Zemi tak, aby se vešly do okna spojení: tabulka barev a bity na políčko, RGB a šestnáctkový kód, obrázek z tvarů, zápis úseků a kontrolní součet proti šumu.",
+      "url": "/aplikace/signal-ze-sondy/",
+      "subject": "Informatika",
+      "grades": [6],
+      "topics": ["Kódování a šifry", "Grafika"],
+      "difficulty": "stredni",
+      "durationMinutes": 20,
+      "icon": "binary",
+      "color": "teal",
+      "featured": false,
+      "requiresKeyboard": false,
+      "thumbnail": "nahled.svg",
+      "status": "published",
+      "skills": ["Barva číslem z tabulky, v RGB i šestnáctkově", "Kolik bitů stačí na políčko podle počtu barev", "Obrázek z kruhů, obdélníků a úseček a pořadí kreslení", "Zkrácený zápis textu a obrázku (počet + znak)", "Kontrolní součet a úplnost přenosu", "Volba zápisu, který se pro obrázek vyplatí"],
+      "teacher": {
+        "goals": [
+          "Žák zakóduje barvy obrázku tabulkou (číslo → šestnáctkový kód) a zvolí nejmenší počet bitů na políčko podle počtu barev.",
+          "Žák převede šestnáctkový kód barvy na trojici RGB (hodnoty 00, 40, 80, C0, FF).",
+          "Žák doplní zápis obrázku pomocí obdélníků, kruhů a úseček se souřadnicemi a vysvětlí, proč záleží na pořadí kreslení.",
+          "Žák zjednoduší zápis textu i řádků obrázku (počet + znak) a porovná délku s původním zápisem.",
+          "Žák pomocí kontrolního součtu najde neúplné řádky a vyžádá jen je.",
+          "Žák u tří různých snímků zdůvodní, kdy se vyplatí zápis po pixelech, po úsecích a kdy tvary."
+        ],
+        "svp": [
+          { "grade": 6, "text": "Kódování a přenos dat: různé možnosti kódování čísel, znaků, barev, obrázků, zvuků a jejich vlastnosti" },
+          { "grade": 6, "text": "Identifikace barev, barevný model, vektorová grafika, zjednodušení zápisu a kontrolní účet" },
+          { "grade": 6, "text": "Zakóduje v obrázku barvy více způsoby, zakóduje obrázek pomocí základních geometrických tvarů, zjednoduší zápis textu a obrázku, pomocí kontrolního součtu ověří úplnost zápisu" }
+        ],
+        "lesson": "Navazuje na říjnový blok 6. ročníku (kódování a přenos dat) a jde do hloubky tam, kde Šifrovací laboratoř dává jen po jedné úloze. Každý přenos má měřidlo „okna spojení“ v bitech, takže žáci vidí, proč se úsporný zápis vyplatí. Rychlá mise (5 přenosů) zabere asi 10 minut, celá mise (9 přenosů v 5 úrovních) asi 20 minut. Varianty A/B/C mají jiné snímky, barvy i texty; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Hra nepotřebuje účet ani internet po načtení.",
+        "prerequisites": [
+          "Sčítání a násobení malých čísel.",
+          "Čtení souřadnic v mřížce (x doprava, y dolů).",
+          "Vhodné, ne nutné: Šifrovací laboratoř (bity a bajty)."
+        ],
+        "reflection": [
+          "Proč sonda neposílá u každého políčka celý kód barvy?",
+          "U jakého obrázku se vyplatí tvary, u jakého úseky a kdy je nejlepší poslat ho po pixelech?",
+          "Kde se kolem nás používá kontrolní součet nebo kontrolní číslice?"
+        ],
+        "differentiation": "Rychlí žáci: celá mise bez nápověd, pak druhá varianta s cílem vše napoprvé; navíc mohou nakreslit vlastní snímek z tvarů na papír a nechat spolužáka ho podle zápisu nakreslit. Začínající: rychlá mise s ukázkou; nápovědy výsledek nesnižují a po dvou pokusech jde zobrazit řešení s vysvětlením.",
+        "gradeNote": "Citace jsou z tematického plánu ICT školy pro 6. ročník (říjen). Šestnáctkový zápis je omezený na hodnoty 00, 40, 80, C0 a FF; ceny v bitech jsou zjednodušený model pro porovnání zápisů."
       }
     }
   ]

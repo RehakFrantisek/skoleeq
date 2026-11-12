@@ -39,7 +39,7 @@ function card(app) {
 
   if (t.goals) { a.append(el('h3', null, 'Cíle')); a.append(list(t.goals)); }
   if (t.svp) {
-    a.append(el('h3', null, 'Návaznost na ŠVP (doslovné citace)'));
+    a.append(el('h3', null, 'Návaznost na ŠVP a tematický plán (doslovné citace)'));
     const ul = el('ul', 't-svp');
     for (const c of t.svp) {
       const li = el('li');

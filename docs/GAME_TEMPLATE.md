@@ -55,7 +55,7 @@ V `public/apps.json` doplň záznam (schéma a whitelisty: [`public/assets/regis
 ```
 
 - `status`: `planned` = karta „Připravujeme“ (neklikatelná, složka hry ještě nemusí existovat), `published` = hratelná, `draft`/`hidden` = mimo katalog.
-- `teacher.svp` cituj **doslova** z přepisu ŠVP. Rozvržení do ročníků označ v `gradeNote` jako pracovní návrh, dokud ho škola nepotvrdí.
+- `teacher.svp` cituj **doslova** z tematického plánu ICT školy (6., 7., 9. ročník; také 3. a 4.), případně z přepisu ŠVP. Ročníky v `grades` řiď tematickým plánem; v `gradeNote` uveď ročník a měsíc z plánu. Plán pro 5. a 8. ročník škola nedodala.
 - Karta „Pro učitele“ se vygeneruje automaticky na `/pro-ucitele/#<id>`; HTML katalogu ani stránky pro učitele se neupravuje.
 
 ## 4. Testy a kontrola
