@@ -35,7 +35,7 @@
           <ul class="facts">
             <li><b>Co se naučíš:</b> posloupnost příkazů, cyklus Opakuj, podmínka Když, krokování a hledání chyb.</li>
             <li><b>Čas:</b> 12 misí ve 3 kapitolách, celkem 20–30 min. Bez časového limitu.</li>
-            <li><b>Ovládání:</b> bloky přidáváš tlačítky (myš i klávesnice), přesouváš šipkami ↑ ↓, mažeš ✕.</li>
+            <li><b>Ovládání:</b> bloky přetahuješ myší nebo prstem (za úchyt ⠿) kamkoli do programu – i mezi ostatní bloky a dovnitř cyklu. Klepnutím na blok v nabídce ho přidáš na označené místo. Z klávesnice: vyber blok, Alt+↑/↓ ho posune, Delete smaže.</li>
           </ul>
         </div>
         <img class="home-hero__art" src="nahled.svg" alt="" width="320" height="140">
@@ -68,7 +68,11 @@
 
         <!-- uprostřed: program -->
         <section class="panel col-prog" aria-labelledby="prog-title">
-          <h3 id="prog-title">Program</h3>
+          <div class="prog-head">
+            <h3 id="prog-title">Program</h3>
+            <span class="meter" id="prog-meter" aria-hidden="true"><span></span></span>
+          </div>
+          <p class="palette-label small">Bloky – přetáhni do programu nebo klikni:</p>
           <div class="palette" id="palette" role="group" aria-label="Přidat blok"></div>
           <p class="insert-hint small" id="insert-hint" aria-live="polite"></p>
           <div class="program" id="program" aria-label="Program robota"></div>
@@ -104,6 +108,7 @@
   </main>
 
   <dialog id="dlg-done" aria-labelledby="dlg-done-h">
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
     <h2 id="dlg-done-h">Mise splněna!</h2>
     <p class="stars-big" id="done-stars"></p>
     <p id="done-stats"></p>

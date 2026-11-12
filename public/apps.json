@@ -228,6 +228,56 @@
         "differentiation": "Připravujeme.",
         "gradeNote": "Pracovní návrh: tvorba prezentací je ve ŠVP v 7.–9. ročníku, aktuálně „pravděpodobně“ probíraná – ročník lze upravit."
       }
+    },
+    {
+      "id": "sifrovaci-laborator",
+      "title": "Šifrovací laboratoř",
+      "subtitle": "Signál ze sondy",
+      "description": "Rozlušti zprávy ze sondy: bity a světla, znaková sada, Caesarova šifra, Morseovka, obrázek z čísel, barvy RGB a kontrolní součty. Za každou zprávu se odkryje kus fotky.",
+      "url": "/aplikace/sifrovaci-laborator/",
+      "subject": "Informatika",
+      "grades": [6],
+      "topics": ["Kódování a šifry", "Práce s daty"],
+      "difficulty": "stredni",
+      "durationMinutes": 25,
+      "icon": "lock",
+      "color": "blue",
+      "featured": false,
+      "requiresKeyboard": false,
+      "thumbnail": "nahled.svg",
+      "status": "published",
+      "skills": ["Bity a dvojková soustava (16-8-4-2-1)", "Kódování znaků podle znakové sady", "Bit a bajt", "Caesarova šifra a její slabina", "Morseova abeceda", "Obrázek a barva jako čísla", "Kresba pomocí tvarů a souřadnic", "Paritní bit a kontrolní číslice"],
+      "teacher": {
+        "goals": [
+          "Žák převede číslo do dvojkového zápisu (5 bitů) a zpět a vysvětlí, kolik kombinací zapíše n bity.",
+          "Žák zakóduje a dekóduje text pomocí znakové sady (výřez ASCII) a ví, že 1 bajt = 8 bitů.",
+          "Žák zašifruje a rozluští zprávu Caesarovou šifrou, přečte Morseovku a vysvětlí, proč jde Caesarovu šifru prolomit zkoušením klíčů.",
+          "Žák zakóduje řádky černobílého obrázku počty políček, namíchá barvu ze složek R, G, B a popíše kresbu tvary se souřadnicemi.",
+          "Žák pomocí paritních bitů a kontrolní číslice odhalí chybu v přenosu a ukáže, kde vznikla."
+        ],
+        "svp": [
+          { "grade": 6, "text": "kódování a přenos dat: různé možnosti kódování čísel, znaků, barev, obrázků, zvuků a jejich vlastnosti; standardizované kódy; bit; bajt, násobné jednotky; jednoduché šifry a jejich limity" },
+          { "grade": 6, "text": "rozpozná zakódované informace kolem sebe" },
+          { "grade": 6, "text": "zakóduje a dekóduje znaky pomocí znakové sady" },
+          { "grade": 6, "text": "zašifruje a dešifruje text pomocí několika šifer" },
+          { "grade": 6, "text": "zakóduje v obrázku barvy více způsoby" },
+          { "grade": 6, "text": "zakóduje obrázek pomocí základních geometrických tvarů" },
+          { "grade": 6, "text": "zjednoduší zápis textu a obrázku, pomocí kontrolního součtu ověří úplnost zápisu" }
+        ],
+        "lesson": "Rychlá mise (6 úloh, z každé oblasti jedna) zabere asi 10 minut – vhodná jako rozcvička nebo opakování. Celá mise (17 úloh v 5 úrovních) asi 25 minut; zbytek hodiny lze věnovat reflexi a hledání kódů kolem nás (čárový kód, QR, kontrolní číslice v čísle účtu). Varianty A/B/C mají jiné zprávy, takže sousedé nemají stejné odpovědi; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Hra nepotřebuje účet ani internet po načtení.",
+        "prerequisites": [
+          "Sčítání do 100 a násobení malými čísly.",
+          "Znalost abecedy (pořadí písmen, A–Z bez diakritiky).",
+          "Čtení souřadnic v mřížce (x doprava, y dolů)."
+        ],
+        "reflection": [
+          "Kde kolem sebe vídáš zakódované informace? K čemu slouží?",
+          "Proč je Caesarova šifra slabá a co by ji udělalo silnější?",
+          "Proč si počítač k datům přidává kontrolní součet? Co se stane, když se převrátí dva bity?"
+        ],
+        "differentiation": "Rychlí žáci: celá mise bez nápověd, pak druhá varianta s cílem vše napoprvé. Začínající: rychlá mise s ukázkou; nápovědy (2–3 na úlohu) výsledek nesnižují a po dvou pokusech jde zobrazit řešení s vysvětlením.",
+        "gradeNote": "Výstupy jsou ve ŠVP v 6. ročníku (kódování a přenos dat). Hodí se i jako opakování v 7.–9. ročníku – ročník lze v katalogu upravit."
+      }
     }
   ]
 }

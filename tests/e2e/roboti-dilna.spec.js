@@ -116,6 +116,55 @@ test.describe('Robotí dílna', () => {
     await expect(page.locator('.pal[data-op="forward"]')).toBeEnabled();
   });
 
+  test('přetahování: z palety mezi bloky, přesun bloku do cyklu, vkládání do mezery, Alt+šipka', async ({ page }) => {
+    const errors = watchErrors(page);
+    // bez animací: poloha bloků se měří až po přesunu, ne uprostřed animace FLIP
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(URL + '?vse=1#dve-cesty');
+    const labels = page.locator('.pn__label');
+    /** Přetáhne prvek myší nad horní část cílového bloku (= vložit před něj). */
+    async function dragTo(source, target, where = 'before') {
+      const s = await source.boundingBox();
+      const t = await target.boundingBox();
+      await page.mouse.move(s.x + 12, s.y + s.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(s.x + 30, s.y + s.height / 2 + 10, { steps: 4 });
+      const y = where === 'before' ? t.y + 4 : t.y + t.height - 4;
+      await page.mouse.move(t.x + 40, y, { steps: 8 });
+      await page.mouse.up();
+    }
+    for (const op of ['forward', 'forward', 'right']) await page.locator(`.pal[data-op="${op}"]`).click();
+    await expect(labels).toHaveText(['Jdi vpřed', 'Jdi vpřed', 'Otoč vpravo']);
+    // z palety přímo mezi 1. a 2. blok
+    await dragTo(page.locator('.pal[data-op="left"]'), page.locator('.pn > .pn__head').nth(1));
+    await expect(labels).toHaveText(['Jdi vpřed', 'Otoč vlevo', 'Jdi vpřed', 'Otoč vpravo']);
+    // přesun posledního bloku na začátek tažením za lištu
+    await dragTo(page.locator('.pn > .pn__head').nth(3).locator('.pn__grip'), page.locator('.pn > .pn__head').first());
+    await expect(labels).toHaveText(['Otoč vpravo', 'Jdi vpřed', 'Otoč vlevo', 'Jdi vpřed']);
+    // cyklus na konec a blok „Otoč vlevo“ přetáhnout dovnitř cyklu
+    await page.locator('.plist--root > .slot-end > .slot-btn').click();
+    await page.locator('.pal[data-op="repeat"]').click();
+    const loopSlot = page.locator('.pn--loop > .pn__body .slot-btn');
+    await dragTo(page.locator('.pn > .pn__head').nth(2).locator('.pn__grip'), loopSlot, 'after');
+    await expect(page.locator('.pn--loop > .pn__body .pn__label')).toHaveText(['Otoč vlevo']);
+    await expect(page.locator('.plist--root > .pn > .pn__head .pn__label')).toHaveText(['Otoč vpravo', 'Jdi vpřed', 'Jdi vpřed', 'Opakuj']);
+    // cyklus nejde přetáhnout do sebe sama – program se nezmění
+    await dragTo(page.locator('.pn--loop > .pn__head .pn__grip'), loopSlot, 'after');
+    await expect(page.locator('.plist--root > .pn')).toHaveCount(4);
+    // kliknutí do mezery mezi bloky přesune vkládání a nový blok se vloží tam
+    await page.locator('.plist--root > .gap').nth(1).locator('.gap__btn').click({ force: true });
+    await page.locator('.pal[data-op="left"]').click();
+    await expect(page.locator('.plist--root > .pn > .pn__head .pn__label')).toHaveText(['Otoč vpravo', 'Otoč vlevo', 'Jdi vpřed', 'Jdi vpřed', 'Opakuj']);
+    // klávesnice: Alt+↓ posune vybraný blok, Delete ho smaže
+    await page.locator('.plist--root > .pn').first().locator(':scope > .pn__head .pn__label').focus();
+    await page.keyboard.press('Alt+ArrowDown');
+    await expect(page.locator('.plist--root > .pn > .pn__head .pn__label')).toHaveText(['Otoč vlevo', 'Otoč vpravo', 'Jdi vpřed', 'Jdi vpřed', 'Opakuj']);
+    await expect(page.locator('.pn__label:focus')).toHaveText('Otoč vpravo');
+    await page.keyboard.press('Delete');
+    await expect(page.locator('.plist--root > .pn > .pn__head .pn__label')).toHaveText(['Otoč vlevo', 'Jdi vpřed', 'Jdi vpřed', 'Opakuj']);
+    expect(errors).toEqual([]);
+  });
+
   test('více map: sekvence projde jen na jedné, chyba je popsaná u konkrétní mapy', async ({ page }) => {
     await page.goto(URL + '?vse=1#dve-cesty');
     await build(page, [{ op: 'forward' }, { op: 'forward' }, { op: 'forward' }, { op: 'right' }, { op: 'forward' }, { op: 'forward' }, { op: 'forward' }]);

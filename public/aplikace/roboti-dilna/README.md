@@ -13,6 +13,12 @@ Výuková hra portálu Školeeq (algoritmizace a programování, 6.–9. roční
 | `engine.js` | simulátor mřížky a interpret stromu příkazů (generátor), limity, cíle, vyhodnocení misí, hvězdy |
 | `app.js` | UI: přehled, editor bloků, mapa (SVG), běh / krokování / pozastavení / reset, záznam, nápověda |
 
+## Editor programu
+
+- **Přetahování** (myš, pero, dotyk): blok z nabídky se dá pustit kamkoli do programu – mezi dva bloky, na začátek, do cyklu nebo větve. Bloky v programu se přesouvají tažením za lištu (myš) nebo za úchyt ⠿ (dotyk). Fialová čára ukazuje, kam blok dopadne; neplatné místo (blok do sebe sama, vnoření > 3) je oranžové a nic se nezmění. Esc přetahování zruší, okraje okna a programu se při tažení samy posouvají.
+- **Kliknutí**: blok z nabídky se vloží na označené místo („sem se vloží další blok“). Místo se nastaví kliknutím na blok (vkládá se za něj), do mezery mezi bloky (objeví se ＋) nebo na „＋ vkládat sem“.
+- **Klávesnice**: Tab na blok, Enter ho vybere; Alt+↑/↓ ho posune, Delete smaže; tlačítka ↑ ↓ ✕ fungují dál.
+
 ## Model simulace
 
 - Mřížka max. 10 × 10, robot má (x, y) a směr N/E/S/W. Každý příkaz je jeden diskrétní krok.

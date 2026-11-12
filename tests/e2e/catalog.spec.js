@@ -32,7 +32,7 @@ test.describe('Katalog', () => {
     await search.fill('MYSAK KLIK');                  // velká písmena, popis
     await expect(card(page, 'klavesova-mise')).toBeVisible();
 
-    await search.fill('sifry');
+    await search.fill('zirafy');                      // nic takového v katalogu není
     await expect(page.locator('.app-card')).toHaveCount(0);
     await expect(page.locator('#empty')).toBeVisible();
     await expect(page.locator('#count')).toHaveText(`Nalezeno: 0 her z ${N}`);

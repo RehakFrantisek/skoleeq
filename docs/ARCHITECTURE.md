@@ -59,7 +59,14 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
 
 - `missions.js` (obsah, mapy v ASCII, reference) · `engine.js` (simulátor, interpret jako generátor, cíle, vyhodnocení na všech mapách) · `app.js` (UI).
 - Program je strom uzlů; interpret vrací událost po každém příkazu a vyhodnocení podmínky, UI ji jen vykreslí (krokování, pozastavení, zvýraznění bloku). Limit 400 instrukcí, max. 3 úrovně vnoření, max. 20 opakování – nekonečný běh nevznikne.
+- Editor: bloky se přetahují přes Pointer Events (myš, pero, dotyk za úchyt ⠿) na libovolné místo – mezi bloky i do cyklu/větve; cíl se počítá z pozice ukazatele, neplatné cíle (blok do sebe sama, vnoření > 3, > 40 bloků) se odmítnou s vysvětlením. Klávesnice: výběr bloku, Alt+↑/↓, Delete, tlačítka ↑ ↓ ✕. Robot je trvalý prvek SVG, pohyb a otočení animuje CSS (délka podle rychlosti).
 - Testy pro každou misi: dosažitelnost všech políček (BFS), referenční řešení projde na všech mapách, prázdný a výchozí program neprojde, alternativní řešení projdou.
+
+## Šifrovací laboratoř
+
+- `logic.js` (kódování, šifry, obrázky, parita, generátor úloh ze seedu varianty A/B/C, vyhodnocení s vysvětlením, `solution()`) · `app.js` (průběh podle design systému a nástroj pro každý typ úlohy).
+- Odpověď má pro každý typ úlohy pevný tvar; stejný tvar posílá UI, `solution()` i testy. Unit test ověří všechny úlohy všech variant (řešení projde, prázdná odpověď ne), E2E test dohraje celou misi přes skutečné ovládací prvky.
+- Fotka ze sondy je inline SVG zakryté mřížkou dílků; každá kopie má vlastní id přechodů (skrytá kopie v `display: none` by je jinak vypnula).
 
 ## Audit před vlnou 1 (2026-11-11)
 
