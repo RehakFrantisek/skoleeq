@@ -660,7 +660,7 @@ function trainDots() {
 function trainTask() {
   if (T.i >= T.queue.length) { trainEnd(); return; }
   const k = T.queue[T.i];
-  T.hint = false; T.tTask = Date.now();
+  T.hint = false; T.tTask = Date.now(); T.lock = 0;
   $('tIcon').textContent = SC[k].icon;
   $('tIcon').className = 't-icon ico-' + k;
   $('tTitle').textContent = TASK_TEXT[k][0];
@@ -678,7 +678,9 @@ function trainKey(k, extra) {
     const dt = Date.now() - T.tTask;
     const bonus = dt < 3000 ? 5 : dt < 6000 ? 2 : 0;
     const gain = (T.hint ? 5 : 10) + bonus;
-    T.score += gain; T.lock = Date.now() + 450;
+    // Zamčeno, dokud trainTask() neukáže další kartu – jinak by nápověda
+    // v mezičase radila zkratku k další úloze, zatímco je vidět ještě ta stará.
+    T.score += gain; T.lock = Infinity;
     sfx.good();
     $('tScore').textContent = T.score;
     notice(`✓ ${SC[k].label} – ${rand(PRAISE)} +${gain}${bonus === 5 ? ' ⚡ bleskově!' : ''}`, 'good');
@@ -700,7 +702,7 @@ function trainKey(k, extra) {
   }
 }
 function trainHint() {
-  if (screen !== 'train' || T.i >= T.queue.length) return;
+  if (screen !== 'train' || T.i >= T.queue.length || Date.now() < T.lock) return;
   const k = T.queue[T.i];
   if (!T.hint) T.hints++;
   T.hint = true;

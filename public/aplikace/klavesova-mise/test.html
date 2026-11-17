@@ -101,10 +101,15 @@ document.getElementById('f').onload = async () => {
     key(wrong); ok(w.eval('T.mistakes') === 1 && w.eval('T.i') === 0, 'training wrong key: mistake, same task');
     key(first, { shiftKey: true }); ok(w.eval('T.i') === 0, 'shift ignored');
     $('tHint').click(); ok($('tFeedback').textContent.includes('Ctrl +'), 'hint shows shortcut text');
-    for (let i = 0; i < 12; i++) { while (Date.now() < w.eval('T.lock')) await sleep(30); key(w.eval('T.queue[T.i]')); await sleep(480); }
+    key(first); const next = w.eval('T.queue[1]');
+    $('tHint').click(); ok(w.eval('T.hints') === 1 && !$('tFeedback').textContent.includes('💡'), 'hint ignored while next card is loading');
+    while (Date.now() < w.eval('T.lock')) await sleep(30);
+    ok($('tTitle').textContent === w.eval(`TASK_TEXT['${next}'][0]`), 'next card shown before unlock');
+    $('tHint').click(); ok($('tFeedback').textContent.includes(w.eval(`SC['${next}'].label`)), 'hint matches visible card');
+    for (let i = 1; i < 12; i++) { while (Date.now() < w.eval('T.lock')) await sleep(30); key(w.eval('T.queue[T.i]')); await sleep(480); }
     await sleep(100);
     ok(w.eval('screen') === 'trainEnd', 'training ended after 12');
-    ok(w.eval('T.score') > 0 && w.eval('T.hints') === 1, 'score counted, 1 hint');
+    ok(w.eval('T.score') > 0 && w.eval('T.hints') === 2, 'score counted, 2 hints');
     ok(w.eval('data.best') !== null, 'record saved');
 
     d.querySelector('[data-home]').click();
