@@ -9,7 +9,7 @@
 3. **Každá hra je nezávislá:** `public/aplikace/<slug>/index.html` + vlastní CSS/JS/assets. Nesmí importovat kód jiné hry ani `public/assets/` portálu. Žádné sdílené herní jádro, žádný centrální stav.
 4. **Registr je jediný zdroj katalogu:** novou hru přidáš záznamem v `public/apps.json`. HTML katalogu se kvůli hře **nikdy needituje**. Schéma a whitelisty: `public/assets/registry.js`.
 5. **localStorage:** jen klíč `vyukovy-portal:<slug>:v1`, vždy v `try/catch`. Klávesová mise má výjimku: **`klavesova-mise-v2` neměnit.**
-6. **Klávesovou misi neměnit** (`public/aplikace/klavesova-mise/app.js`) kromě doložené opravy reálné chyby. Její `test.html` musí dál hlásit PASS.
+6. **Klávesová mise jen opatrně** (`public/aplikace/klavesova-mise/`): opravy a rozšíření ano (od 2026-11-17 má 6. kapitolu Bez myši), ale uložený postup žáků musí dál fungovat (klíč `klavesova-mise-v2`, pole `stars` se jen doplňuje), jen fyzická klávesnice (žádná klávesnice na obrazovce) a `test.html` musí dál hlásit PASS.
 7. **Čeština** ve všem veřejném textu, se správnou diakritikou, srozumitelně pro žáky 2. stupně i učitele. Nevymýšlej osobní údaje, e-maily, domény ani ověřená didaktická fakta (ročníky a délky jsou orientační).
 8. **Přístupnost a výkon:** sémantické HTML (`main`, `nav`, skutečná `button`/`a`, `label`), ovládání klávesnicí, viditelný `:focus-visible`, kontrast AA, `prefers-reduced-motion`, funguje od 320 px bez vodorovného scrollu, dotykové cíle ≥ 44 px.
 9. **Bezpečnost:** text z dat vkládej přes `textContent`, ne `innerHTML`. Žádné `eval`, žádné vkládání cizích skriptů.

@@ -1,8 +1,7 @@
 /* Znakožrout – UI. Průběh podle docs/GAME_DESIGN_SYSTEM.md:
    titulní obrazovka → ukázka → úrovně (s úvodem) → závěr. Úlohy a vyhodnocení jsou v logic.js
    (deterministické, testované). Každý typ úlohy má vlastní „nástroj“ s metodami get/set/lock.
-   Pod úlohou je klávesnice se třemi vrstvami: ukazuje stisknutou klávesu a vrstvu (Shift / AltGr)
-   a na dotyku do pole vkládá znaky. Text vkládáme jen přes textContent, žádné eval,
+   Vstup je jen z fyzické klávesnice; pod úlohou je řádek s posledním stiskem (klávesa + Shift / AltGr). Text vkládáme jen přes textContent, žádné eval,
    localStorage jen pod vlastním klíčem. Hesla z trezoru se nikam neukládají. */
 import * as L from './logic.js';
 
@@ -96,15 +95,15 @@ function renderTask() {
   $('task-h').textContent = t.title;
   $('task-prompt').textContent = t.prompt;
   $('hints').replaceChildren();
-  if (S.tutorial) $('hints').append(el('p', { class: 'hint hint--tour' }, el('b', { text: 'Jak to funguje: ' }), 'Klikni do mezery a napiš znak na klávesnici. Klávesnice pod úlohou ukáže, co jsi zmáčkl(a). Pak stiskni Zkontrolovat (nebo Enter). Nápověda výsledek nesnižuje a po dvou pokusech můžeš zobrazit řešení.'));
+  if (S.tutorial) $('hints').append(el('p', { class: 'hint hint--tour' }, el('b', { text: 'Jak to funguje: ' }), 'Klikni do mezery a napiš znak na klávesnici. Řádek „Stisknuto“ pod úlohou ukáže, kterou klávesu a s čím jsi zmáčkl(a). Pak stiskni Zkontrolovat (nebo Enter). Nápověda výsledek nesnižuje a po dvou pokusech můžeš zobrazit řešení.'));
   setFeedback(null);
   $('btn-reveal').hidden = true; $('btn-next').hidden = true;
   $('btn-check').disabled = false; $('btn-hint').disabled = false;
   $('btn-hint').textContent = '🔍 Nápověda';
   $('progress').max = S.tasks.length; $('progress').value = S.tutorial ? 0 : S.i;
   $('belly-note').textContent = S.tutorial ? 'Každá vyřešená úloha vytáhne znaky ze žaludku.' : `Zachráněno ${S.results.length} z ${S.tasks.length}.`;
-  S.kbd = keyboard(t.type === 'where' ? 'pick' : 'type');
-  S.tool = TOOLS[t.type](t, S.kbd);
+  S.kbd = readout();
+  S.tool = TOOLS[t.type](t);
   $('tool').replaceChildren(S.tool.node);
   $('kbd-box').replaceChildren(S.kbd.node);
   $('task-h').focus();
@@ -118,15 +117,8 @@ function hint() {
   if (!S.tutorial) { S.totalHints++; $('hint-count').textContent = String(S.totalHints); }
   if (S.hints >= t.hints.length) {
     $('btn-hint').disabled = true; $('btn-hint').textContent = 'Všechny nápovědy použity';
-    if (t.type !== 'where' && t.type !== 'password') S.kbd.mark(hintChars(t));
   }
 }
-function hintChars(t) {
-  if (t.type === 'blanks') return t.answers.flatMap(a => [...a]);
-  if (t.type === 'rule' || t.type === 'fix') return L.specials(t.answer);
-  return [];
-}
-
 function setFeedback(kind, text) {
   const fb = $('feedback');
   if (!kind) { fb.className = 'feedback'; fb.replaceChildren(); return; }
@@ -236,196 +228,65 @@ function rescue(box, i, dim = false) {
   box.setAttribute('aria-label', `Zachráněno ${done} z ${box.querySelectorAll('.slot').length} skupin znaků.`);
 }
 
-/* ================= Klávesnice se třemi vrstvami ================= */
-/* mode 'type': ukazuje všechny vrstvy, zvýrazní stisk, ťuknutím vkládá znak do posledního pole.
-   mode 'pick': jen natištěné písmeno / základní znak – žák hledá znak na své skutečné klávesnici;
-   klik klávesu vybere (onPick). */
-function keyboard(mode) {
-  let target = null, onPick = null, locked = false, sticky = null, lastKey = null;
-  const keys = {};
-  const readout = el('p', { class: 'kbd__readout small', text: mode === 'pick' ? 'Klikni na klávesu, kde je znak natištěný.' : 'Stiskni klávesu – tady uvidíš, co píše.' });
-  const shiftBtn = el('button', { type: 'button', class: 'kmod', 'aria-pressed': 'false', text: 'Shift' });
-  const altBtn = el('button', { type: 'button', class: 'kmod kmod--alt', 'aria-pressed': 'false', text: 'AltGr' });
-  const setSticky = v => {
-    sticky = sticky === v ? null : v;
-    shiftBtn.setAttribute('aria-pressed', String(sticky === 'shift'));
-    altBtn.setAttribute('aria-pressed', String(sticky === 'altgr'));
-    board.dataset.layer = sticky || '';
-  };
-  shiftBtn.addEventListener('click', () => setSticky('shift'));
-  altBtn.addEventListener('click', () => setSticky('altgr'));
-
-  const board = el('div', { class: `kbd__board kbd--${mode}` });
-  L.KEYBOARD.forEach((row, r) => {
-    const rowEl = el('div', { class: `kbd__row kbd__row--${r}` });
-    for (const k of row) {
-      const isLetter = /^Key/.test(k.code);
-      let b;
-      if (mode === 'pick') {
-        b = el('button', { type: 'button', class: 'key', 'data-code': k.code, 'aria-label': `Klávesa ${L.keyName(k.code)}` },
-          el('span', { class: 'key__bl', text: isLetter || /^Digit/.test(k.code) ? L.keyCap(k.code) : k.base }));
-      } else {
-        const tl = isLetter ? '' : k.shift;
-        const bl = isLetter ? k.shift : k.base;
-        b = el('button', { type: 'button', class: `key${isLetter ? ' key--letter' : ''}`, 'data-code': k.code, tabindex: '-1',
-          'aria-label': `Klávesa ${L.keyName(k.code)}: ${[k.base, k.shift, k.altgr].filter(Boolean).join(', ')}` },
-        el('span', { class: 'key__tl', 'aria-hidden': 'true', text: tl }),
-        el('span', { class: 'key__bl', 'aria-hidden': 'true', text: bl }),
-        el('span', { class: 'key__br', 'aria-hidden': 'true', text: k.altgr || '' }));
-      }
-      b.addEventListener('mousedown', e => { if (mode === 'type') e.preventDefault(); }); // focus zůstane v poli
-      b.addEventListener('click', () => press(k));
-      keys[k.code] = b;
-      rowEl.append(b);
-    }
-    board.append(rowEl);
-  });
-  if (mode === 'pick') {
-    // Roving tabindex: v pořadí Tab je jen jedna klávesa, mezi klávesami se chodí šipkami.
-    const grid = L.KEYBOARD.map(row => row.map(k => keys[k.code]));
-    grid.flat().forEach((b, i) => { b.tabIndex = i === 0 ? 0 : -1; });
-    board.addEventListener('keydown', e => {
-      const d = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[e.key];
-      if (!d) return;
-      const r = grid.findIndex(row => row.includes(document.activeElement));
-      if (r < 0) return;
-      e.preventDefault();
-      const c = grid[r].indexOf(document.activeElement);
-      const nr = Math.max(0, Math.min(grid.length - 1, r + d[0]));
-      const nc = Math.max(0, Math.min(grid[nr].length - 1, c + d[1]));
-      const nb = grid[nr][nc];
-      grid.flat().forEach(b => { b.tabIndex = b === nb ? 0 : -1; });
-      nb.focus();
-    });
-  }
-  const legend = mode === 'type'
-    ? el('p', { class: 'kbd__legend small' }, el('span', { class: 'lg lg--tl', text: 'vlevo nahoře' }), ' = se Shiftem · ', el('span', { class: 'lg lg--bl', text: 'vlevo dole' }), ' = klávesa sama · ', el('span', { class: 'lg lg--br', text: 'vpravo dole' }), ' = s pravým Altem (AltGr)')
-    : el('p', { class: 'kbd__legend small', text: 'Na obrazovce jsou jen hlavní znaky – ostatní najdeš v rozích kláves na své skutečné klávesnici.' });
-  const tools = mode === 'type' ? el('div', { class: 'kbd__mods' }, el('span', { class: 'small', text: 'Ťukání:' }), shiftBtn, altBtn) : null;
-  const node = el('section', { class: 'kbd', 'aria-label': 'Klávesnice' }, el('div', { class: 'kbd__head' }, readout, tools), el('div', { class: 'kbd__scroll' }, board), legend);
-
-  function flash(code) {
-    const b = keys[code];
-    if (!b) return;
-    b.classList.remove('is-down'); void b.offsetWidth; b.classList.add('is-down');
-    setTimeout(() => b.classList.remove('is-down'), 260);
-  }
-  function press(k) {
-    if (locked) return;
-    if (mode === 'pick') {
-      for (const b of Object.values(keys)) b.classList.remove('is-picked');
-      keys[k.code].classList.add('is-picked');
-      if (onPick) onPick(k.code);
-      return;
-    }
-    const layer = sticky || 'base';
-    const ch = k[layer];
-    if (sticky) setSticky(sticky);
-    flash(k.code);
-    if (!ch) { readout.textContent = `${L.keyName(k.code)} s ${layer === 'altgr' ? 'AltGr' : 'Shiftem'} tu nic nepíše.`; return; }
-    readout.textContent = describe(ch, layer, k.code);
-    if (target && document.contains(target) && !target.readOnly) {
-      const s = target.selectionStart ?? target.value.length, e = target.selectionEnd ?? s;
-      const max = target.maxLength > 0 ? target.maxLength : Infinity;
-      if (target.value.length - (e - s) + ch.length > max) return;
-      target.setRangeText(ch, s, e, 'end');
-      target.dispatchEvent(new Event('input', { bubbles: true }));
-      target.focus();
-    }
-  }
-  function describe(ch, layer, code) {
-    const how = layer === 'base' ? `klávesa ${L.keyName(code)}` : `${layer === 'shift' ? 'Shift' : 'pravý Alt (AltGr)'} + ${L.keyName(code)}`;
-    return `${how} → ${ch}${L.CHAR_NAME[ch] ? ` (${L.CHAR_NAME[ch]})` : ''}`;
-  }
+/* ================= Co jsi stiskl(a) ================= */
+/* Vstup je jen z fyzické klávesnice. Řádek pod úlohou ukazuje poslední stisk:
+   „pravý Alt (AltGr) + V → @ (zavináč)“, ať žák vidí, kterou klávesu a vrstvu použil. */
+function readout() {
+  let locked = false;
+  const text = el('p', { class: 'readout__text', text: 'Stiskni klávesu – tady uvidíš, co píše.' });
+  const node = el('div', { class: 'readout', 'aria-hidden': 'true' }, el('span', { class: 'readout__h', text: 'Stisknuto:' }), text);
   return {
     node,
-    mode,
-    /** Fyzická klávesa: zvýrazni ji a ukaž, co napsala. */
     physical(e) {
-      if (mode !== 'type' || locked) return;
+      if (locked || !e.key || e.key.length !== 1 || e.ctrlKey !== e.altKey) return; // zkratky typu Ctrl+C ne, AltGr = Ctrl+Alt ano
       const altgr = e.getModifierState?.('AltGraph') || (e.ctrlKey && e.altKey);
-      board.dataset.layer = altgr ? 'altgr' : e.shiftKey ? 'shift' : (sticky || '');
-      if (!keys[e.code]) return;
-      flash(e.code);
-      lastKey = e.code;
       const layer = altgr ? 'altgr' : e.shiftKey ? 'shift' : 'base';
-      if (e.key && e.key.length === 1) readout.textContent = describe(e.key, layer, e.code);
+      const k = L.KEYS[e.code];
+      const keyLabel = k ? L.keyName(e.code) : (L.WHERE[e.key] ? L.keyName(L.WHERE[e.key].code) : e.key.toUpperCase());
+      const how = e.key === ' ' ? 'mezerník' : layer === 'base' ? `klávesa ${keyLabel}` : `${layer === 'shift' ? 'Shift' : 'pravý Alt (AltGr)'} + ${keyLabel}`;
+      text.textContent = e.key === ' ' ? 'mezerník → mezera' : `${how} → ${e.key}${L.CHAR_NAME[e.key] ? ` (${L.CHAR_NAME[e.key]})` : ''}`;
     },
-    release() { if (mode === 'type') board.dataset.layer = sticky || ''; },
-    setTarget(inp) { target = inp; },
-    onPick(fn) { onPick = fn; },
-    showPicked(code) {
-      for (const b of Object.values(keys)) b.classList.toggle('is-picked', b.dataset.code === code);
-    },
-    mark(chars) {
-      for (const ch of chars) { const w = L.WHERE[ch]; if (w && keys[w.code]) keys[w.code].classList.add('is-hint'); }
-    },
-    lock() { locked = true; node.classList.add('is-locked'); for (const b of Object.values(keys)) b.disabled = mode === 'pick'; shiftBtn.disabled = altBtn.disabled = true; },
-    get last() { return lastKey; }
+    lock() { locked = true; }
   };
 }
 document.addEventListener('keydown', e => { if (!$('s-play').hidden && S.kbd) S.kbd.physical(e); });
-document.addEventListener('keyup', () => { if (S.kbd) S.kbd.release(); });
 
 /* ================= Nástroje úloh ================= */
-function textField(id, label, { value = '', kbd, wide = false, onInput } = {}) {
+function textField(id, label, { value = '', wide = false, onInput } = {}) {
   const inp = el('input', { id, type: 'text', class: `answer${wide ? ' answer--wide' : ''}`, autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false' });
   inp.value = value;
   inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
-  inp.addEventListener('focus', () => kbd?.setTarget(inp));
   if (onInput) inp.addEventListener('input', onInput);
-  kbd?.setTarget(inp);
   return { input: inp, node: el('label', { class: 'answer-field', for: id }, el('span', { text: label }), inp) };
 }
 
 const TOOLS = {
-  where(t, kbd) {
-    const picks = t.chars.map(() => ({ code: null, layer: null }));
-    let active = 0;
-    const rows = t.chars.map((c, i) => {
-      const keyOut = el('span', { class: 'pick__key', text: 'klávesa: —' });
-      const btn = el('button', { type: 'button', class: 'pick__btn', 'aria-pressed': 'false', id: `pick-${i}` },
-        el('span', { class: 'pick__char', 'aria-hidden': 'true', text: c }), el('span', { class: 'sr-only', text: `Znak ${c} (${L.CHAR_NAME[c]}). ` }), keyOut);
-      btn.addEventListener('click', () => setActive(i));
-      const layers = el('fieldset', { class: 'seg seg--layer' }, el('legend', { class: 'sr-only', text: `S čím se píše ${c}` }),
-        L.LAYERS.map(ly => {
-          const inp = el('input', { type: 'radio', name: `ly-${i}`, value: ly });
-          inp.addEventListener('change', () => { picks[i].layer = ly; });
-          return el('label', {}, inp, el('span', { text: L.LAYER_SHORT[ly] }));
-        }));
-      return { node: el('li', { class: 'pick' }, btn, layers), btn, keyOut, layers };
+  where(t) {
+    const inputs = t.chars.map((c, i) => {
+      const inp = el('input', { type: 'text', class: 'blank blank--big', id: `wh-${i}`, maxlength: '1', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': `Napiš znak ${c} (${L.CHAR_NAME[c]})` });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+      inp.addEventListener('input', () => {
+        inp.classList.remove('is-wrong');
+        if (inp.value && inputs[i + 1] && !inputs[i + 1].value) inputs[i + 1].focus();
+      });
+      return inp;
     });
-    function setActive(i) {
-      active = i;
-      rows.forEach((r, j) => { r.btn.setAttribute('aria-pressed', String(j === i)); r.node.classList.toggle('is-active', j === i); });
-      kbd.showPicked(picks[i].code);
-    }
-    kbd.onPick(code => {
-      picks[active].code = code;
-      rows[active].keyOut.textContent = `klávesa: ${L.keyName(code)}`;
-      rows[active].node.classList.add('has-key');
-      const nextFree = picks.findIndex(p => !p.code);
-      if (nextFree >= 0) setActive(nextFree);
-    });
-    setActive(0);
-    const help = el('p', { class: 'small muted', text: '1. Klikni na řádek se znakem. 2. Klikni na klávesu, na které je znak natištěný. 3. Vyber, jestli se píše samotnou klávesou, se Shiftem, nebo s AltGr.' });
-    const node = el('div', { class: 'tool-stack' }, help, el('ol', { class: 'picks' }, rows.map(r => r.node)));
+    const rows = t.chars.map((c, i) => el('li', { class: 'pick' },
+      el('span', { class: 'pick__char', 'aria-hidden': 'true', text: c }),
+      el('span', { class: 'pick__name', text: L.CHAR_NAME[c] }),
+      el('span', { class: 'pick__arrow', 'aria-hidden': 'true', text: '→' }), inputs[i]));
+    const help = el('p', { class: 'small muted', text: 'Klikni do políčka a stiskni kombinaci kláves, která znak napíše. Do políčka se vejde jen jeden znak – když se spleteš, smaž ho Backspacem.' });
+    const node = el('div', { class: 'tool-stack' }, help, el('ol', { class: 'picks' }, rows));
     return {
       node,
-      get: () => ({ picks: picks.map(p => ({ ...p })) }),
-      set(sol) {
-        sol.picks.forEach((p, i) => {
-          picks[i] = { ...p };
-          rows[i].keyOut.textContent = `klávesa: ${L.keyName(p.code)}`;
-          rows[i].node.classList.add('has-key');
-          rows[i].layers.querySelector(`input[value="${p.layer}"]`).checked = true;
-        });
-      },
-      lock() { rows.forEach(r => { r.btn.disabled = true; r.layers.disabled = true; }); }
+      get: () => ({ values: inputs.map(i => i.value) }),
+      set(sol) { sol.values.forEach((v, i) => { inputs[i].value = v; inputs[i].classList.remove('is-wrong'); }); },
+      mark(r) { inputs.forEach((inp, i) => inp.classList.toggle('is-wrong', !!r.wrong?.includes(i))); },
+      lock() { inputs.forEach(i => { i.readOnly = true; }); }
     };
   },
 
-  blanks(t, kbd) {
+  blanks(t) {
     const inputs = [];
     let n = 0;
     const pileChips = t.pile.map(a => el('span', { class: 'pile__chip mono', text: a }));
@@ -443,12 +304,10 @@ const TOOLS = {
       const i = n++;
       const inp = el('input', { type: 'text', class: `blank${p.a.length > 1 ? ' blank--wide' : ''}`, id: `bl-${i}`, maxlength: '4', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': `Mezera ${i + 1}` });
       inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
-      inp.addEventListener('focus', () => kbd.setTarget(inp));
       inp.addEventListener('input', () => { inp.classList.remove('is-wrong'); updatePile(); });
       inputs.push(inp);
       return inp;
     }));
-    kbd.setTarget(inputs[0]);
     const pile = el('div', { class: 'pile' }, el('span', { class: 'pile__h', text: 'Hromádka vyplivnutých znaků:' }), el('span', { class: 'pile__chips' }, pileChips));
     const node = el('div', { class: 'tool-stack' }, pile, el('div', { class: 'note' }, text));
     return {
@@ -460,8 +319,8 @@ const TOOLS = {
     };
   },
 
-  rule(t, kbd) {
-    const f = textField('ans', t.from, { kbd, wide: true });
+  rule(t) {
+    const f = textField('ans', t.from, { wide: true });
     const ex = el('table', { class: 'rule-ex' }, el('caption', { class: 'sr-only', text: 'Příklad' }),
       el('thead', {}, el('tr', {}, el('th', { scope: 'col', text: 'Zadání' }), el('th', { scope: 'col', text: 'Zápis' }))),
       el('tbody', {}, t.examples.map(([a, b]) => el('tr', {}, el('td', { text: a }), el('td', { class: 'mono', text: b })))));
@@ -474,7 +333,7 @@ const TOOLS = {
     };
   },
 
-  password(t, kbd) {
+  password(t) {
     const list = el('ul', { class: 'checks', 'aria-live': 'polite' });
     const vault = el('div', { class: 'vault', 'aria-hidden': 'true' }, el('span', { class: 'vault__dial' }), el('span', { class: 'vault__count', text: '0/7' }));
     const upd = () => {
@@ -485,7 +344,7 @@ const TOOLS = {
       vault.style.setProperty('--p', String(ok / cs.length));
       vault.classList.toggle('is-open', ok === cs.length);
     };
-    const f = textField('ans', 'Heslo k trezoru', { kbd, wide: true, onInput: upd });
+    const f = textField('ans', 'Heslo k trezoru', { wide: true, onInput: upd });
     upd();
     const node = el('div', { class: 'tool-stack' }, el('div', { class: 'vault-row' }, vault, el('div', {}, el('p', { class: 'rule-card__h', text: 'Pravidla trezoru' }), list)), f.node);
     return {
@@ -496,8 +355,8 @@ const TOOLS = {
     };
   },
 
-  fix(t, kbd) {
-    const f = textField('ans', 'Text k opravě', { kbd, wide: true, value: t.wrong });
+  fix(t) {
+    const f = textField('ans', 'Text k opravě', { wide: true, value: t.wrong });
     const resetBtn = el('button', { type: 'button', class: 'btn btn--ghost btn--small', text: 'Vrátit původní text', onclick: () => { f.input.value = t.wrong; f.input.focus(); } });
     const node = el('div', { class: 'tool-stack' }, el('p', { class: 'orig small' }, el('b', { text: 'Původně: ' }), el('span', { class: 'mono', text: t.wrong })), f.node, el('div', { class: 'row row--tight' }, resetBtn));
     return {

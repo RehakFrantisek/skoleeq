@@ -33,8 +33,8 @@ test.describe('Klávesová mise', () => {
   test('příběh: kapitola 1 klávesnicí a myší, chyba = krok zpět, postup v localStorage @smoke', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto(URL);
-    await expect(page.locator('.chapter')).toHaveCount(5);
-    await expect(page.locator('.chapter:disabled')).toHaveCount(4);
+    await expect(page.locator('.chapter')).toHaveCount(6);
+    await expect(page.locator('.chapter:disabled')).toHaveCount(5);
 
     await page.locator('#storyStart').click();
     await expect(page.locator('#intro')).toBeVisible();
@@ -86,7 +86,7 @@ test.describe('Klávesová mise', () => {
 
     // obnovení stránky zachová postup
     await page.reload();
-    await expect(page.locator('.chapter:disabled')).toHaveCount(3);
+    await expect(page.locator('.chapter:disabled')).toHaveCount(4);
     await expect(page.locator('#storyStart')).toHaveText(/Pokračovat: kapitola 2/);
     expect(errors).toEqual([]);
   });
@@ -183,6 +183,46 @@ test.describe('Klávesová mise', () => {
     }
     await page.locator('.portal-back').click();
     await expect(page).toHaveURL('/');
+  });
+
+  test('kapitola Bez myši skutečnou klávesnicí; starý postup s 5 kapitolami se doplní', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto(URL);
+    await page.evaluate(() => localStorage.setItem('klavesova-mise-v2', JSON.stringify({ stars: [3, 2, 3, 1, 2], best: null, sound: false })));
+    await page.reload();
+    await expect(page.locator('.chapter')).toHaveCount(6);
+    await expect(page.locator('.chapter:disabled')).toHaveCount(0);
+    await expect(page.locator('#storyStart')).toHaveText(/Pokračovat: kapitola 6/);
+    await page.locator('#storyStart').click();
+    await expect(page.locator('#introTitle')).toHaveText('Bez myši');
+    await page.locator('#introGo').click();
+    const caret = () => page.evaluate(() => findPart(S.g, 'line').caret);
+    const step = () => page.evaluate(() => S.step);
+    const waitStep = async n => { await expect.poll(step).toBe(n); await expect.poll(() => page.evaluate(() => Date.now() >= S.lock)).toBe(true); };
+    await expect(page.locator('#taskChip')).toContainText('Jen klávesnice');
+    await page.locator('#paper').click(); // myš odpočívá
+    await expect(page.locator('#storyFeedback')).toContainText('Myš teď odpočívá');
+    await page.keyboard.press('End'); await waitStep(1);
+    await page.keyboard.press('Home'); await waitStep(2);
+    for (let i = 0; i < 4; i++) await page.keyboard.press('Control+ArrowRight');
+    await waitStep(3);
+    expect(await caret()).toBe(23);
+    await page.keyboard.press('Shift+Control+ArrowRight'); await waitStep(4);
+    await expect(page.locator('.ksel')).toHaveText('byl ');
+    await page.keyboard.press('Delete'); await waitStep(5);
+    await page.keyboard.press('End'); await page.keyboard.press('Backspace'); await page.keyboard.type('!'); await waitStep(6);
+    await page.keyboard.press('Shift+Home'); await waitStep(7);
+    await page.keyboard.press('Control+b'); await waitStep(8);
+    await expect(page.locator('[data-id="line"]')).toHaveClass(/fb/);
+    await expect(page.locator('[data-id="line"]')).toHaveText('Výlet na Karlštejn byl skvělý a cesta do kopce nás vůbec neunavila!');
+    await page.keyboard.press('Control+s');
+    await expect(page.locator('#chapterDone')).toBeVisible();
+    await expect(page.locator('#doneStars .star.on')).toHaveCount(3);
+    await page.locator('#doneNext').click();
+    await expect(page.locator('#finalStars .star')).toHaveCount(18);
+    const data = await stored(page);
+    expect(data.stars).toEqual([3, 2, 3, 1, 2, 3]);
+    expect(errors).toEqual([]);
   });
 
   test('původní test.html hlásí PASS @smoke', async ({ page }) => {

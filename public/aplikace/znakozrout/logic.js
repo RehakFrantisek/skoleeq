@@ -90,7 +90,7 @@ export const specials = text => uniq([...text].filter(c => !/[\p{L}\p{N}\s]/u.te
 
 /* ================= Obsah úloh ================= */
 export const LEVEL_INFO = [
-  { name: 'Kde znak bydlí', focus: 'Na jedné klávese jsou až tři znaky. Vlevo dole píšeš klávesou samotnou, vlevo nahoře se Shiftem a vpravo dole s pravým Altem (AltGr). Najdi je na své klávesnici.' },
+  { name: 'Kde znak bydlí', focus: 'Na jedné klávese jsou až tři znaky. Vlevo dole píšeš klávesou samotnou, vlevo nahoře se Shiftem a vpravo dole s pravým Altem (AltGr). Najdi je na své klávesnici a napiš je.' },
   { name: 'Vyplivnuté znaky', focus: 'Znakožrout snědl znaky ze zpráv a pak je vyplivl na hromádku. Vrať každý znak na správné místo – napiš ho na klávesnici.' },
   { name: 'Adresy a názvy', focus: 'E-mail, webová adresa i název souboru mají přísná pravidla: žádné mezery, žádné háčky, správné znaky na správném místě.' },
   { name: 'Trezor', focus: 'Znakožrout se schoval do trezoru. Otevře ho jen silné heslo – dlouhé a se znaky, které se píšou s AltGr.' },
@@ -174,7 +174,7 @@ export function buildGame(variant = 'A', mode = 'cela') {
   // 1) Kde znak bydlí
   for (const chars of rng.shuffle(WHERE_SETS).slice(0, quick ? 1 : 2)) {
     add(0, { type: 'where', skill: 'vrstvy', chars, title: 'Ukradené štítky',
-      prompt: `Znakožrout okusoval štítky na klávesách. Najdi na své klávesnici, kde jsou znaky ${chars.map(showChar).join(', ')}: klikni na řádek, pak na klávesu a vyber, s čím se znak píše.`,
+      prompt: `Znakožrout okusoval štítky na klávesách. Najdi na své klávesnici znaky ${chars.map(showChar).join(', ')} a do každého políčka je napiš – stiskni klávesu, a když je potřeba, drž k ní Shift nebo pravý Alt (AltGr).`,
       hints: ['Na klávese vlevo nahoře = se Shiftem, vlevo dole = bez přídavné klávesy, vpravo dole = s pravým Altem (AltGr).',
         `Klávesy: ${chars.map(c => `${showChar(c)} je na klávese ${keyName(WHERE[c].code)}`).join(' · ')}.`] });
   }
@@ -231,16 +231,17 @@ function firstDiff(a, b) {
 export function check(t, ans) {
   switch (t.type) {
     case 'where': {
-      const picks = ans?.picks || [];
-      if (picks.length < t.chars.length || picks.some(p => !p || !p.code || !p.layer)) return { ok: false, incomplete: true, msg: 'U každého znaku vyber klávesu i to, s čím se píše.' };
+      const v = (ans?.values || []).map(x => String(x ?? '').trim());
+      if (v.length < t.chars.length || v.some(x => !x)) return { ok: false, incomplete: true, msg: 'Do každého políčka napiš jeden znak – stiskni kombinaci kláves, která ho napíše.' };
       const bad = [];
       t.chars.forEach((c, i) => {
-        const w = WHERE[c], p = picks[i];
-        if (p.code !== w.code) bad.push(`${showChar(c)} na klávese ${keyName(p.code)} není – podívej se na své klávesnici na znak v rozích kláves.`);
-        else if (p.layer !== w.layer) bad.push(`${showChar(c)} je na správné klávese, ale píše se ${LAYER_NAME[w.layer]}${w.layer === 'altgr' ? ' – znak je vpravo dole' : w.layer === 'shift' ? ' – znak je vlevo nahoře' : ''}.`);
+        if (v[i] === c) return;
+        const w = WHERE[c], got = WHERE[v[i]];
+        if (got && got.code === w.code) bad.push(`${showChar(v[i])} je na správné klávese, ale ${showChar(c)} se píše ${LAYER_NAME[w.layer]}${w.layer === 'altgr' ? ' – znak je na klávese vpravo dole' : w.layer === 'shift' ? ' – znak je na klávese vlevo nahoře' : ''}.`);
+        else bad.push(`Místo ${showChar(c)} jsi napsal(a) ${showChar(v[i])}. Hledej ${showChar(c)} v rozích kláves na své klávesnici.`);
       });
       if (!bad.length) return { ok: true, msg: `Štítky jsou zpátky: ${t.chars.map(howTo).join(' · ')}.` };
-      return { ok: false, msg: bad.join(' ') };
+      return { ok: false, msg: bad.join(' '), wrong: t.chars.map((c, i) => (v[i] === c ? null : i)).filter(i => i != null) };
     }
     case 'blanks': {
       const v = (ans?.values || []).map(x => norm(x).trim());
@@ -292,7 +293,7 @@ export function check(t, ans) {
 
 export function solution(t) {
   switch (t.type) {
-    case 'where': return { picks: t.chars.map(c => ({ ...WHERE[c] })) };
+    case 'where': return { values: [...t.chars] };
     case 'blanks': return { values: [...t.answers] };
     case 'rule': return { value: t.answer };
     case 'password': return { value: t.example };

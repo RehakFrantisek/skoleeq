@@ -4,8 +4,8 @@
     {
       "id": "klavesova-mise",
       "title": "Klávesová mise",
-      "subtitle": "Klik a školní výlet",
-      "description": "Pomoz myšákovi Klikovi připravit školní výlet a procvič 12 klávesových zkratek – v příběhu i v tréninku na čas.",
+      "subtitle": "Kurzík a školní výlet",
+      "description": "Pomoz myšákovi Kurzíkovi připravit školní výlet a procvič 12 klávesových zkratek a pohyb v textu bez myši – v příběhu i v tréninku na čas.",
       "url": "/aplikace/klavesova-mise/",
       "subject": "Informatika",
       "grades": [7],
@@ -17,17 +17,20 @@
       "featured": true,
       "requiresKeyboard": true,
       "status": "published",
-      "skills": ["Kopírování, vyjmutí a vložení (Ctrl+C/X/V)", "Zpět a Znovu (Ctrl+Z/Y)", "Označení, uložení, tisk a hledání"],
+      "skills": ["Kopírování, vyjmutí a vložení (Ctrl+C/X/V)", "Zpět a Znovu (Ctrl+Z/Y)", "Označení, uložení, tisk a hledání", "Pohyb a označení textu bez myši (šipky, Home, End, Shift)"],
       "teacher": {
         "goals": [
           "Žák používá základní klávesové zkratky pro práci s textem a souborem.",
-          "Žák rozliší Zpět a Znovu a ví, kdy je použít."
+          "Žák rozliší Zpět a Znovu a ví, kdy je použít.",
+          "Žák se v řádku textu pohybuje jen klávesnicí (šipky, Ctrl + šipka po slovech, Home, End) a se Shiftem označí slovo i celý řádek."
         ],
         "svp": [
           { "grade": 7, "text": "používá klávesové zkratky a příkazy Zpět a znovu" },
-          { "grade": 7, "text": "používá některé klávesové zkratky" }
+          { "grade": 7, "text": "používá některé klávesové zkratky" },
+          { "grade": 7, "text": "pohyb v dokumentu pomocí klávesnice i myši" },
+          { "grade": 7, "text": "výběr znaku, slova, řádku..." }
         ],
-        "lesson": "Příběh trvá asi 15–20 minut, trénink na čas 3–5 minut. Hodí se jako rozcvička nebo samostatná práce v učebně; zbytek hodiny lze navázat prací ve skutečném textovém editoru.",
+        "lesson": "Příběh (6 kapitol) trvá asi 20–25 minut, trénink na čas 3–5 minut. Kapitola 6 „Bez myši“ jde spustit i samostatně, když jsou předchozí kapitoly hotové – hodí se jako navázání na hodinu o označování textu. Hodí se jako rozcvička nebo samostatná práce v učebně; zbytek hodiny lze navázat prací ve skutečném textovém editoru.",
         "prerequisites": [
           "Orientace na klávesnici (Ctrl, Shift, písmena).",
           "Základní práce s textem: psaní a označení myší."
@@ -35,7 +38,8 @@
         "reflection": [
           "Kterou zkratku použiješ nejčastěji a proč?",
           "Čím se liší Ctrl+X a Ctrl+C?",
-          "Co uděláš, když omylem smažeš odstavec?"
+          "Co uděláš, když omylem smažeš odstavec?",
+          "Kdy je rychlejší označit text klávesnicí než myší?"
         ],
         "differentiation": "Rychlejší žáci: trénink na čas a překonání vlastního rekordu. Začínající: jen příběhový režim, klávesy hledat podle nápovědy na obrazovce.",
         "gradeNote": "Podle tematického plánu ICT školy jsou klávesové zkratky v 7. ročníku (listopad, textový editor). Jako rozcvička se hodí i v jiných ročnících."
@@ -467,7 +471,7 @@
           { "grade": 7, "text": "dodržuje základní typografická pravidla" },
           { "grade": 7, "text": "chápe pojmy e-mail, VoIP, SMS" }
         ],
-        "lesson": "Hodí se do bloku textového editoru v 7. ročníku jako rozcvička před psaním vlastního dokumentu nebo jako samostatná práce. Rychlá hra (6 úloh) zabere asi 10 minut, celá hra (11 úloh v 5 úrovních) asi 20 minut. Pod každou úlohou je klávesnice se třemi barevnými vrstvami: ukazuje, kterou klávesu žák stiskl a zda se Shiftem nebo AltGr. Na tabletu se na ni dá ťukat. Varianty A/B/C mají jiné texty a pravidla hesla; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Hesla z úlohy Trezor se nikam neukládají.",
+        "lesson": "Hodí se do bloku textového editoru v 7. ročníku jako rozcvička před psaním vlastního dokumentu nebo jako samostatná práce. Rychlá hra (6 úloh) zabere asi 10 minut, celá hra (11 úloh v 5 úrovních) asi 20 minut. Píše se jen na fyzické klávesnici (na tabletu bez klávesnice hra nejde); pod úlohou se ukazuje, kterou klávesu žák stiskl a zda se Shiftem nebo AltGr. Varianty A/B/C mají jiné texty a pravidla hesla; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Hesla z úlohy Trezor se nikam neukládají.",
         "prerequisites": [
           "Psaní písmen a číslic na klávesnici.",
           "Vědět, kde je klávesa Shift a pravý Alt (na české klávesnici často označený AltGr)."
@@ -477,7 +481,7 @@
           "Proč se do e-mailové adresy nepíšou mezery ani háčky?",
           "Kdy napíšeš 25 % a kdy 25% (s mezerou a bez ní)?"
         ],
-        "differentiation": "Rychlí žáci: celá hra bez nápověd a bez ťukání na obrazovce, pak druhá varianta; navíc mohou ve skutečném editoru napsat vlastní pozvánku se všemi znaky z hry. Začínající: rychlá hra s ukázkou; klávesnice na obrazovce ukazuje všechny vrstvy a druhá nápověda zvýrazní potřebné klávesy.",
+        "differentiation": "Rychlí žáci: celá hra bez nápověd, pak druhá varianta; navíc mohou ve skutečném editoru napsat vlastní pozvánku se všemi znaky z hry. Začínající: rychlá hra s ukázkou; vedle sebe mít obrázek české klávesnice nebo se dívat na tu skutečnou; druhá nápověda řekne potřebné kombinace.",
         "gradeNote": "Citace jsou ze ŠVP školy pro 7. ročník (Textové editory, Internet a komunikace); podle tematického plánu ICT je textový editor v 7. ročníku září–prosinec. Rozložení kláves odpovídá české klávesnici QWERTZ ve Windows – na Macu nebo s jiným rozložením jsou některé znaky jinde (hra přesto kontroluje jen napsaný text)."
       }
     }

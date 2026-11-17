@@ -6,7 +6,7 @@ Statický web bez backendu a bez databáze, hostovaný na **Cloudflare Pages** p
 - Katalog her se generuje z registru [`public/apps.json`](public/apps.json) – hledání (i bez diakritiky) a filtry podle ročníku, předmětu, tématu a obtížnosti.
 - Každá hra je samostatná stránka ve složce `public/aplikace/<slug>/` – žádné iframy, žádné sdílené herní jádro.
 - Hratelné hry:
-  - **Klávesová mise – Klik a školní výlet** (`/aplikace/klavesova-mise/`)
+  - **Klávesová mise – Kurzík a školní výlet** – 12 zkratek a pohyb v textu bez myši, 6 kapitol + trénink (`/aplikace/klavesova-mise/`)
   - **Datoví detektivové – tabulky a grafy** (`/aplikace/datovi-detektivove/`)
   - **Dokumentová záchranka** – formátování dokumentu ve skutečném mini-editoru, 10 misí (`/aplikace/dokumentova-zachranka/`)
   - **Robotí dílna: Záchrana sondy** – programování z bloků, interpret s krokováním, 12 misí (`/aplikace/roboti-dilna/`)

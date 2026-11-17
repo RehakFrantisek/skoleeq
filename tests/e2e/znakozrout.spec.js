@@ -1,7 +1,7 @@
 // E2E testy hry Znakožrout: titulní obrazovka, ukázka, dohrání celé hry přes skutečné ovládací prvky
-// (výběr klávesy a vrstvy, psaní do mezer, adresy, trezor, oprava textu), klávesnice na obrazovce
-// (zvýraznění stisku, ťukání s AltGr), chyba s vysvětlením, nevyplněná odpověď se nepočítá, nápověda
-// zvýrazní klávesy, rychlý režim z URL, Menu hry, 320 px dotykem, smazání výsledků.
+// (psaní znaků do políček a mezer, adresy, trezor, oprava textu), řádek „Stisknuto“ s klávesou a vrstvou,
+// žádná klávesnice na obrazovce, chyba s vysvětlením, nevyplněná odpověď se nepočítá, nápovědy,
+// rychlý režim z URL, Menu hry, 320 px, smazání výsledků.
 import { test, expect } from '@playwright/test';
 import { watchErrors, expectNoHorizontalScroll } from './helpers.js';
 import * as L from '../../public/aplikace/znakozrout/logic.js';
@@ -13,14 +13,9 @@ const CHECK = 'Zkontrolovat';
 /** Vyplní správnou odpověď přes skutečné ovládací prvky nástroje. */
 async function solve(page, t, { tap = false } = {}) {
   const a = L.solution(t);
-  const press = loc => (tap ? loc.tap() : loc.click());
   switch (t.type) {
     case 'where':
-      for (const [i, p] of a.picks.entries()) {
-        await press(page.locator(`#pick-${i}`));
-        await press(page.locator(`.kbd [data-code="${p.code}"]`));
-        await page.locator(`input[name="ly-${i}"][value="${p.layer}"]`).check();
-      }
+      for (const [i, v] of a.values.entries()) await page.locator(`#wh-${i}`).fill(v);
       break;
     case 'blanks':
       for (const [i, v] of a.values.entries()) {
@@ -88,35 +83,32 @@ test.describe('Znakožrout', () => {
     expect(errors).toEqual([]);
   });
 
-  test('kde znak bydlí: prázdné se nepočítá, špatná vrstva = vysvětlení, řešení', async ({ page }) => {
+  test('kde znak bydlí: prázdné se nepočítá, špatná vrstva = vysvětlení, řešení; klávesnice na obrazovce není', async ({ page }) => {
     await page.goto(URL);
     await page.getByRole('button', { name: 'Přeskočit ukázku' }).click();
     await passIntroIfShown(page);
     const t = L.buildGame('A')[0];
+    await expect(page.locator('.kbd, .key')).toHaveCount(0);
     await page.getByRole('button', { name: CHECK }).click();
     await page.getByRole('button', { name: CHECK }).click();
-    await expect(page.locator('#feedback')).toContainText('U každého znaku vyber');
+    await expect(page.locator('#feedback')).toContainText('Do každého políčka napiš');
     await expect(page.locator('#btn-reveal')).toBeHidden();
-    // na obrazovce jsou jen hlavní znaky – AltGr vrstva není vidět
-    await expect(page.locator('.kbd--pick .key__br')).toHaveCount(0);
-    const a = L.solution(t);
-    for (const [i, p] of a.picks.entries()) {
-      await page.locator(`#pick-${i}`).click();
-      await page.locator(`.kbd [data-code="${p.code}"]`).click();
-      const wrong = i === 0 ? (p.layer === 'base' ? 'shift' : 'base') : p.layer;
-      await page.locator(`input[name="ly-${i}"][value="${wrong}"]`).check();
-    }
-    await expect(page.locator('#pick-0')).toContainText(`klávesa: ${L.keyName(a.picks[0].code)}`);
-    await page.getByRole('button', { name: CHECK }).click();
+    // první znak: správná klávesa, ale bez přídavné klávesy (např. v místo @)
+    const w = L.WHERE[t.chars[0]];
+    const sameKey = L.KEYS[w.code][w.layer === 'base' ? 'shift' : 'base'];
+    for (const [i, c] of t.chars.entries()) await page.locator(`#wh-${i}`).fill(i === 0 ? sameKey : c);
+    await page.locator('#wh-2').press('Enter');
     await expect(page.locator('#feedback')).toContainText('na správné klávese');
+    await expect(page.locator('#wh-0')).toHaveClass(/is-wrong/);
     await page.getByRole('button', { name: CHECK }).click();
     await page.getByRole('button', { name: 'Ukázat řešení' }).click();
     await expect(page.locator('#feedback')).toContainText('Řešení:');
+    await expect(page.locator('#wh-0')).toHaveValue(t.chars[0]);
     await expect(page.locator('#btn-next')).toBeFocused();
     await expect(page.locator('#belly .slot.is-dim')).toHaveCount(1);
   });
 
-  test('klávesnice: zvýrazní stisk, ťuknutí s AltGr vloží @, nápověda označí klávesy, Enter zkontroluje', async ({ page }) => {
+  test('řádek Stisknuto: ukáže klávesu i AltGr; nápovědy; Enter zkontroluje', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto(URL + '?rezim=rychly');
     await page.getByRole('button', { name: 'Přeskočit ukázku' }).click();
@@ -125,21 +117,18 @@ test.describe('Znakožrout', () => {
       if (t.type === 'blanks') {
         await page.locator('#bl-0').click();
         await page.keyboard.press('KeyV');
-        await expect(page.locator('.kbd__readout')).toContainText('klávesa V → v');
+        await expect(page.locator('.readout__text')).toHaveText('klávesa V → v');
+        // AltGr na české klávesnici = Ctrl + Alt; Playwright neumí české rozložení, tak událost pošleme přímo
+        await page.locator('#bl-0').evaluate(n => n.dispatchEvent(new KeyboardEvent('keydown', { key: '@', code: 'KeyV', ctrlKey: true, altKey: true, bubbles: true })));
+        await expect(page.locator('.readout__text')).toHaveText('pravý Alt (AltGr) + V → @ (zavináč)');
+        await page.locator('#bl-0').evaluate(n => n.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', code: 'KeyC', ctrlKey: true, bubbles: true })));
+        await expect(page.locator('.readout__text')).toHaveText('pravý Alt (AltGr) + V → @ (zavináč)'); // Ctrl+C se nepíše
         await page.locator('#bl-0').fill('');
-        // ťuknutí: AltGr + V
-        await page.getByRole('button', { name: 'AltGr' }).click();
-        await expect(page.getByRole('button', { name: 'AltGr' })).toHaveAttribute('aria-pressed', 'true');
-        await page.locator('.kbd [data-code="KeyV"]').click();
-        await expect(page.locator('#bl-0')).toHaveValue('@');
-        await expect(page.getByRole('button', { name: 'AltGr' })).toHaveAttribute('aria-pressed', 'false');
-        await expect(page.locator('.kbd__readout')).toContainText('pravý Alt (AltGr) + V → @ (zavináč)');
-        // zbytek mezer nevyplněn → nepočítá se
         await page.locator('#bl-0').press('Enter');
         await expect(page.locator('#feedback')).toContainText('Vyplň všechny mezery');
         for (let k = 0; k < t.hints.length; k++) await page.getByRole('button', { name: '🔍 Nápověda' }).click();
         await expect(page.locator('#hint-count')).toHaveText(String(t.hints.length));
-        await expect(page.locator('.kbd .key.is-hint')).not.toHaveCount(0);
+        await expect(page.locator('#hints')).toContainText(L.combo(t.answers[0][0]));
         await solve(page, t);
         await page.locator('#bl-0').press('Enter');
         await expect(page.locator('#feedback')).toContainText('Správně');
@@ -224,22 +213,14 @@ test.describe('Znakožrout', () => {
 });
 
 test.describe('Znakožrout – mobil', () => {
-  test('320 px: celá hra dotykem bez vodorovného scrollu, ťukání na klávesnici @mobile', async ({ page }) => {
+  test('320 px: celá hra bez vodorovného scrollu @mobile', async ({ page }) => {
     test.setTimeout(120_000);
     await page.setViewportSize({ width: 320, height: 720 });
     await page.goto(URL + '?varianta=B');
     await expectNoHorizontalScroll(page);
     await page.getByRole('button', { name: 'Začít ukázkou' }).tap();
     await expectNoHorizontalScroll(page);
-    // ukázka ťukáním: Shift + čárka = ?, Shift + § = !
-    await page.locator('#bl-0').tap();
-    await page.getByRole('button', { name: 'Shift' }).tap();
-    await page.locator('.kbd [data-code="Comma"]').tap();
-    await expect(page.locator('#bl-0')).toHaveValue('?');
-    await page.locator('#bl-1').tap();
-    await page.getByRole('button', { name: 'Shift' }).tap();
-    await page.locator('.kbd [data-code="Quote"]').tap();
-    await expect(page.locator('#bl-1')).toHaveValue('!');
+    await solve(page, L.tutorialTask(), { tap: true });
     await page.getByRole('button', { name: CHECK }).tap();
     await expect(page.locator('#feedback')).toContainText('Správně');
     await page.locator('#btn-next').tap();

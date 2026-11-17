@@ -93,6 +93,13 @@ Zdroj: `index.zip` (z `shortcut-game/index.zip`, 5 souborů) rozbalený beze zm�
 
 Zachováno: 5 kapitol / 37 kroků, trénink 12 zkratek, zvuky, hvězdy, rekord, kopírování výsledku, `test.html`, klíč `localStorage` **`klavesova-mise-v2`**.
 
+**Úpravy 2026-11-17:**
+
+- Maskot přejmenován z „Klik“ na **„Kurzík“** (jen texty; CSS třídy `klik-*` a funkce `klikSVG` zůstaly). Důvod: shoda se jménem myšáka v cizí aplikaci Klik a Ťuk.
+- Nová **6. kapitola „Bez myši“** (9 kroků, celkem 6 kapitol / 46 kroků): krok typu `nav` má v řádku `line` vlastní kurzor a výběr (`caret`, `anchor`) a ovládá se jen klávesnicí – šipky (s Ctrl po slovech), Home/End, Shift pro výběr, Backspace/Delete, psaní znaků; krok je splněný podle výsledku (`ok(řádek)`), ne podle konkrétní klávesy. Ctrl + Z v kroku vrátí řádek na začátek kroku. Chyby se počítají jen u zkratek s písmenem.
+- Uložený postup s 5 hvězdičkami se při načtení doplní nulou pro 6. kapitolu; finále počítá z `CHAPTERS.length × 3` hvězd.
+- Hra dál bere vstup jen z fyzické klávesnice (klávesnice na obrazovce byla v původním projektu záměrně odstraněna).
+
 ### Zkratky a omezení prohlížečů
 
 - Hra zachytává `keydown` ve fázi capture na `document` a pro Ctrl/⌘ + písmeno volá `preventDefault()`, ale **jen během příběhu a tréninku** (na úvodní obrazovce hry zkratky prohlížeče fungují normálně). Test ověřuje, že `Ctrl + A/C/X/V/S/P/F/Z/Y/B/I/U` mají `defaultPrevented`, takže se v aktivní hře neotevře tisk (Ctrl+P), hledání (Ctrl+F) ani ukládání (Ctrl+S).

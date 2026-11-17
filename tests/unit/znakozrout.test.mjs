@@ -53,21 +53,22 @@ test('každá úloha jde vyřešit a prázdná odpověď se nepočítá', () => 
     for (const t of [...L.buildGame(v, m), L.tutorialTask()]) {
       const r = L.check(t, L.solution(t));
       assert.ok(r.ok, `${v}/${m} ${t.id}: ${r.msg}`);
-      const empty = { where: { picks: [] }, blanks: { values: [] }, rule: { value: '  ' }, password: { value: '' }, fix: { value: '' } }[t.type];
+      const empty = { where: { values: ['', '', ''] }, blanks: { values: [] }, rule: { value: '  ' }, password: { value: '' }, fix: { value: '' } }[t.type];
       assert.equal(L.check(t, empty).incomplete, true, t.id);
     }
   }
 });
 
 test('kde znak bydlí: správná klávesa se špatnou vrstvou dostane konkrétní vysvětlení', () => {
-  const t = L.buildGame('A').find(x => x.type === 'where');
-  const sol = L.solution(t);
-  const wrongLayer = { picks: sol.picks.map((p, i) => (i === 0 ? { ...p, layer: p.layer === 'altgr' ? 'shift' : 'altgr' } : p)) };
-  const r = L.check(t, wrongLayer);
+  const t = { type: 'where', chars: ['@', '?', '%'] };
+  assert.equal(L.check(t, { values: ['@', '?', '%'] }).ok, true);
+  const r = L.check(t, { values: ['v', '?', '%'] }); // V bez AltGr
   assert.equal(r.ok, false);
-  assert.match(r.msg, /na správné klávese/);
-  const wrongKey = { picks: sol.picks.map((p, i) => (i === 1 ? { ...p, code: p.code === 'KeyA' ? 'KeyB' : 'KeyA' } : p)) };
-  assert.match(L.check(t, wrongKey).msg, /není/);
+  assert.deepEqual(r.wrong, [0]);
+  assert.match(r.msg, /správné klávese.*pravým Altem/);
+  assert.match(L.check(t, { values: ['@', ',', '%'] }).msg, /vlevo nahoře/); // čárka bez Shiftu
+  assert.match(L.check(t, { values: ['@', '?', 'x'] }).msg, /Místo „%“ jsi napsal\(a\) „x“/);
+  assert.equal(L.check(t, { values: ['@', '', '%'] }).incomplete, true);
 });
 
 test('mezery: chyba označí pozice a pozná znak, který na hromádce není', () => {

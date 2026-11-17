@@ -29,7 +29,7 @@ test.describe('Katalog', () => {
     await expect(page.locator('#count')).toHaveText(`Nalezeno: 1 hra z ${N}`);
     await expect(page).toHaveURL(/\?q=klavesove\+zkratky/);
 
-    await search.fill('MYSAK KLIK');                  // velká písmena, popis
+    await search.fill('MYSAK KURZIK');                  // velká písmena, popis
     await expect(card(page, 'klavesova-mise')).toBeVisible();
 
     await search.fill('zirafy');                      // nic takového v katalogu není
@@ -138,7 +138,7 @@ test.describe('Katalog', () => {
     // klik kamkoli na kartu (odkaz „Spustit“ je roztažený přes celou kartu)
     await card(page, 'klavesova-mise').click({ position: { x: 40, y: 260 } });
     await expect(page).toHaveURL('/aplikace/klavesova-mise/');
-    await expect(page).toHaveTitle('Klávesová mise – Klik a školní výlet');
+    await expect(page).toHaveTitle('Klávesová mise – Kurzík a školní výlet');
   });
 
   test('klávesnicí: Tab dojde na odkaz Spustit a Enter hru otevře', async ({ page }) => {
