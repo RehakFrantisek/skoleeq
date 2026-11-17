@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Znakožrout – speciální znaky, AltGr a typografie</title>
+  <meta name="description" content="Výuková hra: Znakožrout snědl znaky ze školních textů. Najdi je na klávesnici (Shift a AltGr), vrať je do zpráv, napiš e-mail a webovou adresu, otevři trezor silným heslem a oprav typografii.">
+  <meta name="theme-color" content="#3b2a6b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#hra">Přeskočit na hru</a>
+
+  <header class="bar">
+    <a class="back" href="/" aria-label="Zpět do katalogu her">← <span>Všechny hry</span></a>
+    <p class="brand"><span class="brand__mark" aria-hidden="true">@</span> <span>Znakožrout</span></p>
+    <div class="hud" id="hud" hidden>
+      <label class="sr-only" for="progress">Postup</label>
+      <progress id="progress" max="1" value="0"></progress>
+      <span class="chip" id="hud-task"></span>
+      <span class="chip"><span aria-hidden="true">🔍</span> <span class="sr-only">Použité nápovědy:</span> <b id="hint-count">0</b></span>
+      <span class="chip" id="timer" hidden><span aria-hidden="true">⏱</span> <span class="sr-only">Čas:</span> <b>0:00</b></span>
+      <button class="menu-btn" id="btn-menu" type="button" aria-label="Menu hry"><span aria-hidden="true">☰</span> <span class="menu-btn__t">Menu hry</span></button>
+    </div>
+  </header>
+
+  <main id="hra" tabindex="-1">
+    <!-- ===== 1) Titulní obrazovka ===== -->
+    <section class="screen" id="s-title" aria-labelledby="title-h">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Počítačová učebna · poplach</p>
+          <h1 id="title-h">Znakožrout</h1>
+          <p class="lead">Do školních počítačů se vloudil Znakožrout. Sežral ze zpráv otazníky, zavináče, závorky i stupně Celsia. Najdi znaky na klávesnici, vrať je zpátky a vyžeň ho z učebny.</p>
+        </div>
+        <div class="hero__art" aria-hidden="true">
+          <div class="monster"><i class="monster__eye"></i><i class="monster__eye"></i><span class="monster__mouth">@ ? % ° # &amp;</span></div>
+        </div>
+      </div>
+      <div class="info-grid">
+        <article class="info">
+          <h2>Co se naučíš</h2>
+          <ul>
+            <li>najít na klávesnici znak a poznat, jestli se píše se Shiftem, nebo s pravým Altem (AltGr)</li>
+            <li>psát interpunkci, závorky, smajlíky a znaménka jako ×, ÷, &lt; a &gt;</li>
+            <li>napsat e-mail, webovou adresu a název souboru podle pravidla</li>
+            <li>vytvořit silné heslo se speciálními znaky</li>
+            <li>dodržet typografická pravidla: −3 °C, 40 %, (do Brna), 3 × 4</li>
+          </ul>
+        </article>
+        <article class="info">
+          <h2>Jak se hraje</h2>
+          <p><b>5 úrovní</b>, každá s krátkým úvodem. Pod úlohou je klávesnice: ukazuje, kterou klávesu jsi stiskl(a) a jestli s Shiftem nebo AltGr. Na dotykovém zařízení na ni můžeš ťukat.</p>
+          <p>Chyba nevadí – hra napíše proč a ty opravíš. Nápověda výsledek nesnižuje. Rozložení odpovídá české klávesnici ve Windows.</p>
+        </article>
+      </div>
+      <fieldset class="opts">
+        <legend>Nastavení</legend>
+        <div class="seg" role="radiogroup" aria-label="Délka hry">
+          <label><input type="radio" name="mode" value="cela" checked> <span><b>Celá hra</b> 11 úloh · asi 20 min</span></label>
+          <label><input type="radio" name="mode" value="rychly"> <span><b>Rychlá hra</b> 6 úloh · asi 10 min</span></label>
+        </div>
+        <div class="seg seg--small" role="radiogroup" aria-label="Varianta zadání">
+          <span class="seg__label">Varianta zadání:</span>
+          <label><input type="radio" name="variant" value="A" checked> <span>A</span></label>
+          <label><input type="radio" name="variant" value="B"> <span>B</span></label>
+          <label><input type="radio" name="variant" value="C"> <span>C</span></label>
+        </div>
+        <label class="switch"><input type="checkbox" id="opt-timer"> <span>Zobrazit stopky (bez časového limitu)</span></label>
+      </fieldset>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-start" type="button">Začít ukázkou</button>
+        <button class="btn btn--ghost" id="btn-skip" type="button">Přeskočit ukázku</button>
+      </div>
+      <div class="best-box">
+        <p class="small" id="best"></p>
+        <p class="muted small">Výsledky se ukládají jen v tomto prohlížeči. Nikam se neodesílají. Hesla z trezoru se neukládají vůbec.</p>
+        <div class="row row--tight" id="reset-box"><button class="btn btn--ghost btn--small" id="btn-reset" type="button">Smazat moje výsledky</button></div>
+      </div>
+      <p class="teacher-link"><a href="/pro-ucitele/#znakozrout">Pro učitele: cíle, návaznost na tematický plán a tipy do hodiny →</a></p>
+    </section>
+
+    <!-- ===== 2) Úvod úrovně ===== -->
+    <section class="screen screen--intro" id="s-intro" hidden aria-labelledby="intro-h">
+      <p class="eyebrow" id="intro-num"></p>
+      <h2 id="intro-h" tabindex="-1"></h2>
+      <p class="lead" id="intro-focus"></p>
+      <p class="muted" id="intro-count"></p>
+      <div class="row"><button class="btn btn--primary" id="btn-intro" type="button">Do toho →</button></div>
+    </section>
+
+    <!-- ===== 3) Úloha ===== -->
+    <section class="play" id="s-play" hidden aria-labelledby="task-h">
+      <article class="screen task">
+        <p class="task__meta"><span class="badge" id="task-level"></span> <span id="task-meta"></span></p>
+        <h2 id="task-h" tabindex="-1"></h2>
+        <p class="task__prompt" id="task-prompt"></p>
+        <div class="tool" id="tool"></div>
+        <div id="hints" aria-live="polite"></div>
+        <div class="row">
+          <button class="btn btn--primary" id="btn-check" type="button">Zkontrolovat</button>
+          <button class="btn btn--ghost" id="btn-hint" type="button">🔍 Nápověda</button>
+        </div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+        <div class="row">
+          <button class="btn btn--ghost" id="btn-reveal" type="button" hidden>Ukázat řešení</button>
+          <button class="btn btn--success" id="btn-next" type="button" hidden>Další úloha →</button>
+        </div>
+        <div id="kbd-box"></div>
+      </article>
+      <aside class="screen belly-panel" aria-labelledby="belly-h">
+        <h2 id="belly-h">Znakožroutův žaludek</h2>
+        <div class="belly" id="belly"></div>
+        <p class="small muted" id="belly-note"></p>
+      </aside>
+    </section>
+
+    <!-- ===== 4) Závěr ===== -->
+    <section class="screen" id="s-end" hidden aria-labelledby="end-h">
+      <p class="eyebrow">Učebna je volná</p>
+      <h2 id="end-h" tabindex="-1">Znakožrout je pryč!</h2>
+      <div class="end-grid">
+        <div class="belly belly--big" id="belly-end"></div>
+        <div>
+          <p class="lead" id="result"></p>
+          <dl class="stats" id="stats"></dl>
+          <h3>Co umíš</h3>
+          <ul class="skills" id="skills"></ul>
+        </div>
+      </div>
+      <p class="muted small">Výsledek je uložený jen v tomto prohlížeči.</p>
+      <div class="row">
+        <button class="btn btn--primary" id="btn-again" type="button">Hrát jinou variantu</button>
+        <button class="btn btn--ghost" id="btn-home" type="button">Na začátek</button>
+        <a class="btn btn--ghost" href="/">Další hry</a>
+      </div>
+    </section>
+  </main>
+  <dialog id="dlg-menu" aria-labelledby="dlg-menu-h">
+    <h2 id="dlg-menu-h">Odejít do menu hry?</h2>
+    <p>Rozehraná hra se neuloží. Tvůj dosavadní nejlepší výsledek zůstane.</p>
+    <div class="row">
+      <button class="btn btn--primary" id="btn-menu-yes" type="button">Ano, do menu</button>
+      <button class="btn btn--ghost" id="btn-menu-no" type="button">Hrát dál</button>
+    </div>
+  </dialog>
+</body>
+</html>

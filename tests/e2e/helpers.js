@@ -12,7 +12,9 @@ export function watchErrors(page, { allow404 = [] } = {}) {
   page.on('response', r => {
     if (r.status() >= 400 && !allow404.some(p => r.url().includes(p))) errors.push(`HTTP ${r.status()}: ${r.url()}`);
   });
-  page.on('requestfailed', r => errors.push(`failed: ${r.url()} ${r.failure()?.errorText}`));
+  // ERR_ABORTED = prohlížeč požadavek zrušil (typicky náhledy karet při odchodu ze stránky) – není to chyba.
+  // Chybějící soubory zachytí kontrola stavu 4xx/5xx výše.
+  page.on('requestfailed', r => { const t = r.failure()?.errorText || ''; if (!t.includes('ERR_ABORTED')) errors.push(`failed: ${r.url()} ${t}`); });
   return errors;
 }
 

@@ -434,6 +434,52 @@
         "differentiation": "Rychlí žáci: celá mise bez nápověd, pak druhá varianta s cílem vše napoprvé; navíc mohou nakreslit vlastní snímek z tvarů na papír a nechat spolužáka ho podle zápisu nakreslit. Začínající: rychlá mise s ukázkou; nápovědy výsledek nesnižují a po dvou pokusech jde zobrazit řešení s vysvětlením.",
         "gradeNote": "Citace jsou z tematického plánu ICT školy pro 6. ročník (říjen). Šestnáctkový zápis je omezený na hodnoty 00, 40, 80, C0 a FF; ceny v bitech jsou zjednodušený model pro porovnání zápisů."
       }
+    },
+    {
+      "id": "znakozrout",
+      "title": "Znakožrout",
+      "subtitle": "Speciální znaky, AltGr a typografie",
+      "description": "Znakožrout snědl ze školních textů otazníky, zavináče i stupně Celsia. Najdi znaky na klávesnici (Shift a AltGr), vrať je do zpráv, napiš e-mail a adresu, otevři trezor silným heslem a oprav typografii.",
+      "url": "/aplikace/znakozrout/",
+      "subject": "Informatika",
+      "grades": [7],
+      "topics": ["Práce s textem", "Typografie"],
+      "difficulty": "lehka",
+      "durationMinutes": 20,
+      "icon": "keyboard",
+      "color": "pink",
+      "featured": false,
+      "requiresKeyboard": true,
+      "thumbnail": "nahled.svg",
+      "status": "published",
+      "skills": ["Tři vrstvy klávesy: sama, Shift, AltGr", "Interpunkce, závorky, smajlíci a znaménka × ÷ =", "E-mail, webová adresa a název souboru podle pravidla", "Silné heslo se speciálními znaky", "Mezery u jednotek, procent, závorek a znamének"],
+      "teacher": {
+        "goals": [
+          "Žák najde na klávesnici speciální znak a určí, zda se píše samotnou klávesou, se Shiftem, nebo s pravým Altem (AltGr).",
+          "Žák napíše interpunkci, závorky, smajlíka a matematická znaménka (×, ÷, =, menší a větší než) na správné místo ve větě.",
+          "Žák podle pravidla zapíše e-mailovou adresu, webovou adresu a název souboru bez mezer a diakritiky.",
+          "Žák vytvoří heslo, které splní pravidla síly (délka, velká a malá písmena, číslice, znaky z vrstvy AltGr, žádná snadno uhodnutelná slova).",
+          "Žák opraví text podle základních typografických pravidel: mezera mezi číslem a jednotkou (−3 °C, 40 %, 120 Kč), žádná mezera uvnitř závorek a před interpunkcí, mezery kolem znamének."
+        ],
+        "svp": [
+          { "grade": 7, "text": "pohyb v dokumentu pomocí klávesnice i myši" },
+          { "grade": 7, "text": "vytvoří vlastní dokument v textovém editoru, který upraví a existující změny uloží" },
+          { "grade": 7, "text": "dodržuje základní typografická pravidla" },
+          { "grade": 7, "text": "chápe pojmy e-mail, VoIP, SMS" }
+        ],
+        "lesson": "Hodí se do bloku textového editoru v 7. ročníku jako rozcvička před psaním vlastního dokumentu nebo jako samostatná práce. Rychlá hra (6 úloh) zabere asi 10 minut, celá hra (11 úloh v 5 úrovních) asi 20 minut. Pod každou úlohou je klávesnice se třemi barevnými vrstvami: ukazuje, kterou klávesu žák stiskl a zda se Shiftem nebo AltGr. Na tabletu se na ni dá ťukat. Varianty A/B/C mají jiné texty a pravidla hesla; pro společnou práci na projektoru otevřete stejnou variantu (?varianta=B). Hesla z úlohy Trezor se nikam neukládají.",
+        "prerequisites": [
+          "Psaní písmen a číslic na klávesnici.",
+          "Vědět, kde je klávesa Shift a pravý Alt (na české klávesnici často označený AltGr)."
+        ],
+        "reflection": [
+          "Které znaky píšeš s pravým Altem a jak si je zapamatuješ?",
+          "Proč se do e-mailové adresy nepíšou mezery ani háčky?",
+          "Kdy napíšeš 25 % a kdy 25% (s mezerou a bez ní)?"
+        ],
+        "differentiation": "Rychlí žáci: celá hra bez nápověd a bez ťukání na obrazovce, pak druhá varianta; navíc mohou ve skutečném editoru napsat vlastní pozvánku se všemi znaky z hry. Začínající: rychlá hra s ukázkou; klávesnice na obrazovce ukazuje všechny vrstvy a druhá nápověda zvýrazní potřebné klávesy.",
+        "gradeNote": "Citace jsou ze ŠVP školy pro 7. ročník (Textové editory, Internet a komunikace); podle tematického plánu ICT je textový editor v 7. ročníku září–prosinec. Rozložení kláves odpovídá české klávesnici QWERTZ ve Windows – na Macu nebo s jiným rozložením jsou některé znaky jinde (hra přesto kontroluje jen napsaný text)."
+      }
     }
   ]
 }

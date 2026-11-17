@@ -12,6 +12,9 @@ Statický web bez backendu a bez databáze, hostovaný na **Cloudflare Pages** p
   - **Robotí dílna: Záchrana sondy** – programování z bloků, interpret s krokováním, 12 misí (`/aplikace/roboti-dilna/`)
   - **Šifrovací laboratoř: Signál ze sondy** – bity, znaková sada, Caesar, Morseovka, kódování obrázků a barev, kontrolní součty; 17 úloh v 5 úrovních (`/aplikace/sifrovaci-laborator/`)
   - **Grafový navigátor: Síť základen** – grafy, nejkratší cesta, kostra grafu, orientované grafy, automat, souběžná práce dvou robotů; 11 úloh v 5 úrovních (`/aplikace/grafovy-navigator/`)
+  - **Phishingová hlídka** – phishing, hesla a bezpečné sdílení (`/aplikace/phishingova-hlidka/`)
+  - **Signál ze sondy** – barvy více způsoby, obrázek z tvarů, zápis úseků, kontrolní součet (`/aplikace/signal-ze-sondy/`)
+  - **Znakožrout** – speciální znaky, Shift a AltGr, e-mail a adresy, silné heslo, typografie; klávesnice se třemi vrstvami, 11 úloh v 5 úrovních (`/aplikace/znakozrout/`)
 - Připravovaná hra (karta „Připravujeme“): Prezentační studio.
 - Stránka **Pro učitele** (`/pro-ucitele/`, přímé odkazy `/pro-ucitele/#<id>`): cíle, doslovné citace ŠVP, tipy do 45min hodiny, otázky k reflexi.
 - Bez přihlašování, bez analytiky a cookies. Postup her jen v `localStorage` prohlížeče.
