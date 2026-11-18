@@ -2,3 +2,5 @@
 User-agent: *
 Allow: /
 Disallow: /aplikace/*/test.html
+
+Sitemap: https://skoleeq.fanda-rehak1.workers.dev/sitemap.xml
