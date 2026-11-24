@@ -92,6 +92,16 @@ test('vlastní sada písmen: nahrání, výběr, jiný rukopis, export a uložen
   expect(errors).toEqual([]);
 });
 
+test('velikost písma mění náhled i stažený obrázek', async ({ page }) => {
+  await page.locator('#text').fill('Мама мыла раму');
+  const width = () => page.locator('#preview').evaluate(c => c.getBoundingClientRect().width);
+  await page.locator('#opt-size').selectOption('32');
+  await expect(page.locator('#size-info')).toContainText('px');
+  const small = await width();
+  await page.locator('#opt-size').selectOption('110');
+  await expect.poll(width).toBeGreaterThan(small * 2.5);
+});
+
 test('320 px bez vodorovného scrollu @mobile', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   await page.locator('#text').fill('Очень длинная строка текста для проверки ширины');

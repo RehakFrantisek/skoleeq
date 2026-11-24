@@ -6,7 +6,7 @@
 export const FORMAT = 'psaci-azbuka-glyphs';
 const GAP = 0.13;      // mezera mezi písmeny (v nejbližším místě)
 const SPACE = 0.6;     // mezera mezi slovy
-const MAX_JOIN = 0.9;  // delší spojovací tah už nekreslíme
+const MAX_JOIN = 1.3;  // delší spojovací tah už nekreslíme
 
 /** Kontrola nahraného souboru se sadou písmen. Vrací seznam chyb (prázdný = v pořádku). */
 export function validateSet(set) {
@@ -93,23 +93,101 @@ export function kern(prev, prevX, next, gap = GAP, skip = null) {
 const rowOf = (set, y) => Math.round((y - set.grid[0]) / set.grid[1]);
 
 /**
- * Umístí další písmeno za předchozí. Když předchozí končí spojovacím tahem, posune další písmeno tak,
- * aby se ho konec tahu dotkl (jako v písance). Vrací { x, join } – join = body spojovací křivky, když je potřeba.
+ * Kde písmeno začíná a končí (pravidla napojení z písanky):
+ * in  – low: spojovací tah přichází do dolní třetiny střední výšky (и, л, м …), high: nahoru (а, о, с …), none: nenapojuje se
+ * out – low: končí tahem v dolní třetině, high: končí nahoře (о, в, э …), none: dál nenavazuje
+ * Starší sady bez těchto údajů odhadneme z bodů napojení.
+ */
+export function joinTypes(g) {
+  const tin = g.in || (g.entry[1] < -0.55 ? 'high' : 'low');
+  let tout = g.out;
+  if (!tout) tout = g.exit[0] < g.w - 0.15 ? 'none' : g.exit[1] > -0.45 ? 'low' : 'high';
+  return { in: tin, out: tout };
+}
+
+/** Navazuje písmeno na další? */
+export function canJoin(g) {
+  return joinTypes(g).out !== 'none';
+}
+
+/**
+ * Vybere variantu písmene podle okolí: před dalším písmenem variantu se spojovacím tahem
+ * (u в podle toho, jak začíná další písmeno), na konci slova variantu bez něj.
+ */
+export function chooseVariant(vars, next, r) {
+  let pool = vars;
+  if (vars.length > 1) {
+    const joining = vars.filter(v => joinTypes(v).out !== 'none');
+    const ending = vars.filter(v => joinTypes(v).out === 'none');
+    if (!next) pool = ending.length ? ending : vars;
+    else {
+      pool = joining.length ? joining : vars;
+      const nin = joinTypes(next[0]).in;
+      const same = pool.filter(v => joinTypes(v).out === nin);
+      if (same.length) pool = same;
+    }
+  }
+  return pool[Math.floor(r() * pool.length)];
+}
+
+/** Řádky profilu, kde je jen spojovací tah předchozího písmene (ty se při prokladu nepočítají). */
+function tailRows(set, g) {
+  const t = joinTypes(g).out;
+  const [ex, ey] = g.exit;
+  if (t === 'none') return null;
+  return (i, r) => {
+    const y = set.grid[0] + i * set.grid[1];
+    return r > ex - 0.3 && (t === 'low' ? y > ey - 0.15 : Math.abs(y - ey) < 0.2);
+  };
+}
+
+/**
+ * Umístí další písmeno za předchozí. Vrací { x, join }, join = druh spojovacího tahu nebo null.
+ * Dolní tah → písmeno začínající dole: konec tahu se dotkne dalšího písmene (jako v písance).
+ * Ostatní spojení: mezi písmeny zůstane místo a nakreslí se spojovací tah.
  */
 export function place(set, prev, prevX, next) {
-  const plain = kern(prev, prevX, next);
-  if (!canJoin(prev) || next.entry[0] > 0.2) return { x: plain, join: null };
+  const a = joinTypes(prev), b = joinTypes(next);
+  if (a.out === 'none' || b.in === 'none') return { x: kern(prev, prevX, next, 0.16), join: null };
   const [ex, ey] = prev.exit;
-  // řádky, kde je jen spojovací tah předchozího písmene, při prokladu přeskočíme
-  const tail = kern(prev, prevX, next, GAP, (i, r) => r > ex - 0.3 && set.grid[0] + i * set.grid[1] > ey - 0.15);
-  const row = rowOf(set, ey);
-  let touch = null;
-  for (const k of [row, row - 1, row + 1, row - 2, row + 2]) {
-    const l = next.L[k];
-    if (l != null) { touch = prevX + ex - l - 0.02; break; }
+  const base = kern(prev, prevX, next, GAP, tailRows(set, prev));
+  if (a.out === 'low' && b.in === 'low') {
+    const row = rowOf(set, ey);
+    for (const k of [row, row - 1, row + 1, row - 2, row + 2]) {
+      const l = next.L[k];
+      if (l == null) continue;
+      const touch = prevX + ex - l - 0.02;
+      if (touch >= base - 0.02) return { x: touch, join: null };
+      break;
+    }
   }
-  if (touch != null && touch >= tail - 0.02) return { x: touch, join: null };
-  return { x: Math.max(tail, prevX + ex + 0.05), join: true };
+  const minDx = a.out === 'low' && b.in === 'high' ? 0.3 : a.out === 'high' && b.in === 'low' ? 0.38 : 0.25;
+  let x = Math.max(base + 0.05, prevX + ex + minDx - next.entry[0]);
+  // písmeno začínající nahoře (а, о, с …) nesmí bříškem zasáhnout konec dolního tahu
+  if (a.out === 'low' && b.in === 'high') {
+    const row = rowOf(set, ey);
+    const ls = [row - 1, row, row + 1].map(k => next.L[k]).filter(v => v != null);
+    if (ls.length) x = Math.max(x, prevX + ex - Math.min(...ls) + 0.1);
+  }
+  return { x, join: `${a.out}-${b.in}` };
+}
+
+/** Kam spojovací tah míří. Shora do písmene začínajícího dole jde tah jen do půlky střední výšky (bez prudkého zhoupnutí). */
+export function joinTarget(set, g, kind) {
+  if (kind === 'high-low') {
+    const y = -0.45, l = g.L[rowOf(set, y)];
+    if (l != null && g.entry[1] > y) return [l, y];
+  }
+  return g.entry;
+}
+
+/** Body spojovací křivky (kubická Bézierova) podle druhu spojení. */
+export function joinCurve(kind, e, s) {
+  const dx = s[0] - e[0], dy = s[1] - e[1];
+  if (kind === 'low-high') return [e, [e[0] + dx * 0.45, e[1] + dy * 0.55], [s[0] - dx * 0.12, s[1] + 0.28], s];
+  if (kind === 'high-low') return [e, [e[0] + dx * 0.45, e[1] + 0.02], [s[0] - dx * 0.4, s[1] - 0.02], s];
+  if (kind === 'high-high') return [e, [e[0] + dx * 0.35, e[1] - 0.06], [s[0] - dx * 0.35, s[1] - 0.04], s];
+  return [e, [e[0] + dx * 0.5, e[1] - dx * 0.2], [s[0] - dx * 0.4, s[1]], s];
 }
 
 /**
@@ -123,9 +201,10 @@ export function layout(text, set, { seed = 1, jitter = 1, fallbackWidth = () => 
   const r = rng(seed);
   const lines = String(text).split('\n').map(line => {
     const items = [];
+    const chars = [...line];
     let x = 0, prev = null, top = -1, bottom = 0.2;
-    for (const ch of line) {
-      if (ch === ' ' || ch === '\t') { x = (prev ? Math.max(x, prev.x + prev.g.w) : x) + SPACE; prev = null; continue; }
+    chars.forEach((ch, idx) => {
+      if (ch === ' ' || ch === '\t') { x = (prev ? Math.max(x, prev.x + prev.g.w) : x) + SPACE; prev = null; return; }
       const found = variantsFor(set, ch);
       if (!found) {
         const w = fallbackWidth(ch);
@@ -133,35 +212,30 @@ export function layout(text, set, { seed = 1, jitter = 1, fallbackWidth = () => 
         items.push({ type: 'text', ch, x: fx, w });
         x = fx + w + 0.06;
         prev = null;
-        continue;
+        return;
       }
-      const g = found.vars[Math.floor(r() * found.vars.length)];
+      const nextFound = idx + 1 < chars.length ? variantsFor(set, chars[idx + 1]) : null;
+      const g = chooseVariant(found.vars, nextFound?.vars || null, r);
       const pl = prev ? place(set, prev.g, prev.x, g) : { x, join: null };
-      const gx = pl.x;
-      const item = { type: 'glyph', g, x: gx, ch, mark: found.mark, jit: jitter > 0 ? jitterFor(r, jitter) : null };
+      const item = { type: 'glyph', g, x: pl.x, ch, mark: found.mark, jit: jitter > 0 ? jitterFor(r, jitter) : null };
       if (prev && pl.join) {
         const e = transformPoint(prev.g.exit[0], prev.g.exit[1], prev);
-        const s = transformPoint(g.entry[0], g.entry[1], item);
+        const s = transformPoint(...joinTarget(set, g, pl.join), item);
         const dx = s[0] - e[0];
-        if (dx > 0.01 && dx < MAX_JOIN) items.push({ type: 'join', p: [e, [e[0] + dx * 0.4, e[1] - dx * 0.25], [s[0] - dx * 0.4, s[1]], s] });
+        if (dx > 0.01 && dx < MAX_JOIN) items.push({ type: 'join', p: joinCurve(pl.join, e, s) });
       }
       items.push(item);
       top = Math.min(top, g.top - (found.mark ? 0.5 : 0));
       bottom = Math.max(bottom, g.bottom);
       prev = item;
-      x = gx + g.w;
-    }
+      x = pl.x + g.w;
+    });
     let width = 0;
     for (const it of items) if (it.type !== 'join') width = Math.max(width, it.x + (it.type === 'glyph' ? it.g.w : it.w));
     for (const it of items) if (it.type === 'join') width = Math.max(width, it.p[3][0]);
     return { items, width, top, bottom };
   });
   return { lines, pen: set.pen || 0.03 };
-}
-
-/** Navazuje písmeno na další? Jen když jeho poslední tah končí vpravo dole. */
-export function canJoin(g) {
-  return g.exit[0] > g.w - 0.12 && g.exit[1] > -0.36;
 }
 
 /** Diakritika složených písmen (tečky nad ё, oblouček nad й) jako jednoduché tahy. */

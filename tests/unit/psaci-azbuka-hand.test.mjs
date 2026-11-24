@@ -48,10 +48,36 @@ test('ё a й se skládají z е a и s diakritikou', () => {
   assert.equal(H.variantsFor(set, 'ж'), null);
 });
 
-test('napojení: písmeno s koncovým tahem dole navazuje, vysoko končící ne', () => {
-  assert.equal(H.canJoin({ w: 1, exit: [0.98, -0.25] }), true);
-  assert.equal(H.canJoin({ w: 1, exit: [0.98, -0.65] }), false); // о, в
-  assert.equal(H.canJoin({ w: 1, exit: [0.6, -0.25] }), false);  // tah končí uvnitř písmene
+test('napojení: typy podle písanky, odhad u starších sad', () => {
+  assert.equal(H.canJoin({ w: 1, in: 'low', out: 'none', entry: [0, -0.2], exit: [0.9, -0.5] }), false);
+  assert.deepEqual(H.joinTypes({ w: 1, entry: [0, -0.25], exit: [0.98, -0.25] }), { in: 'low', out: 'low' });
+  assert.deepEqual(H.joinTypes({ w: 1, entry: [0.5, -0.95], exit: [0.98, -0.7] }), { in: 'high', out: 'high' });
+  assert.equal(H.joinTypes({ w: 1, entry: [0, -0.25], exit: [0.6, -0.25] }).out, 'none');
+});
+
+test('в na konci slova je bez obloučku, uvnitř slova se napojuje', () => {
+  const set = makeSet();
+  const items = l => l.items.filter(i => i.type === 'glyph' && i.ch === 'в');
+  for (let seed = 1; seed < 20; seed++) {
+    const { lines } = H.layout('кв вот', set, { seed });
+    const [end, inside] = items(lines[0]);
+    assert.equal(end.g.out, 'none', 'na konci slova');
+    assert.equal(inside.g.out, 'high', 'před о');
+  }
+});
+
+test('spojovací tahy: dole se písmena dotknou, jinde se nakreslí tah', () => {
+  const set = makeSet();
+  const kinds = t => H.layout(t, set, { jitter: 0 }).lines[0].items.filter(i => i.type === 'join').length;
+  assert.equal(kinds('мм'), 0);   // dolní tah → dolní začátek: dotyk
+  assert.equal(kinds('ма'), 1);   // dolní tah → а začíná nahoře
+  assert.equal(kinds('ом'), 1);   // о končí nahoře
+  assert.equal(kinds('Ам'), 0);   // velké А končí dolním tahem → dotyk
+  const { lines } = H.layout('ма', set, { jitter: 0 });
+  const [m, a] = lines[0].items.filter(i => i.type === 'glyph');
+  assert.ok(a.x >= m.x + m.g.w, 'а nezasahuje do м');
+  const join = lines[0].items.find(i => i.type === 'join');
+  assert.ok(join.p[3][1] < join.p[0][1], 'tah do а stoupá nahoru');
 });
 
 test('bez odchylek je bod písmene jen posunutý; s odchylkami se mírně liší', () => {

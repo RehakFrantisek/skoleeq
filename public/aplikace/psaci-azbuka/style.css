@@ -88,7 +88,8 @@ textarea:focus-visible { border-color: var(--ds-focus); }
 /* Náhled a nastavení */
 .preview { overflow: auto; max-height: 70vh; padding: .75rem; border: 1px dashed var(--ds-line); border-radius: var(--ds-radius-sm);
   background: repeating-conic-gradient(#f1f3f1 0 25%, #fff 0 50%) 0 0 / 20px 20px; }
-.preview canvas { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.preview canvas { display: block; max-width: none; height: auto; margin: 0 auto; }
+.preview { max-width: 100%; }
 .settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem 1rem; margin-top: 1rem; }
 .settings label:not(.switch) { display: grid; gap: .25rem; font-weight: 700; }
 select { min-height: var(--ds-tap); padding: .3rem .5rem; font: 400 1rem var(--ds-font); color: var(--ds-ink); background: #fff; border: 1px solid var(--ds-line); border-radius: 10px; max-width: 100%; }

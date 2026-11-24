@@ -10,7 +10,7 @@ const els = {
   text: $('text'), help: $('mode-help'), canvas: $('preview'), feedback: $('feedback'), kbd: $('kbd'), kbdShift: $('kbd-shift'),
   font: $('opt-font'), size: $('opt-size'), color: $('opt-color'), lines: $('opt-lines'), spacing: $('opt-spacing'),
   scale: $('opt-scale'), transparent: $('opt-transparent'), jitter: $('opt-jitter'), fontCustom: $('opt-font-custom'),
-  setFile: $('set-file'), setStatus: $('set-status'), reseed: $('btn-reseed'), setRemove: $('btn-set-remove')
+  sizeInfo: $('size-info'), setFile: $('set-file'), setStatus: $('set-status'), reseed: $('btn-reseed'), setRemove: $('btn-set-remove')
 };
 let glyphSet = null;                       // vlastní sada písmen (z písanky)
 const state = { seed: 1 };
@@ -199,7 +199,11 @@ function render() {
     try { await document.fonts.load(`${o.size}px "${fontFamily(o)}"`, els.text.value || 'Аа'); } catch { /* vykreslí se záložním písmem */ }
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const lay = draw(els.canvas, dpr, o);
+    // náhled ve skutečné velikosti (1× kvalita); širší text se v rámečku posouvá
     els.canvas.style.width = `${lay.width}px`;
+    const sc = Number(els.scale.value);
+    const w = Math.round(lay.width * sc), h = Math.round(lay.height * sc);
+    els.sizeInfo.textContent = `Náhled je ve skutečné velikosti (kvalita 1×). Stažený obrázek: ${w} × ${h} px, při tisku 300 dpi asi ${(w / 118).toFixed(1).replace('.', ',')} × ${(h / 118).toFixed(1).replace('.', ',')} cm.`;
     els.canvas.setAttribute('aria-label', `Náhled psacího písma: ${els.text.value.trim() || 'zatím prázdný text'}`);
   });
 }
