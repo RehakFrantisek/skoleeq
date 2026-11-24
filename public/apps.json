@@ -484,6 +484,24 @@
         "differentiation": "Rychlí žáci: celá hra bez nápověd, pak druhá varianta; navíc mohou ve skutečném editoru napsat vlastní pozvánku se všemi znaky z hry. Začínající: rychlá hra s ukázkou; vedle sebe mít obrázek české klávesnice nebo se dívat na tu skutečnou; druhá nápověda řekne potřebné kombinace.",
         "gradeNote": "Citace jsou ze ŠVP školy pro 7. ročník (Textové editory, Internet a komunikace); podle tematického plánu ICT je textový editor v 7. ročníku září–prosinec. Rozložení kláves odpovídá české klávesnici QWERTZ ve Windows – na Macu nebo s jiným rozložením jsou některé znaky jinde (hra přesto kontroluje jen napsaný text)."
       }
+    },
+    {
+      "id": "psaci-azbuka",
+      "title": "Psací azbuka",
+      "subtitle": "Převod tiskací azbuky na psací",
+      "description": "Napiš nebo vlož text azbukou (i z české klávesnice) a hned ho uvidíš psacím písmem. Výsledek stáhneš jako obrázek PNG nebo zkopíruješ do pracovního listu.",
+      "url": "/aplikace/psaci-azbuka/",
+      "subject": "Ruský jazyk",
+      "grades": [7, 8, 9],
+      "topics": ["Azbuka", "Psací písmo"],
+      "difficulty": "lehka",
+      "durationMinutes": 10,
+      "icon": "document",
+      "color": "red",
+      "featured": false,
+      "requiresKeyboard": false,
+      "status": "published",
+      "skills": ["Čtení psací azbuky", "Psaní azbukou na české klávesnici", "Rozložení ruské klávesnice ЙЦУКЕН"]
     }
   ]
 }
