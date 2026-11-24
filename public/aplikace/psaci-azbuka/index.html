@@ -65,6 +65,7 @@
           <select id="opt-font">
             <option value="Marck Script">Školní psací (Marck Script)</option>
             <option value="Bad Script">Jednodušší psací (Bad Script)</option>
+            <option value="custom" id="opt-font-custom" hidden disabled>Písanka (vlastní sada písmen)</option>
           </select>
         </label>
         <label>Velikost
@@ -107,6 +108,17 @@
         </label>
         <label class="switch"><input type="checkbox" id="opt-transparent"> <span>Průhledné pozadí</span></label>
       </div>
+
+      <fieldset class="handset">
+        <legend>Vlastní písmo z písanky</legend>
+        <p class="small" id="set-status">Zatím není nahraná žádná sada písmen. Nahraj soubor se sadou (.json) a v nabídce Písmo vyber „Písanka“.</p>
+        <div class="row row--tight">
+          <label class="btn btn--ghost btn--small file-btn">Nahrát sadu písmen (.json)<input type="file" id="set-file" accept=".json,application/json"></label>
+          <button class="btn btn--ghost btn--small" id="btn-reseed" type="button" disabled>Jiný rukopis</button>
+          <button class="btn btn--ghost btn--small" id="btn-set-remove" type="button" disabled>Odebrat sadu</button>
+        </div>
+        <label class="switch"><input type="checkbox" id="opt-jitter" checked> <span>Lidské odchylky (každé písmeno je trochu jiné)</span></label>
+      </fieldset>
 
       <div class="row">
         <button class="btn btn--primary" id="btn-download" type="button">Stáhnout obrázek PNG</button>

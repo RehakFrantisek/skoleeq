@@ -1,5 +1,6 @@
 // Psací azbuka – ovládání stránky. Logika převodu je v logic.js (bez DOM).
 import * as L from './logic.js';
+import * as H from './handwriting.js';
 
 const STORAGE_KEY = 'vyukovy-portal:psaci-azbuka:v1';
 const SAMPLE = 'Привет! Меня зовут Анна.\nЯ живу в Праге.';
@@ -8,8 +9,11 @@ const $ = id => document.getElementById(id);
 const els = {
   text: $('text'), help: $('mode-help'), canvas: $('preview'), feedback: $('feedback'), kbd: $('kbd'), kbdShift: $('kbd-shift'),
   font: $('opt-font'), size: $('opt-size'), color: $('opt-color'), lines: $('opt-lines'), spacing: $('opt-spacing'),
-  scale: $('opt-scale'), transparent: $('opt-transparent')
+  scale: $('opt-scale'), transparent: $('opt-transparent'), jitter: $('opt-jitter'), fontCustom: $('opt-font-custom'),
+  setFile: $('set-file'), setStatus: $('set-status'), reseed: $('btn-reseed'), setRemove: $('btn-set-remove')
 };
+let glyphSet = null;                       // vlastní sada písmen (z písanky)
+const state = { seed: 1 };
 const SETTINGS = ['font', 'size', 'color', 'lines', 'spacing', 'scale'];
 
 const HELP = {
@@ -26,7 +30,7 @@ let saveTimer = 0;
 function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    const data = { text: els.text.value, mode: mode(), transparent: els.transparent.checked };
+    const data = { text: els.text.value, mode: mode(), transparent: els.transparent.checked, jitter: els.jitter.checked, seed: state.seed, glyphSet };
     for (const k of SETTINGS) data[k] = els[k].value;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* soukromý režim nebo plné úložiště */ }
   }, 300);
@@ -106,23 +110,63 @@ function flashKey(code) {
 }
 
 // ---------- Vykreslení psacího písma ----------
+const fontFamily = o => (o.font === 'custom' ? 'Bad Script' : o.font);
 const opts = () => ({
   font: els.font.value, size: Number(els.size.value), color: els.color.value, lines: els.lines.value,
-  spacing: Number(els.spacing.value), transparent: els.transparent.checked
+  spacing: Number(els.spacing.value), transparent: els.transparent.checked, jitter: els.jitter.checked
 });
 
-function draw(canvas, scale, o = opts()) {
-  const ctx = canvas.getContext('2d');
-  const fontCss = `${o.size}px "${o.font}"`;
+// Rozvržení textu písmem (font) – vrací rozměry, účaří a funkci, která text nakreslí.
+function fontLayout(ctx, lines, o) {
+  const fontCss = `${o.size}px "${fontFamily(o)}"`;
   ctx.font = fontCss;
-  const lines = (els.text.value.replace(/\s+$/, '') || ' ').split('\n');
   const measure = s => {
     const m = ctx.measureText(s);
     return { ascent: m.actualBoundingBoxAscent, descent: m.actualBoundingBoxDescent, left: m.actualBoundingBoxLeft, right: m.actualBoundingBoxRight };
   };
   const lay = L.layoutLines(lines, measure, { size: o.size, spacing: o.spacing });
-  const xHeight = ctx.measureText('х').actualBoundingBoxAscent || o.size * 0.45;
-  const capHeight = ctx.measureText('Ш').actualBoundingBoxAscent || o.size * 0.7;
+  lay.xHeight = ctx.measureText('х').actualBoundingBoxAscent || o.size * 0.45;
+  lay.capHeight = ctx.measureText('Ш').actualBoundingBoxAscent || o.size * 0.7;
+  lay.paint = () => {
+    ctx.font = fontCss;
+    ctx.fillStyle = o.color;
+    ctx.textBaseline = 'alphabetic';
+    lines.forEach((l, i) => ctx.fillText(l, lay.x, lay.baselines[i]));
+  };
+  return lay;
+}
+
+// Rozvržení vlastní sadou písmen (z písanky). Znaky mimo sadu (čísla, interpunkce) píše tenké Bad Script.
+function handLayout(ctx, lines, o) {
+  const u = o.size * 0.42;                       // střední výška v px
+  ctx.font = `${o.size}px "Bad Script"`;
+  const fbX = (ctx.measureText('х').actualBoundingBoxAscent || o.size * 0.4) / o.size;
+  const fbSize = (u / fbX) * 0.9;
+  ctx.font = `${fbSize}px "Bad Script"`;
+  const fallbackWidth = ch => ctx.measureText(ch).width / u;
+  const hl = H.layout(lines.join('\n'), glyphSet, { seed: state.seed, jitter: o.jitter ? 1 : 0, fallbackWidth });
+  const pad = Math.round(u * 0.6);
+  const lineH = Math.max(o.spacing * o.size, u * 3.4);
+  const top = Math.min(-2.1, ...hl.lines.map(l => l.top));
+  const baselines = hl.lines.map((_, i) => pad + -top * u + i * lineH);
+  const last = hl.lines[hl.lines.length - 1];
+  const height = Math.ceil(baselines[baselines.length - 1] + Math.max(0.4, last.bottom) * u + pad);
+  const width = Math.ceil(Math.max(1, ...hl.lines.map(l => l.width)) * u + 2 * pad);
+  return {
+    width, height, baselines, xHeight: u, capHeight: 2 * u,
+    paint: () => hl.lines.forEach((l, i) => H.drawLine(ctx, l, {
+      ox: pad, baseline: baselines[i], u, color: o.color, pen: hl.pen,
+      drawText: (ch, x, y) => { ctx.font = `${fbSize}px "Bad Script"`; ctx.fillStyle = o.color; ctx.fillText(ch, x, y); }
+    }))
+  };
+}
+
+const useHand = o => o.font === 'custom' && !!glyphSet;
+
+function draw(canvas, scale, o = opts()) {
+  const ctx = canvas.getContext('2d');
+  const lines = (els.text.value.replace(/\s+$/, '') || ' ').split('\n');
+  const lay = useHand(o) ? handLayout(ctx, lines, o) : fontLayout(ctx, lines, o);
 
   canvas.width = Math.max(1, Math.round(lay.width * scale));
   canvas.height = Math.max(1, Math.round(lay.height * scale));
@@ -135,17 +179,14 @@ function draw(canvas, scale, o = opts()) {
     const line = (y, color, w = thin) => { ctx.strokeStyle = color; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(lay.width, y); ctx.stroke(); };
     for (const y of lay.baselines) {
       if (o.lines === 'school') {
-        line(y - capHeight, '#c9d6e8');
-        line(y - xHeight, '#9fb6d6');
+        line(y - lay.capHeight, '#c9d6e8');
+        line(y - lay.xHeight, '#9fb6d6');
       }
       line(y, '#6b8bb8', thin * 1.3);
     }
   }
 
-  ctx.font = fontCss;
-  ctx.fillStyle = o.color;
-  ctx.textBaseline = 'alphabetic';
-  lines.forEach((l, i) => ctx.fillText(l, lay.x, lay.baselines[i]));
+  lay.paint();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   return lay;
 }
@@ -155,7 +196,7 @@ function render() {
   cancelAnimationFrame(raf);
   raf = requestAnimationFrame(async () => {
     const o = opts();
-    try { await document.fonts.load(`${o.size}px "${o.font}"`, els.text.value || 'Аа'); } catch { /* vykreslí se záložním písmem */ }
+    try { await document.fonts.load(`${o.size}px "${fontFamily(o)}"`, els.text.value || 'Аа'); } catch { /* vykreslí se záložním písmem */ }
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const lay = draw(els.canvas, dpr, o);
     els.canvas.style.width = `${lay.width}px`;
@@ -171,7 +212,7 @@ function say(msg, good = true) {
 
 async function makePng() {
   const o = opts();
-  try { await document.fonts.load(`${o.size}px "${o.font}"`, els.text.value || 'Аа'); } catch { /* záložní písmo */ }
+  try { await document.fonts.load(`${o.size}px "${fontFamily(o)}"`, els.text.value || 'Аа'); } catch { /* záložní písmo */ }
   const c = document.createElement('canvas');
   draw(c, Number(els.scale.value), o);
   return new Promise((resolve, reject) => c.toBlob(b => (b ? resolve(b) : reject(new Error('toBlob'))), 'image/png'));
@@ -231,7 +272,42 @@ function onMode() {
 document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', onMode));
 els.kbdShift.addEventListener('change', buildKeyboard);
 els.text.addEventListener('input', () => { render(); save(); });
-for (const k of [...SETTINGS, 'transparent']) els[k].addEventListener('change', () => { render(); save(); });
+for (const k of [...SETTINGS, 'transparent', 'jitter']) els[k].addEventListener('change', () => { render(); save(); });
+
+// ---------- Vlastní sada písmen ----------
+function setGlyphSet(set, { select = false } = {}) {
+  glyphSet = set;
+  const n = set ? Object.keys(set.glyphs).length : 0;
+  els.fontCustom.hidden = !set;
+  els.fontCustom.disabled = !set;
+  els.reseed.disabled = !set;
+  els.setRemove.disabled = !set;
+  if (set) {
+    els.setStatus.textContent = `Nahraná sada: ${String(set.name || 'bez názvu').slice(0, 80)} (${n} písmen). Písmena, která v sadě chybí (čísla, interpunkce), se doplní písmem Bad Script.`;
+    if (select) els.font.value = 'custom';
+  } else {
+    els.setStatus.textContent = 'Zatím není nahraná žádná sada písmen. Nahraj soubor se sadou (.json) a v nabídce Písmo vyber „Písanka“.';
+    if (els.font.value === 'custom') els.font.value = 'Marck Script';
+  }
+}
+els.setFile.addEventListener('change', async () => {
+  const file = els.setFile.files?.[0];
+  els.setFile.value = '';
+  if (!file) return;
+  try {
+    if (file.size > 3_000_000) throw new Error('Soubor je moc velký.');
+    const set = JSON.parse(await file.text());
+    const errors = H.validateSet(set);
+    if (errors.length) throw new Error(errors.join(' '));
+    setGlyphSet(set, { select: true });
+    say('✔ Sada písmen je nahraná a vybraná v nabídce Písmo.');
+  } catch (e) {
+    say(`Sadu písmen se nepodařilo nahrát. ${e instanceof SyntaxError ? 'Soubor není platný JSON.' : e.message}`, false);
+  }
+  render(); save();
+});
+els.reseed.addEventListener('click', () => { state.seed = (state.seed % 100000) + 1 + Math.floor(Math.random() * 1000); render(); save(); });
+els.setRemove.addEventListener('click', () => { setGlyphSet(null); render(); save(); say('Sada písmen je odebraná.'); });
 
 // ---------- Start ----------
 const saved = load();
@@ -243,6 +319,10 @@ for (const k of SETTINGS) {
   if (saved[k] && [...els[k].options].some(op => op.value === saved[k])) els[k].value = saved[k];
 }
 els.transparent.checked = !!saved.transparent;
+els.jitter.checked = saved.jitter !== false;
+if (Number.isInteger(saved.seed)) state.seed = saved.seed;
+if (saved.glyphSet && !H.validateSet(saved.glyphSet).length) setGlyphSet(saved.glyphSet);
+if (els.font.value === 'custom' && !glyphSet) els.font.value = 'Marck Script';
 els.help.textContent = HELP[mode()];
 buildKeyboard();
 render();

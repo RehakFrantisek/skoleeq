@@ -2,6 +2,7 @@
 // písmena na obrazovce, přepis latinky, stažení PNG, uložení do localStorage a 320 px.
 import { test, expect } from '@playwright/test';
 import { watchErrors, expectNoHorizontalScroll } from './helpers.js';
+import { makeSet } from '../fixtures/glyph-set.mjs';
 
 const URL = '/aplikace/psaci-azbuka/';
 const KEY = 'vyukovy-portal:psaci-azbuka:v1';
@@ -66,6 +67,29 @@ test('stažení PNG psacího písma a uložení nastavení', async ({ page }) =>
   await page.reload();
   await expect(page.locator('#text')).toHaveValue('Мама мыла раму');
   await expect(page.locator('#opt-lines')).toHaveValue('school');
+});
+
+test('vlastní sada písmen: nahrání, výběr, jiný rukopis, export a uložení', async ({ page }) => {
+  const errors = watchErrors(page);
+  await page.locator('#text').fill('мама, 12');
+  await expect(page.locator('#opt-font-custom')).toBeHidden();
+  await page.locator('#set-file').setInputFiles({ name: 'nesmysl.json', mimeType: 'application/json', buffer: Buffer.from('{"a":1}') });
+  await expect(page.locator('#feedback')).toContainText('nepodařilo');
+  await page.locator('#set-file').setInputFiles({ name: 'sada.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(makeSet())) });
+  await expect(page.locator('#feedback')).toContainText('nahraná');
+  await expect(page.locator('#opt-font')).toHaveValue('custom');
+  await expect(page.locator('#set-status')).toContainText('Testovací sada');
+  const before = await page.locator('#preview').evaluate(c => c.toDataURL());
+  await page.getByRole('button', { name: 'Jiný rukopis' }).click();
+  await expect.poll(() => page.locator('#preview').evaluate(c => c.toDataURL())).not.toBe(before);
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Stáhnout obrázek PNG' }).click()]);
+  expect(download.suggestedFilename()).toBe('mama-12.png');
+  await page.waitForTimeout(400);
+  await page.reload();
+  await expect(page.locator('#opt-font')).toHaveValue('custom');
+  await page.getByRole('button', { name: 'Odebrat sadu' }).click();
+  await expect(page.locator('#opt-font')).toHaveValue('Marck Script');
+  expect(errors).toEqual([]);
 });
 
 test('320 px bez vodorovného scrollu @mobile', async ({ page }) => {

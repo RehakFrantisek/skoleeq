@@ -94,3 +94,10 @@ textarea:focus-visible { border-color: var(--ds-focus); }
 select { min-height: var(--ds-tap); padding: .3rem .5rem; font: 400 1rem var(--ds-font); color: var(--ds-ink); background: #fff; border: 1px solid var(--ds-line); border-radius: 10px; max-width: 100%; }
 .feedback.is-bad { background: var(--ds-warn-soft); border-color: var(--ds-warn); }
 .settings { grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); } .settings select { width: 100%; }
+
+/* Vlastní sada písmen */
+.handset { margin: 1.25rem 0 0; padding: .5rem 1rem 1rem; border: 1px solid var(--ds-line); border-radius: var(--ds-radius-sm); background: var(--ds-surface-2); }
+.handset legend { font-weight: 700; padding: 0 .3rem; }
+.file-btn { position: relative; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.file-btn:focus-within { outline: 3px solid var(--ds-focus); outline-offset: 3px; }
