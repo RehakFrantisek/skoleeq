@@ -175,7 +175,7 @@ export function place(set, prev, prevX, next) {
 /** Kam spojovací tah míří. Shora do písmene začínajícího dole jde tah jen do půlky střední výšky (bez prudkého zhoupnutí). */
 export function joinTarget(set, g, kind) {
   if (kind === 'high-low') {
-    const y = -0.45, l = g.L[rowOf(set, y)];
+    const y = -0.55, l = g.L[rowOf(set, y)];
     if (l != null && g.entry[1] > y) return [l, y];
   }
   return g.entry;
