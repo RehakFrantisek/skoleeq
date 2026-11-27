@@ -543,7 +543,9 @@
       g.appendChild(svg('path', { d: `M${top.join(' L')}`, stroke: t.top, 'stroke-width': 10, fill: 'none', 'stroke-linejoin': 'round' }));
       const mid = (z.from + z.to) / 2;
       g.appendChild(svg('text', { x: mid, y: Math.max(75, Math.min(...top.map((s) => Number(s.split(' ')[1]))) - 60), 'text-anchor': 'middle', class: 'zone__name' }, z.name));
-      const label = svg('text', { x: mid, y: surf(mid) + 120, 'text-anchor': 'middle', class: 'zone__soilname' }, t.name);
+      // Popisek půdy nesmí utéct za okraj krajiny (Hory vlevo, Niva vpravo pod ovládáním)
+      const lx = Math.min(Math.max(mid, 130), W - 170);
+      const label = svg('text', { x: lx, y: Math.min(surf(lx) + 120, 585), 'text-anchor': 'middle', class: 'zone__soilname' }, t.name);
       g.appendChild(label);
       z.icons.forEach((ic, i) => {
         const x = z.from + ((i + 0.6) / (z.icons.length + 0.2)) * (z.to - z.from);
@@ -586,9 +588,10 @@
         if (!svgW) resize();
         const x = p * Math.max(0, svgW - vpW);
         root.style.transform = `translate3d(${(-x).toFixed(1)}px,0,0)`;
-        const centerX = ((x + vpW / 2) / svgW) * W;
-        const entry = zoneEls.find(({ z }) => centerX >= z.from && centerX < z.to) || zoneEls[zoneEls.length - 1];
-        show(entry);
+        // Aktivní zóna podle postupu (zastávky 0, .2 … 1), ne podle středu okna:
+        // na širokém displeji by se střed nikdy nedostal do první ani poslední zóny.
+        const i = Math.min(zoneEls.length - 1, Math.max(0, Math.round(p * (zoneEls.length - 1))));
+        show(zoneEls[i]);
       },
     });
   })();

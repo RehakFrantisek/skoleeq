@@ -1,4 +1,4 @@
-# Šifrovací laboratoř: Signál ze sondy
+# Šifrovací laboratoř: Zprávy ze sondy
 
 Výuková hra portálu Školeeq (kódování a přenos dat, 6. ročník). Statická, bez serveru a bez knihoven, bez `eval`.
 Příběhem navazuje na Robotí dílnu: zachráněná sonda posílá zprávy a žák je rozluští. Za každou zprávu se odkryje dílek fotky ze sondy.
