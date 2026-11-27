@@ -420,3 +420,61 @@ p { margin: 0; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .hero__spot { transform: none; }
 }
+
+/* =====================================================================
+   Vzhled pro 2. stupeň (2026-11): střídmější, „učebnicový“ styl.
+   Menší zaoblení, plochá tlačítka, bez fixy a naklopených karet,
+   ikony jako čárové SVG místo emoji. Barvy a struktura zůstávají.
+   ===================================================================== */
+:root { --radius: 12px; --radius-sm: 8px; --grid-line: rgba(15, 118, 110, .045); }
+h1, h2, h3 { font-weight: 700; letter-spacing: -.015em; }
+
+.btn { box-shadow: none; border-radius: var(--radius-sm); transition: background-color .15s ease, filter .15s ease; }
+.btn:hover { filter: brightness(.94); }
+.btn:active { transform: none; box-shadow: none; filter: brightness(.88); }
+.btn--ghost { border: 1px solid #cfd6d3; }
+
+.site-nav a { border-radius: var(--radius-sm); }
+.site-nav a.site-nav__kind { font-weight: 600; color: var(--ink-2); }
+
+.ico { width: 26px; height: 26px; display: block; }
+
+.hero::after { display: none; }
+.eyebrow {
+  padding: 0; border-radius: 0; background: none;
+  color: var(--primary-ink); font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+}
+.hero h1 { font-weight: 700; }
+.hero__hl { background: none; color: var(--primary); }
+.dot { box-shadow: none; width: .45rem; height: .45rem; }
+
+.door { border-radius: var(--radius); }
+.door::before { height: 4px; }
+.door:hover { transform: none; }
+.door__icon { width: 44px; height: 44px; border-radius: 10px; color: var(--d); }
+.door__title { font-weight: 700; }
+
+.hero__spot { border-radius: var(--radius); transform: none; border-top-width: 4px; }
+.hero__spot:hover { transform: none; }
+.spot__icon { border-radius: 10px; }
+.spot__title { font-weight: 700; }
+
+.flow__n { border-radius: 8px; }
+
+.app-card:hover { transform: none; }
+.app-card__media {
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 20px 20px,
+    var(--c-soft);
+}
+.app-card__icon { width: 64px; height: 64px; border-radius: 14px; box-shadow: 0 1px 2px rgba(19, 42, 50, .08), 0 4px 12px color-mix(in srgb, var(--c) 14%, transparent); }
+.app-card:hover .app-card__icon { transform: none; }
+.app-card__subject { border-radius: 6px; }
+.app-card__title { font-weight: 700; }
+.app-card:active .app-card__link { box-shadow: none; }
+.tag { border-radius: 6px; }
+.eyebrow + h1, .eyebrow + h2 { margin-top: .1rem; }
+.catalog__switch a { border-radius: var(--radius-sm); }
+/* odkaz roztažený přes kartu nesmí dostat filter/transform (smrskl by klikací plochu) */
+.app-card__link, .app-card__link:hover, .app-card__link:active { filter: none; transform: none; }

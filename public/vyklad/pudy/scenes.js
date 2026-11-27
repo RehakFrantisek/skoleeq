@@ -542,20 +542,100 @@
       g.appendChild(svg('path', { d: `M${top2.join(' L')} L${bottom2.join(' L')}Z`, fill: t.layers[1][0], opacity: 0.9 }));
       g.appendChild(svg('path', { d: `M${top.join(' L')}`, stroke: t.top, 'stroke-width': 10, fill: 'none', 'stroke-linejoin': 'round' }));
       const mid = (z.from + z.to) / 2;
-      g.appendChild(svg('text', { x: mid, y: Math.max(75, Math.min(...top.map((s) => Number(s.split(' ')[1]))) - 60), 'text-anchor': 'middle', class: 'zone__name' }, z.name));
+      g.appendChild(svg('text', { x: Math.min(Math.max(mid, 110), W - 150), y: Math.max(75, Math.min(...top.map((s) => Number(s.split(' ')[1]))) - 120), 'text-anchor': 'middle', class: 'zone__name' }, z.name));
       // Popisek půdy nesmí utéct za okraj krajiny (Hory vlevo, Niva vpravo pod ovládáním)
       const lx = Math.min(Math.max(mid, 130), W - 170);
       const label = svg('text', { x: lx, y: Math.min(surf(lx) + 120, 585), 'text-anchor': 'middle', class: 'zone__soilname' }, t.name);
       g.appendChild(label);
-      z.icons.forEach((ic, i) => {
-        const x = z.from + ((i + 0.6) / (z.icons.length + 0.2)) * (z.to - z.from);
-        g.appendChild(svg('text', { x, y: surf(x) - 6, 'text-anchor': 'middle', class: 'zone__icon' }, ic));
-      });
       root.appendChild(g);
       return { z, g };
     });
+    // ---- Ploché ilustrace krajiny (místo emoji): jednotný styl a rozumné měřítko ----
+    const art = svg('g', { class: 'land__art', 'aria-hidden': 'true' });
+    const put = (el) => art.appendChild(el);
+    const conifer = (x, h = 80) => {
+      const y = surf(x);
+      put(svg('rect', { x: x - 3, y: y - 12, width: 6, height: 14, fill: '#6b4a2e' }));
+      [[1, 0.62], [0.78, 0.4], [0.55, 0.18]].forEach(([w, top], i) => {
+        const base = y - 10 - i * h * 0.22, peak = y - 10 - h * (1 - top * 0.2) - i * h * 0.12;
+        put(svg('path', { d: `M${x - h * 0.3 * w} ${base} L${x} ${peak} L${x + h * 0.3 * w} ${base}Z`, fill: i === 1 ? '#2f6440' : '#285a38' }));
+      });
+    };
+    const tree = (x, h = 85, crown = '#5d8f3c') => {
+      const y = surf(x);
+      put(svg('rect', { x: x - 4, y: y - h * 0.45, width: 8, height: h * 0.45 + 2, fill: '#6b4a2e' }));
+      put(svg('circle', { cx: x, cy: y - h * 0.62, r: h * 0.3, fill: crown }));
+      put(svg('circle', { cx: x - h * 0.17, cy: y - h * 0.5, r: h * 0.2, fill: crown }));
+      put(svg('circle', { cx: x + h * 0.18, cy: y - h * 0.52, r: h * 0.21, fill: crown }));
+    };
+    const shrub = (x, r = 13, c = '#4f7d38') => {
+      const y = surf(x);
+      put(svg('ellipse', { cx: x, cy: y - r * 0.6, rx: r * 1.3, ry: r, fill: c }));
+    };
+    const animal = (x, kind) => {
+      // ovce ~30 jednotek, kráva ~50 (strom ~85)
+      const cow = kind === 'cow', L = cow ? 50 : 30, H = cow ? 22 : 16, y = surf(x) - (cow ? 12 : 9);
+      const body = cow ? '#f4f1ea' : '#ecebe6', dark = '#3a3330';
+      [-0.32, -0.12, 0.14, 0.32].forEach((k) => put(svg('rect', { x: x + k * L - 1.5, y: y + H * 0.3, width: 3, height: cow ? 12 : 9, fill: dark })));
+      put(svg('rect', { x: x - L / 2, y: y - H / 2, width: L, height: H, rx: cow ? 6 : 8, fill: body }));
+      if (cow) {
+        put(svg('ellipse', { cx: x - 6, cy: y - 2, rx: 8, ry: 5, fill: '#4a3f38' }));
+        put(svg('ellipse', { cx: x + 13, cy: y + 3, rx: 5, ry: 4, fill: '#4a3f38' }));
+      }
+      put(svg('ellipse', { cx: x - L / 2 - (cow ? 5 : 4), cy: y - H * 0.35, rx: cow ? 8 : 6, ry: cow ? 7 : 5.5, fill: cow ? '#4a3f38' : dark }));
+    };
+    // pole: řádek plodin podél povrchu
+    const field = (from, to, step, draw) => { for (let x = from; x <= to; x += step) draw(x, surf(x)); };
+    const potatoes = (a, b) => field(a, b, 16, (x, y) => put(svg('ellipse', { cx: x, cy: y - 5, rx: 7, ry: 5, fill: '#5f8a3a' })));
+    const rapeseed = (a, b) => field(a, b, 9, (x, y) => {
+      put(svg('rect', { x: x - 1, y: y - 20, width: 2, height: 20, fill: '#6d8d36' }));
+      put(svg('circle', { cx: x, cy: y - 21, r: 4.5, fill: '#e9c82a' }));
+    });
+    const flax = (a, b) => field(a, b, 10, (x, y) => {
+      put(svg('rect', { x: x - 1, y: y - 18, width: 2, height: 18, fill: '#6f9147' }));
+      put(svg('circle', { cx: x, cy: y - 19, r: 3.2, fill: '#6f8fd8' }));
+    });
+    const wheat = (a, b) => field(a, b, 7, (x, y) => {
+      put(svg('rect', { x: x - 1, y: y - 24, width: 2, height: 24, fill: '#c9a640' }));
+      put(svg('ellipse', { cx: x, cy: y - 27, rx: 2.6, ry: 6, fill: '#ddb94a' }));
+    });
+    const corn = (a, b) => field(a, b, 15, (x, y) => {
+      put(svg('rect', { x: x - 1.5, y: y - 42, width: 3, height: 42, fill: '#6a9a3a' }));
+      put(svg('path', { d: `M${x} ${y - 20} q -12 -4 -16 4 M${x} ${y - 30} q 12 -4 16 4`, stroke: '#6a9a3a', 'stroke-width': 3, fill: 'none' }));
+      put(svg('ellipse', { cx: x + 4, cy: y - 26, rx: 2.6, ry: 6, fill: '#e2c04a' }));
+    });
+    const beet = (a, b) => field(a, b, 13, (x, y) => put(svg('path', { d: `M${x - 7} ${y} q 2 -14 7 -15 q 5 1 7 15Z`, fill: '#4f8a3f' })));
+    const vines = (a, b) => field(a, b, 22, (x, y) => {
+      put(svg('rect', { x: x - 1.5, y: y - 34, width: 3, height: 34, fill: '#7a5a3a' }));
+      put(svg('ellipse', { cx: x, cy: y - 22, rx: 9, ry: 12, fill: '#5b8a35' }));
+      put(svg('circle', { cx: x + 3, cy: y - 14, r: 3, fill: '#6a3f7a' }));
+    });
+
+    // Hory: smrky a ovce na horské louce (nad názvem zóny necháváme volno)
+    [40, 125, 410, 470, 530].forEach((x, i) => conifer(x, i % 2 ? 72 : 86));
+    animal(215, 'sheep'); animal(275, 'sheep');
+    // Vrchovina: smíšený les
+    conifer(600, 80); tree(670, 82); conifer(735, 74); tree(805, 88, '#6a9a44'); conifer(880, 78);
+    // Kras: nízké keře mezi vápencovými skalami
+    shrub(965, 11); shrub(1058, 9, '#5d8a3e'); shrub(1150, 14);
+    // Pahorkatina (hnědozem): brambory, řepka, kráva na pastvině, len
+    potatoes(1195, 1300); rapeseed(1325, 1440); animal(1500, 'cow'); flax(1550, 1605);
+    // Nížina (černozem): pšenice, kukuřice, cukrová řepa, vinice
+    wheat(1700, 1800); corn(1815, 1925); beet(1950, 2040); vines(2065, 2165);
+    // statek mezi pahorkatinou a nížinou (měřítko: dům ~ 2 krávy)
+    (() => {
+      const x = 1650, y = surf(x);
+      put(svg('rect', { x: x - 26, y: y - 34, width: 52, height: 34, fill: '#efe6d6' }));
+      put(svg('path', { d: `M${x - 32} ${y - 32} L${x} ${y - 58} L${x + 32} ${y - 32}Z`, fill: '#b5533a' }));
+      put(svg('rect', { x: x - 6, y: y - 18, width: 12, height: 18, fill: '#7a5a3a' }));
+    })();
+    // Niva řeky: stromy u břehu
+    tree(2205, 80, '#6f9e4a'); tree(2385, 72, '#6f9e4a');
+    root.appendChild(art);
+
     // vápencové skály v krasu
-    root.appendChild(svg('path', { d: 'M985 300 L1000 250 L1030 240 L1045 290 Z M1070 292 L1085 235 L1110 228 L1122 310 Z', fill: '#ece8dc', stroke: '#c9c4b5', 'stroke-width': 3 }));
+    root.appendChild(svg('path', { d: 'M978 304 L990 270 L1004 258 L1020 262 L1030 276 L1042 300 Z M1064 304 L1074 268 L1090 252 L1108 256 L1118 280 L1126 308 Z', fill: '#e6e2d6', stroke: '#b9b3a3', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }));
+    root.appendChild(svg('path', { d: 'M1004 266 l4 14 M1090 262 l-3 16 M1106 266 l3 12', stroke: '#b9b3a3', 'stroke-width': 2, fill: 'none' }));
     // řeka
     root.appendChild(svg('path', { d: `M2230 ${surf(2230) + 2} Q2285 ${surf(2285) + 22} 2340 ${surf(2340) + 2} Z`, fill: '#4f9bd1' }));
 

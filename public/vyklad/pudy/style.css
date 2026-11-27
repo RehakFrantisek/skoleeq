@@ -278,9 +278,8 @@ a { color: var(--accent); }
 .land__title { font-size: 1.1rem; margin: 0 0 0.4rem; color: var(--ink-soft); }
 .land__title .eyebrow { display: block; margin: 0; }
 .land__svg { position: absolute; left: 0; top: 0; will-change: transform; display: block; }
-.zone__name { font: 800 34px var(--font); fill: #2a3a4a; opacity: 0.55; }
-.zone__soilname { font: 800 30px var(--font); fill: #fff; paint-order: stroke; stroke: rgba(0, 0, 0, 0.55); stroke-width: 6px; opacity: 0.45; transition: opacity 0.3s; }
-.zone__icon { font-size: 46px; }
+.zone__name { font: 700 32px var(--font); fill: #2a3a4a; opacity: 0.5; }
+.zone__soilname { font: 700 26px var(--font); letter-spacing: .02em; fill: #fff; paint-order: stroke; stroke: rgba(30, 22, 16, 0.45); stroke-width: 4px; opacity: 0.45; transition: opacity 0.3s; }
 .zone__soil { transition: filter 0.3s; }
 .zone.is-active .zone__soilname { opacity: 1; }
 .zone.is-active .zone__name { opacity: 1; }
