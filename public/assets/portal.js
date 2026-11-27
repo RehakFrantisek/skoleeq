@@ -257,9 +257,38 @@ function renderFeatured() {
   box.hidden = false;
 }
 
+/* ---------- Rozcestník Výklad / Hřiště ---------- */
+function syncKindNav(druh) {
+  document.querySelectorAll('.site-nav a').forEach(a => {
+    const on = a.dataset.druhLink ? a.dataset.druhLink === druh : a.getAttribute('href') === '/' && !druh;
+    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+}
+function doorCounts() {
+  const n = { vyklad: ['výklad', 'výklady', 'výkladů'], hra: ['hra', 'hry', 'her'] };
+  document.querySelectorAll('[data-door-count]').forEach(el => {
+    const k = el.dataset.doorCount;
+    const c = APPS.filter(a => kindOf(a) === k).length;
+    const w = n[k] || n.hra;
+    el.textContent = c ? `${c} ${c === 1 ? w[0] : c <= 4 ? w[1] : w[2]}` : '';
+  });
+}
+function openKind(e) {
+  const druh = e.currentTarget.dataset.druhLink;
+  const select = $('#f-druh');
+  if (!APPS.length || ![...select.options].some(o => o.value === druh)) return; // necháme běžný odkaz
+  e.preventDefault();
+  select.value = druh;
+  render();
+  const kat = $('#katalog');
+  kat.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  kat.focus({ preventScroll: true });
+}
+
 function render() {
   const s = readForm();
   writeUrl(s);
+  syncKindNav(s.druh);
   const list = APPS.filter(a => matches(a, s));
   const grid = $('#grid');
   grid.replaceChildren(...list.map(card));
@@ -303,6 +332,7 @@ async function load() {
     buildFilterOptions();
     applyStateToForm(readUrl());
     renderFeatured();
+    doorCounts();
     render();
   } catch (err) {
     console.error('[katalog] načtení selhalo', err);
@@ -324,6 +354,7 @@ function init() {
   form.addEventListener('reset', () => setTimeout(() => { render(); $('#q').focus(); }, 0));
   document.querySelectorAll('[data-reset]').forEach(b => b.addEventListener('click', resetFilters));
   $('#retry').addEventListener('click', load);
+  document.querySelectorAll('a[data-druh-link]').forEach(a => a.addEventListener('click', openKind));
   load();
 }
 

@@ -165,8 +165,24 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
     expect(errors).toEqual([]);
   });
 
+  test('bez připravovaných her se sekce Připravujeme nezobrazí', async ({ page }) => {
+    expect(registry().apps.filter(a => a.status === 'planned')).toEqual([]);
+    await page.goto('/');
+    await expect(page.locator('.app-card').first()).toBeVisible();
+    await expect(page.locator('#planned')).toBeHidden();
+  });
+
   test('připravované hry jsou vidět, ale nejdou spustit; filtr podle tématu', async ({ page }) => {
-    const planned = registry().apps.filter(a => a.status === 'planned');
+    // Registr teď připravované hry nemá – zkoušíme na podstrčeném záznamu.
+    const base = registry();
+    const planned = [{
+      id: 'prezentacni-studio', title: 'Prezentační studio', description: 'Oprav přeplněné snímky.',
+      url: '/aplikace/prezentacni-studio/', subject: 'Informatika', grades: [7, 9], topics: ['Prezentace'],
+      difficulty: 'stredni', durationMinutes: 15, icon: 'slides', color: 'pink', requiresKeyboard: false, status: 'planned'
+    }];
+    await page.route('**/apps.json', route => route.fulfill({
+      contentType: 'application/json', body: JSON.stringify({ ...base, apps: [...base.apps, ...planned] })
+    }));
     await page.goto('/');
     const section = page.locator('#planned');
     await expect(section.getByRole('heading', { name: 'Připravujeme' })).toBeVisible();
@@ -198,9 +214,6 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
     await expect(art.locator('h3', { hasText: 'Otázky k reflexi' }).locator('+ ul li')).toHaveCount(3);
     await expect(art).toContainText('Rychlí a začínající žáci');
     await expect(art).toContainText('Ve 45minutové hodině');
-    await page.goto('/pro-ucitele/#prezentacni-studio');
-    await expect(page.locator('article#prezentacni-studio')).toContainText('Připravujeme');
-    await expect(page.locator('article#prezentacni-studio')).toContainText('Pracovní návrh');
     for (const id of ['dokumentova-zachranka', 'roboti-dilna']) {
       await page.goto(`/pro-ucitele/#${id}`);
       await expect(page.locator(`article#${id}`)).toContainText('Hratelné');

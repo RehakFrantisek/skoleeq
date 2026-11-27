@@ -194,48 +194,6 @@
       "thumbnail": "nahled.svg"
     },
     {
-      "id": "prezentacni-studio",
-      "title": "Prezentační studio",
-      "subtitle": "Zachraň katastrofální prezentaci",
-      "description": "Oprav přeplněné snímky: zkrať text na klíčové body, oprav kontrast a velikost písma, vyber vhodný graf a seřaď snímky do příběhu.",
-      "url": "/aplikace/prezentacni-studio/",
-      "subject": "Informatika",
-      "grades": [7, 9],
-      "topics": ["Prezentace"],
-      "difficulty": "stredni",
-      "durationMinutes": 15,
-      "icon": "slides",
-      "color": "pink",
-      "featured": false,
-      "requiresKeyboard": false,
-      "status": "planned",
-      "skills": ["Výstižný text na snímku", "Kontrast a čitelnost", "Vhodný graf či obrázek", "Logické pořadí snímků"],
-      "teacher": {
-        "goals": [
-          "Žák pozná přeplněný snímek a zkrátí text na klíčové body.",
-          "Žák upraví velikost písma a kontrast pro čitelnost.",
-          "Žák seřadí snímky do logického celku a zkontroluje jednotný vzhled."
-        ],
-        "svp": [
-          { "grade": 7, "text": "vkládá, upravuje a formátuje text v prezentacích" },
-          { "grade": 7, "text": "vytvoří vlastní prezentaci na zvolené téma, upraví ji, uloží a odprezentuje před spolužáky" },
-          { "grade": 9, "text": "vytváří prezentace a podle zadaných pokynů je formátuje" },
-          { "grade": 9, "text": "uplatňuje estetická a typografická pravidla pro práci s textem a obrazem při tvorbě prezentace" }
-        ],
-        "lesson": "Připravujeme jako další hru. Plánovaná délka 10–20 minut. Hodnotit se budou konkrétní principy (čitelnost, kontrast, množství textu, pořadí snímků), ne „jediný správný vkus“.",
-        "prerequisites": [
-          "Zkušenost s prohlížením prezentace."
-        ],
-        "reflection": [
-          "Kolik textu snese jeden snímek?",
-          "Proč záleží na kontrastu písma a pozadí?",
-          "Podle čeho jsi zvolil(a) pořadí snímků?"
-        ],
-        "differentiation": "Připravujeme.",
-        "gradeNote": "Pracovní návrh hry. Podle tematického plánu ICT školy jsou prezentace v 7. ročníku (leden–březen) a v 9. ročníku (prosinec–leden)."
-      }
-    },
-    {
       "id": "sifrovaci-laborator",
       "title": "Šifrovací laboratoř",
       "subtitle": "Signál ze sondy",

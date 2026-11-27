@@ -15,7 +15,7 @@ Statický web bez backendu a bez databáze, hostovaný na **Cloudflare Pages** p
   - **Phishingová hlídka** – phishing, hesla a bezpečné sdílení (`/aplikace/phishingova-hlidka/`)
   - **Signál ze sondy** – barvy více způsoby, obrázek z tvarů, zápis úseků, kontrolní součet (`/aplikace/signal-ze-sondy/`)
   - **Znakožrout** – speciální znaky, Shift a AltGr, e-mail a adresy, silné heslo, typografie; klávesnice se třemi vrstvami, 11 úloh v 5 úrovních (`/aplikace/znakozrout/`)
-- Připravovaná hra (karta „Připravujeme“): Prezentační studio.
+- Připravované hry (karta „Připravujeme“): zatím žádné; návrh Prezentačního studia je v soukromém repozitáři skoleeq-lab (`pripravujeme/`).
 - Stránka **Pro učitele** (`/pro-ucitele/`, přímé odkazy `/pro-ucitele/#<id>`): cíle, doslovné citace ŠVP, tipy do 45min hodiny, otázky k reflexi.
 - Bez přihlašování, bez analytiky a cookies. Postup her jen v `localStorage` prohlížeče.
 
@@ -121,7 +121,7 @@ Zadání vlny her se v několika bodech lišilo od pravidel repozitáře. Platí
 ## Další kroky
 
 1. **Ověřit ve třídě** všechny tři nové hry (délky misí, srozumitelnost zadání a nápověd) a s učitelem potvrdit ročníky v `apps.json`.
-2. **Prezentační studio – další hra na řadě** (`planned`): plátno 16:9 s miniaturami snímků, panel oprav. Mise: označ 3 chyby na snímku, zkrať přetížený text na klíčové body, oprav velikost písma a kontrast, vyber vhodný graf/obrázek, seřaď snímky do příběhu. Hodnotit konkrétní principy (počet slov, kontrastní poměr, pořadí), ne vkus. Výstup: náhled před/po. Lze převzít model bloků a historii z Dokumentové záchranky.
+2. **Prezentační studio – další hra na řadě** (záznam odložen do skoleeq-lab, `pripravujeme/prezentacni-studio.json`): plátno 16:9 s miniaturami snímků, panel oprav. Mise: označ 3 chyby na snímku, zkrať přetížený text na klíčové body, oprav velikost písma a kontrast, vyber vhodný graf/obrázek, seřaď snímky do příběhu. Hodnotit konkrétní principy (počet slov, kontrastní poměr, pořadí), ne vkus. Výstup: náhled před/po. Lze převzít model bloků a historii z Dokumentové záchranky.
 3. Dokumentová záchranka: volitelně export `.docx` (zatím jen tisk/PDF a HTML, které Word umí otevřít), mise na záhlaví/zápatí.
 4. Robotí dílna: proměnné a cyklus „opakuj, dokud“ pro 9. ročník. (Přetahování bloků myší i dotykem je hotové – 2026-11-12.)
 5. Vlna 2 (zatím ne v katalogu): Souborový detektiv, Internetový ověřovatel, Excelová výzva.

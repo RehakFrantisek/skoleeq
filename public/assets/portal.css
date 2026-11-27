@@ -89,6 +89,28 @@ p { margin: 0; }
 }
 .site-nav a:hover { background: var(--primary-soft); color: var(--primary-ink); }
 .site-nav a[aria-current="page"] { color: var(--primary-ink); background: var(--primary-soft); }
+/* Rozcestník Výklad / Hřiště (hlavička i úvod) */
+.site-nav a.site-nav__kind { font-weight: 700; color: var(--ink); }
+.site-nav a.site-nav__kind[data-druh-link="vyklad"][aria-current="page"] { background: #ffeedd; color: #8a3a0c; }
+.site-nav a.site-nav__kind[data-druh-link="hra"][aria-current="page"] { background: #dff3ef; color: var(--primary-ink); }
+
+.doors { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin-top: 1.5rem; max-width: 640px; }
+.door {
+  --d: var(--primary); --d-soft: var(--primary-soft);
+  position: relative; display: grid; align-content: start; gap: .2rem; padding: 1.1rem 1.15rem 1rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  color: var(--ink); text-decoration: none; overflow: hidden; transition: transform .18s, box-shadow .18s, border-color .18s;
+}
+.door::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--d); }
+.door--vyklad { --d: #b8480f; --d-soft: #ffeedd; }
+.door--hra { --d: #0f766e; --d-soft: #dff3ef; }
+.door:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--d); }
+.door__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--d-soft); font-size: 1.6rem; margin-bottom: .3rem; }
+.door__step { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: var(--d); }
+.door__title { font: 800 1.6rem/1.1 var(--font-display); }
+.door__text { color: var(--ink-2); font-size: .95rem; }
+.door__count { margin-top: .35rem; font-weight: 700; font-size: .9rem; color: var(--d); }
+.door__count:not(:empty)::after { content: " →"; }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -353,7 +375,12 @@ p { margin: 0; }
   .hero__spot { transform: none; }
   .hero::after { display: none; }
 }
+@media (max-width: 640px) {
+  .site-header__inner { flex-wrap: wrap; row-gap: .25rem; padding-block: .4rem; }
+  .site-nav { flex-wrap: wrap; }
+}
 @media (max-width: 520px) {
+  .doors { grid-template-columns: 1fr; }
   .wrap { width: calc(100% - 1.5rem); }
   .filters { grid-template-columns: 1fr; padding: .85rem; }
   .site-nav a { padding: .45rem .6rem; }

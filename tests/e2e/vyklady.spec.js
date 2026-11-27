@@ -76,3 +76,26 @@ test('katalog: filtr Druh odliší hry, výklady a nástroje @smoke', async ({ p
   await expect(card(page, 'kolobeh-vody')).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('úvod: rozcestník Výklad / Hřiště v hlavičce i v úvodu přepne katalog @smoke', async ({ page }) => {
+  const errors = watchErrors(page);
+  await page.goto('/');
+  await expect(page.locator('#planned')).toBeHidden();
+  await expect(page.locator('[data-door-count="vyklad"]')).toHaveText(`${VYKLADY.length} výklady`);
+  await page.locator('.door--vyklad').click();
+  await expect(page).toHaveURL(/druh=vyklad/);
+  await expect(page.locator('.app-card')).toHaveCount(VYKLADY.length);
+  await expect(page.locator('.site-nav a[aria-current="page"]')).toHaveText(/Výklad/);
+
+  await page.getByRole('navigation', { name: 'Hlavní navigace' }).getByRole('link', { name: 'Hřiště' }).click();
+  await expect(page).toHaveURL(/druh=hra/);
+  await expect(page.locator('.app-card[data-kind="vyklad"]')).toHaveCount(0);
+  await expect(page.locator('.site-nav a[aria-current="page"]')).toHaveText(/Hřiště/);
+
+  // z jiné stránky vede odkaz do katalogu s filtrem
+  await page.goto('/o-projektu/');
+  await page.getByRole('navigation', { name: 'Hlavní navigace' }).getByRole('link', { name: 'Výklad' }).click();
+  await expect(page).toHaveURL(/\/\?druh=vyklad#katalog/);
+  await expect(page.locator('#f-druh')).toHaveValue('vyklad');
+  expect(errors).toEqual([]);
+});
