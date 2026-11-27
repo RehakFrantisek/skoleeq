@@ -35,7 +35,7 @@ test.describe('Phishingová hlídka', () => {
     await page.goto(URL);
     await expect(page.getByRole('heading', { level: 1, name: 'Phishingová hlídka' })).toBeVisible();
     await expect(page.getByRole('radio', { name: /Celá služba/ })).toBeChecked();
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#phishingova-hlidka');
     expect(errors).toEqual([]);
   });

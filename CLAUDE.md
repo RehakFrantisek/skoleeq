@@ -53,7 +53,7 @@ Prohlížeče pro testy: `npx playwright install chromium firefox`. Systémový 
 
 ## Kde co je
 
-- Katalog: `public/index.html`, `public/assets/portal.{js,css}`, schéma `public/assets/registry.js`
+- Úvod `public/index.html`, katalogy `public/hriste/` a `public/vyklad/index.html`, `public/assets/portal.{js,css}`, schéma `public/assets/registry.js`
 - Název webu / doména: `site.config.json` (pak `npm run sync`)
 - Hlavičky: `public/_headers` (lokálně je čte `scripts/serve.mjs`)
 - Dokumentace: `docs/DEPLOYMENT.md`, `docs/ADD_NEW_APP.md`, `docs/ARCHITECTURE.md`

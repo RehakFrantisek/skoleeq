@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Výklad – Školeeq</title>
+  <meta name="application-name" content="Školeeq">
+  <meta name="description" content="Interaktivní výklady pro základní školu: pro projektor i samostudium, s 3D modely, pokusy a otázkami.">
+  <meta name="theme-color" content="#0f766e">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Školeeq">
+  <meta property="og:title" content="Výklad – Školeeq">
+  <meta property="og:description" content="Krátké výukové hry pro základní školy zdarma a bez registrace.">
+  <meta property="og:locale" content="cs_CZ">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/portal.css">
+  <link rel="modulepreload" href="/assets/registry.js">
+  <script type="module" src="/assets/portal.js"></script>
+</head>
+<body data-scope="vyklad">
+  <a class="skip-link" href="#katalog">Přeskočit na katalog</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="/" aria-label="Školeeq – úvod">
+        <img class="logo__mark" src="/favicon.svg" alt="" width="36" height="36">
+        <span class="logo__word" data-site-name>Školeeq</span>
+      </a>
+      <nav class="site-nav" aria-label="Hlavní navigace">
+        <a href="/">Úvod</a>
+        <a class="site-nav__kind" href="/vyklad/" data-kind="vyklad" aria-current="page"><span aria-hidden="true">🎬 </span>Výklad</a>
+        <a class="site-nav__kind" href="/hriste/" data-kind="hra"><span aria-hidden="true">🛝 </span>Hřiště</a>
+        <a href="/pro-ucitele/">Pro učitele</a>
+        <a href="/o-projektu/">O projektu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <section class="catalog catalog--page" id="katalog" aria-labelledby="katalog-title" tabindex="-1">
+      <div class="wrap">
+        <div class="catalog__head">
+          <div>
+            <h1 id="katalog-title"><span aria-hidden="true">🎬 </span>Výklad</h1>
+            <p class="catalog__lead">Interaktivní výklady pro projektor i samostudium. Posouvej, nebo listuj šipkami a klikrem. Najdeš tu i pomůcky do výuky.</p>
+          </div>
+          <p class="catalog__count" id="count" role="status" aria-live="polite"></p>
+        </div>
+        <p class="catalog__switch"><a href="/hriste/">Chceš procvičovat? <strong>🛝 Na Hřiště →</strong></a></p>
+
+        <form class="filters" id="filters" role="search" aria-label="Hledání a filtry výkladů">
+          <div class="field field--search">
+            <label for="q">Hledat</label>
+            <div class="search">
+              <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Název, téma, popis… (např. voda)">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-rocnik">Ročník</label>
+            <select id="f-rocnik" name="rocnik"><option value="">Všechny ročníky</option></select>
+          </div>
+          <div class="field">
+            <label for="f-predmet">Předmět</label>
+            <select id="f-predmet" name="predmet"><option value="">Všechny předměty</option></select>
+          </div>
+          <div class="field">
+            <label for="f-tema">Téma</label>
+            <select id="f-tema" name="tema"><option value="">Všechna témata</option></select>
+          </div>
+          <button class="btn btn--ghost filters__reset" id="clear-filters" type="reset" hidden>Vymazat filtry</button>
+        </form>
+
+
+        <div class="grid" id="grid" aria-busy="true">
+          <div class="card-skeleton" aria-hidden="true"></div>
+          <div class="card-skeleton" aria-hidden="true"></div>
+          <div class="card-skeleton" aria-hidden="true"></div>
+        </div>
+
+
+        <div class="state" id="empty" hidden>
+          <p class="state__title">Nic jsme nenašli.</p>
+          <p>Zkus jiné slovo nebo uvolni filtry.</p>
+          <button class="btn btn--primary" type="button" data-reset>Vymazat filtry</button>
+        </div>
+
+        <div class="state state--error" id="error" role="alert" hidden>
+          <p class="state__title">Katalog se nepodařilo načíst.</p>
+          <p>Zkontroluj připojení k internetu a zkus to znovu.</p>
+          <button class="btn btn--primary" type="button" id="retry">Zkusit znovu</button>
+        </div>
+
+        <noscript>
+          <div class="state">
+            <p class="state__title">Katalog potřebuje zapnutý JavaScript.</p>
+            <p>Zapni ho prosím v nastavení prohlížeče a stránku obnov. Samotné výklady ho potřebují také.</p>
+          </div>
+        </noscript>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p><strong data-site-name>Školeeq</strong> – škola, školení a kolega v jednom. Hravé výukové miniaplikace pro základní školy.</p>
+      <nav aria-label="Odkazy v patičce">
+        <a href="/">Úvod</a>
+        <a href="/vyklad/">Výklad</a>
+        <a href="/hriste/">Hřiště</a>
+        <a href="/pro-ucitele/">Pro učitele</a>
+        <a href="/o-projektu/">O projektu</a>
+      </nav>
+      <p class="site-footer__small">Bez registrace, bez reklam a bez sledovacích cookies.</p>
+    </div>
+  </footer>
+</body>
+</html>

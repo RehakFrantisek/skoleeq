@@ -44,7 +44,7 @@ test.describe('Grafový navigátor', () => {
     await page.goto(URL);
     await expect(page.getByRole('heading', { level: 1, name: 'Grafový navigátor' })).toBeVisible();
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#grafovy-navigator');
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     expect(errors).toEqual([]);
   });
 

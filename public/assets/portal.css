@@ -91,8 +91,8 @@ p { margin: 0; }
 .site-nav a[aria-current="page"] { color: var(--primary-ink); background: var(--primary-soft); }
 /* Rozcestník Výklad / Hřiště (hlavička i úvod) */
 .site-nav a.site-nav__kind { font-weight: 700; color: var(--ink); }
-.site-nav a.site-nav__kind[data-druh-link="vyklad"][aria-current="page"] { background: #ffeedd; color: #8a3a0c; }
-.site-nav a.site-nav__kind[data-druh-link="hra"][aria-current="page"] { background: #dff3ef; color: var(--primary-ink); }
+.site-nav a.site-nav__kind[data-kind="vyklad"][aria-current="page"] { background: #ffeedd; color: #8a3a0c; }
+.site-nav a.site-nav__kind[data-kind="hra"][aria-current="page"] { background: #dff3ef; color: var(--primary-ink); }
 
 .doors { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin-top: 1.5rem; max-width: 640px; }
 .door {
@@ -167,9 +167,24 @@ p { margin: 0; }
 .catalog__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; margin-bottom: 1.25rem; }
 .catalog__head h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; }
 .catalog__count { color: var(--muted); font-weight: 600; }
+/* Podstránky /hriste/ a /vyklad/ */
+.catalog__head h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); font-weight: 800; }
+.catalog__lead { margin-top: .4rem; color: var(--ink-2); max-width: 62ch; }
+.catalog__switch { margin: -.25rem 0 1.25rem; }
+.catalog__switch a { display: inline-flex; flex-wrap: wrap; gap: .35rem; align-items: center; min-height: 44px; padding: .4rem 1rem; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--ink-2); text-decoration: none; }
+.catalog__switch a:hover { border-color: var(--primary); color: var(--primary-ink); }
+.catalog__switch strong { color: var(--ink); }
+/* Úvod: jak to vypadá v hodině */
+.flow { padding: clamp(2rem, 5vw, 3.5rem) 0 4rem; }
+.flow h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 1rem; }
+.flow__steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.flow__steps li { display: grid; gap: .35rem; align-content: start; padding: 1.1rem 1.2rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+.flow__steps span:not(.flow__n) { color: var(--ink-2); }
+.flow__n { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--primary-soft); color: var(--primary-ink); font-weight: 800; }
+@media (max-width: 760px) { .flow__steps { grid-template-columns: 1fr; } }
 
 .filters {
-  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: .75rem; align-items: end;
   padding: 1rem; margin-bottom: 1.5rem;
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm);

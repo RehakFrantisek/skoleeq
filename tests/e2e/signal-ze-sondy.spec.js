@@ -67,7 +67,7 @@ test.describe('Signál ze sondy', () => {
     await page.goto(URL);
     await expect(page.getByRole('heading', { level: 1, name: 'Signál ze sondy' })).toBeVisible();
     await expect(page.getByRole('radio', { name: /Celá mise/ })).toBeChecked();
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#signal-ze-sondy');
     expect(errors).toEqual([]);
   });

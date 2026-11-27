@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Školeeq – hravé výukové miniaplikace pro ZŠ</title>
+  <title>Školeeq – výklady a hry pro základní školu</title>
   <meta name="application-name" content="Školeeq">
-  <meta name="description" content="Krátké výukové hry pro základní školy zdarma a bez registrace. Vyber podle ročníku, předmětu a tématu a hraj rovnou v prohlížeči.">
+  <meta name="description" content="Interaktivní výklady pro celou třídu a krátké výukové hry pro základní školy. Zdarma, bez registrace, rovnou v prohlížeči.">
   <meta name="theme-color" content="#0f766e">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Školeeq">
-  <meta property="og:title" content="Školeeq – hravé výukové miniaplikace pro ZŠ">
+  <meta property="og:title" content="Školeeq – výklady a hry pro základní školu">
   <meta property="og:description" content="Krátké výukové hry pro základní školy zdarma a bez registrace.">
   <meta property="og:locale" content="cs_CZ">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -18,7 +18,7 @@
   <script type="module" src="/assets/portal.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#katalog">Přeskočit na katalog</a>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
 
   <header class="site-header">
     <div class="wrap site-header__inner">
@@ -28,8 +28,8 @@
       </a>
       <nav class="site-nav" aria-label="Hlavní navigace">
         <a href="/" aria-current="page">Úvod</a>
-        <a class="site-nav__kind" href="/?druh=vyklad#katalog" data-druh-link="vyklad"><span aria-hidden="true">🎬 </span>Výklad</a>
-        <a class="site-nav__kind" href="/?druh=hra#katalog" data-druh-link="hra"><span aria-hidden="true">🛝 </span>Hřiště</a>
+        <a class="site-nav__kind" href="/vyklad/" data-kind="vyklad"><span aria-hidden="true">🎬 </span>Výklad</a>
+        <a class="site-nav__kind" href="/hriste/" data-kind="hra"><span aria-hidden="true">🛝 </span>Hřiště</a>
         <a href="/pro-ucitele/">Pro učitele</a>
         <a href="/o-projektu/">O projektu</a>
       </nav>
@@ -44,14 +44,14 @@
           <h1 id="hero-title">Pochop výkladem. <span class="hero__hl">Procvič na hřišti.</span></h1>
           <p class="hero__lead">Interaktivní výklady pro celou třídu a krátké hry, ve kterých si každý žák látku vyzkouší sám. Ve škole na tabuli, v učebně i doma. Zdarma, bez registrace a bez reklam.</p>
           <div class="doors">
-            <a class="door door--vyklad" href="/?druh=vyklad#katalog" data-druh-link="vyklad">
+            <a class="door door--vyklad" href="/vyklad/">
               <span class="door__icon" aria-hidden="true">🎬</span>
               <span class="door__step">1 · Pochop</span>
               <span class="door__title">Výklad</span>
               <span class="door__text">Pro projektor i samostudium: příběh, který se odvíjí posouváním, s 3D modely a pokusy.</span>
               <span class="door__count" data-door-count="vyklad"></span>
             </a>
-            <a class="door door--hra" href="/?druh=hra#katalog" data-druh-link="hra">
+            <a class="door door--hra" href="/hriste/">
               <span class="door__icon" aria-hidden="true">🛝</span>
               <span class="door__step">2 · Procvič</span>
               <span class="door__title">Hřiště</span>
@@ -69,78 +69,14 @@
       </div>
     </section>
 
-    <section class="catalog" id="katalog" aria-labelledby="katalog-title" tabindex="-1">
+    <section class="flow" aria-labelledby="flow-title">
       <div class="wrap">
-        <div class="catalog__head">
-          <h2 id="katalog-title">Katalog her a výkladů</h2>
-          <p class="catalog__count" id="count" role="status" aria-live="polite"></p>
-        </div>
-
-        <form class="filters" id="filters" role="search" aria-label="Hledání a filtry katalogu">
-          <div class="field field--search">
-            <label for="q">Hledat</label>
-            <div class="search">
-              <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-              <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Název, téma, popis… (např. zkratky)">
-            </div>
-          </div>
-          <div class="field">
-            <label for="f-druh">Druh</label>
-            <select id="f-druh" name="druh"><option value="">Hry i výklady</option></select>
-          </div>
-          <div class="field">
-            <label for="f-rocnik">Ročník</label>
-            <select id="f-rocnik" name="rocnik"><option value="">Všechny ročníky</option></select>
-          </div>
-          <div class="field">
-            <label for="f-predmet">Předmět</label>
-            <select id="f-predmet" name="predmet"><option value="">Všechny předměty</option></select>
-          </div>
-          <div class="field">
-            <label for="f-tema">Téma</label>
-            <select id="f-tema" name="tema"><option value="">Všechna témata</option></select>
-          </div>
-          <div class="field">
-            <label for="f-obtiznost">Obtížnost</label>
-            <select id="f-obtiznost" name="obtiznost"><option value="">Jakákoli obtížnost</option></select>
-          </div>
-          <button class="btn btn--ghost filters__reset" id="clear-filters" type="reset" hidden>Vymazat filtry</button>
-        </form>
-
-        <p class="touch-hint" id="touch-hint" hidden>
-          Používáš dotykové zařízení. Hry označené <strong>Vyžaduje klávesnici</strong> se nejlépe hrají na počítači nebo s připojenou klávesnicí.
-        </p>
-
-        <div class="grid" id="grid" aria-busy="true">
-          <div class="card-skeleton" aria-hidden="true"></div>
-          <div class="card-skeleton" aria-hidden="true"></div>
-          <div class="card-skeleton" aria-hidden="true"></div>
-        </div>
-
-        <section class="planned" id="planned" aria-labelledby="planned-title" hidden>
-          <h3 id="planned-title">Připravujeme</h3>
-          <p class="planned__note">Tyto hry zatím nejdou spustit. Cíle a návaznost na ŠVP najdete v části <a href="/pro-ucitele/">Pro učitele</a>.</p>
-          <div class="grid" id="planned-grid"></div>
-        </section>
-
-        <div class="state" id="empty" hidden>
-          <p class="state__title">Nic jsme nenašli.</p>
-          <p>Zkus jiné slovo nebo uvolni filtry.</p>
-          <button class="btn btn--primary" type="button" data-reset>Vymazat filtry</button>
-        </div>
-
-        <div class="state state--error" id="error" role="alert" hidden>
-          <p class="state__title">Katalog se nepodařilo načíst.</p>
-          <p>Zkontroluj připojení k internetu a zkus to znovu.</p>
-          <button class="btn btn--primary" type="button" id="retry">Zkusit znovu</button>
-        </div>
-
-        <noscript>
-          <div class="state">
-            <p class="state__title">Katalog potřebuje zapnutý JavaScript.</p>
-            <p>Zapni ho prosím v nastavení prohlížeče a stránku obnov. Samotné hry ho potřebují také.</p>
-          </div>
-        </noscript>
+        <h2 id="flow-title">Jak to vypadá v hodině</h2>
+        <ol class="flow__steps">
+          <li><span class="flow__n" aria-hidden="true">1</span><strong>Výklad u tabule</strong><span>Učitel promítne výklad a listuje šipkami nebo klikrem. Otázky ve výkladu řeší třída společně.</span></li>
+          <li><span class="flow__n" aria-hidden="true">2</span><strong>Hřiště v lavicích</strong><span>Žáci otevřou hru k tématu na svých zařízeních a procvičují vlastním tempem.</span></li>
+          <li><span class="flow__n" aria-hidden="true">3</span><strong>Doma znovu</strong><span>Výklady i hry fungují i na mobilu, takže se k nim žák může kdykoli vrátit.</span></li>
+        </ol>
       </div>
     </section>
   </main>
@@ -150,8 +86,8 @@
       <p><strong data-site-name>Školeeq</strong> – škola, školení a kolega v jednom. Hravé výukové miniaplikace pro základní školy.</p>
       <nav aria-label="Odkazy v patičce">
         <a href="/">Úvod</a>
-        <a class="site-nav__kind" href="/?druh=vyklad#katalog" data-druh-link="vyklad"><span aria-hidden="true">🎬 </span>Výklad</a>
-        <a class="site-nav__kind" href="/?druh=hra#katalog" data-druh-link="hra"><span aria-hidden="true">🛝 </span>Hřiště</a>
+        <a href="/vyklad/">Výklad</a>
+        <a href="/hriste/">Hřiště</a>
         <a href="/pro-ucitele/">Pro učitele</a>
         <a href="/o-projektu/">O projektu</a>
       </nav>

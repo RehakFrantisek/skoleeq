@@ -43,7 +43,7 @@ test.describe('Robotí dílna', () => {
     await expect(page.locator('.mcard')).toHaveCount(12);
     for (const h of ['Kapitola 1 – Posloupnost', 'Kapitola 2 – Opakování', 'Kapitola 3 – Podmínky a ladění']) await expect(page.getByRole('heading', { name: h })).toBeVisible();
     await expect(page.locator('.mcard button')).toHaveCount(1);
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#roboti-dilna');
     expect(errors).toEqual([]);
   });

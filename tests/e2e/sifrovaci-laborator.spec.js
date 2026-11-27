@@ -62,7 +62,7 @@ test.describe('Šifrovací laboratoř', () => {
     await page.goto(URL);
     await expect(page.getByRole('heading', { level: 1, name: 'Šifrovací laboratoř' })).toBeVisible();
     await expect(page.getByRole('radio', { name: /Celá mise/ })).toBeChecked();
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#sifrovaci-laborator');
     expect(errors).toEqual([]);
   });

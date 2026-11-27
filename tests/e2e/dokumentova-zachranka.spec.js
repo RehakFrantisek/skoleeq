@@ -122,7 +122,7 @@ test.describe('Dokumentová záchranka', () => {
     for (const h of ['Začátečník', 'Pokročilý', 'Expert']) await expect(page.getByRole('heading', { level: 2, name: h })).toBeVisible();
     await expect(page.locator('.mcard button')).toHaveCount(1);
     await expect(page.locator('.mcard.is-locked')).toHaveCount(9);
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#dokumentova-zachranka');
     expect(errors).toEqual([]);
   });

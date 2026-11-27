@@ -5,7 +5,9 @@ GitHub (1 repozitář)
         │ push do main / pull request
         ▼
 Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
-        ├── /                            katalog (index.html + assets/portal.js načte /apps.json)
+        ├── /                            úvod: rozcestník Výklad / Hřiště + doporučená hra (portal.js bez katalogu)
+        ├── /hriste/                     katalog her (body data-scope="hra")
+        ├── /vyklad/                     katalog výkladů a nástrojů (body data-scope="vyklad")
         ├── /aplikace/klavesova-mise/   samostatná hra
         ├── /aplikace/datovi-detektivove/ samostatná hra (ES moduly: logic.js + app.js)
         ├── /aplikace/<další-hra>/      samostatná hra
@@ -42,8 +44,8 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
 
 - Registr má volitelné pole `kind`: `hra` (výchozí), `vyklad` (interaktivní výklad řízený posouváním) a `nastroj` (pomůcka, která není hra, např. Psací azbuka).
 - Výklady a nástroje leží v `public/vyklad/<slug>/`, každý samostatně (vlastní kopie `engine.js`, `scenes.js`, CSS). Stejně jako hry nesmí sdílet kód s jinými výklady ani s portálem.
-- Katalog má filtr **Druh** (`?druh=hra|vyklad|nastroj`), karta výkladu ukazuje „Výklad · ročník“ a tlačítko „Spustit výklad“, nástroj „Otevřít“. Obtížnost se u výkladů a nástrojů nezobrazuje (v registru je kvůli schématu `lehka`).
-- Odkazy z výkladů vedou do katalogu: zpět `/?druh=vyklad#katalog`, téma `/?tema=<téma>#katalog`.
+- Úvod `/` je jen rozcestník; hry jsou na `/hriste/`, výklady a nástroje na `/vyklad/` (stejný `portal.js`, rozsah podle `data-scope` na `<body>`; staré `/?druh=…` přesměruje). Karta výkladu ukazuje „Výklad · ročník“ a tlačítko „Spustit výklad“, nástroj „Otevřít“. Obtížnost se u výkladů a nástrojů nezobrazuje (v registru je kvůli schématu `lehka`).
+- Odkazy z výkladů vedou na `/vyklad/` (téma `/vyklad/?tema=<téma>`), hry odkazují zpět na `/hriste/`.
 - Výklady vznikly v soukromém repozitáři `skoleeq-lab` (skill `interaktivni-vyklad`). Ten teď slouží jen pro rozpracované návrhy (např. rozdělení webu na Výklad/Hřiště); hotové výklady se vyvíjejí tady.
 - Psací azbuka: sadu písmen „Písanka Školeeq“ generuje `scripts/build-azbuka-set.mjs` do `public/vyklad/psaci-azbuka/sada-skoleeq.json`. Testy: `tests/unit/psaci-azbuka*.test.mjs`, `tests/e2e/psaci-azbuka.spec.js`. Výklady: `tests/e2e/vyklady.spec.js`.
 

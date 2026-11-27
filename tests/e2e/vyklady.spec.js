@@ -37,11 +37,10 @@ for (const v of VYKLADY) {
       expect(errors).toEqual([]);
     });
 
-    test('odkaz zpět vede do katalogu na výklady', async ({ page }) => {
+    test('odkaz zpět vede na stránku Výklad', async ({ page }) => {
       await page.goto(v.url);
       await page.locator('a.back').click();
-      await expect(page).toHaveURL(/\/\?druh=vyklad/);
-      await expect(page.locator('#f-druh')).toHaveValue('vyklad');
+      await expect(page).toHaveURL('/vyklad/');
       await expect(card(page, v.id)).toBeVisible();
     });
 
@@ -54,48 +53,34 @@ for (const v of VYKLADY) {
   });
 }
 
-test('katalog: filtr Druh odliší hry, výklady a nástroje @smoke', async ({ page }) => {
+test('stránka Výklad: jen výklady a nástroje, Hřiště jen hry @smoke', async ({ page }) => {
   const errors = watchErrors(page);
-  await page.goto('/');
-  await expect(card(page, 'pudy')).toBeVisible();
+  await page.goto('/vyklad/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Výklad' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Hlavní navigace' }).getByRole('link', { name: 'Výklad' })).toHaveAttribute('aria-current', 'page');
   await expect(card(page, 'pudy').getByRole('link', { name: 'Spustit výklad Co máme pod nohama?' })).toHaveAttribute('href', '/vyklad/pudy/');
   await expect(card(page, 'psaci-azbuka').getByRole('link', { name: 'Otevřít nástroj Psací azbuka' })).toHaveAttribute('href', '/vyklad/psaci-azbuka/');
   await expect(card(page, 'pudy')).toContainText('Výklad');
-
-  await page.getByLabel('Druh').selectOption('vyklad');
-  await expect(page).toHaveURL(/druh=vyklad/);
-  await expect(page.locator('.app-card')).toHaveCount(VYKLADY.length);
   await expect(page.locator('.app-card[data-kind="hra"]')).toHaveCount(0);
+  await expect(page.locator('.app-card')).toHaveCount(VYKLADY.length + 1);
+  await expect(page.locator('#count')).toHaveText(`${VYKLADY.length} výklady a 1 nástroj v katalogu`);
+  await expect(page.getByLabel('Obtížnost')).toHaveCount(0);
 
-  await page.getByLabel('Druh').selectOption('hra');
-  await expect(card(page, 'pudy')).toHaveCount(0);
-  await expect(card(page, 'klavesova-mise')).toBeVisible();
-
-  await page.goto('/?tema=Voda');
+  await page.goto('/vyklad/?tema=Voda');
   await expect(page.locator('.app-card')).toHaveCount(1);
   await expect(card(page, 'kolobeh-vody')).toBeVisible();
+
+  await page.getByRole('link', { name: /Na Hřiště/ }).click();
+  await expect(page).toHaveURL('/hriste/');
+  await expect(page.locator('.app-card[data-kind="vyklad"]')).toHaveCount(0);
+  await expect(card(page, 'klavesova-mise')).toBeVisible();
   expect(errors).toEqual([]);
 });
 
-test('úvod: rozcestník Výklad / Hřiště v hlavičce i v úvodu přepne katalog @smoke', async ({ page }) => {
-  const errors = watchErrors(page);
-  await page.goto('/');
-  await expect(page.locator('#planned')).toBeHidden();
-  await expect(page.locator('[data-door-count="vyklad"]')).toHaveText(`${VYKLADY.length} výklady`);
-  await page.locator('.door--vyklad').click();
-  await expect(page).toHaveURL(/druh=vyklad/);
-  await expect(page.locator('.app-card')).toHaveCount(VYKLADY.length);
-  await expect(page.locator('.site-nav a[aria-current="page"]')).toHaveText(/Výklad/);
-
-  await page.getByRole('navigation', { name: 'Hlavní navigace' }).getByRole('link', { name: 'Hřiště' }).click();
-  await expect(page).toHaveURL(/druh=hra/);
-  await expect(page.locator('.app-card[data-kind="vyklad"]')).toHaveCount(0);
-  await expect(page.locator('.site-nav a[aria-current="page"]')).toHaveText(/Hřiště/);
-
-  // z jiné stránky vede odkaz do katalogu s filtrem
+test('O projektu vede na Výklad a Hřiště, ne na úvod', async ({ page }) => {
   await page.goto('/o-projektu/');
-  await page.getByRole('navigation', { name: 'Hlavní navigace' }).getByRole('link', { name: 'Výklad' }).click();
-  await expect(page).toHaveURL(/\/\?druh=vyklad#katalog/);
-  await expect(page.locator('#f-druh')).toHaveValue('vyklad');
-  expect(errors).toEqual([]);
+  const main = page.getByRole('main');
+  await expect(main.getByRole('link', { name: /Na Výklad/ })).toHaveAttribute('href', '/vyklad/');
+  await expect(main.getByRole('link', { name: /Na Hřiště/ })).toHaveAttribute('href', '/hriste/');
+  await expect(main.getByRole('link', { name: /katalogu her/ })).toHaveCount(0);
 });

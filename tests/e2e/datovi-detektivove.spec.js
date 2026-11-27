@@ -60,7 +60,7 @@ test.describe('Datoví detektivové', () => {
     await expect(page.getByRole('radio', { name: /Rychlý režim/ })).toBeVisible();
     await expect(page.getByRole('checkbox', { name: /Zobrazit stopky/ })).not.toBeChecked(); // výchozí: bez časomíry
     await expect(page.getByRole('link', { name: /Pro učitele/ })).toHaveAttribute('href', '/pro-ucitele/#datovi-detektivove');
-    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Zpět do katalogu her' })).toHaveAttribute('href', '/hriste/');
     expect(errors).toEqual([]);
   });
 

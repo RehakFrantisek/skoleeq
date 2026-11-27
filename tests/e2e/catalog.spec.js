@@ -2,19 +2,38 @@ import { test, expect } from '@playwright/test';
 import { watchErrors, expectNoHorizontalScroll, card, registry, publishedApps } from './helpers.js';
 
 // Počty se berou z registru, aby testy nebylo nutné upravovat při přidání hry.
-const N = publishedApps().length;
-const hry = n => (n === 1 ? '1 položka' : n >= 2 && n <= 4 ? `${n} položky` : `${n} položek`);
+// Katalog her je na /hriste/ (výklady na /vyklad/, úvod / je jen rozcestník).
+const N = publishedApps().filter(a => (a.kind || 'hra') === 'hra').length;
+const hry = n => (n === 1 ? '1 hra' : n >= 2 && n <= 4 ? `${n} hry` : `${n} her`);
 
 test.describe('Katalog', () => {
-  test('homepage zobrazí Klávesovou misi bez chyb @smoke', async ({ page }) => {
+  test('úvod je rozcestník: doporučená hra, Výklad a Hřiště, žádný katalog @smoke', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/');
     await expect(page).toHaveTitle(/Školeeq/);
+    await expect(page.locator('#featured')).toContainText('Klávesová mise');
+    await expect(page.locator('.app-card')).toHaveCount(0);
+    await expect(page.locator('.door--hra')).toHaveAttribute('href', '/hriste/');
+    await expect(page.locator('.door--vyklad')).toHaveAttribute('href', '/vyklad/');
+    await expect(page.locator('[data-door-count="hra"]')).toHaveText(hry(N));
+    await page.locator('.door--hra').click();
+    await expect(page).toHaveURL('/hriste/');
+    await expect(page.getByRole('heading', { level: 1, name: 'Hřiště' })).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Hlavní navigace' }).getByRole('link', { name: 'Hřiště' })).toHaveAttribute('aria-current', 'page');
+    // staré odkazy /?druh=… vedou na podstránku
+    await page.goto('/?druh=vyklad#katalog');
+    await expect(page).toHaveURL('/vyklad/');
+    expect(errors).toEqual([]);
+  });
+
+  test('Hřiště zobrazí Klávesovou misi bez chyb @smoke', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto('/hriste/');
+    await expect(page).toHaveTitle(/Hřiště/);
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     await expect(card(page, 'klavesova-mise').getByRole('heading', { name: 'Klávesová mise' })).toBeVisible();
     await expect(card(page, 'klavesova-mise')).toContainText('Vyžaduje klávesnici');
     await expect(card(page, 'klavesova-mise')).toContainText('7. ročník');
-    await expect(page.locator('#featured')).toContainText('Klávesová mise');
     await expect(page.locator('#count')).toHaveText(`${hry(N)} v katalogu`);
     await expect(page.locator('.app-card')).toHaveCount(N);
     await expect(page.locator('#grid')).toHaveAttribute('aria-busy', 'false');
@@ -22,11 +41,11 @@ test.describe('Katalog', () => {
   });
 
   test('hledání bez diakritiky, prázdný výsledek a vymazání filtrů @smoke', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/hriste/');
     const search = page.getByLabel('Hledat', { exact: true });
     await search.fill('klavesove zkratky');           // bez háčků a čárek
     await expect(card(page, 'klavesova-mise')).toBeVisible();
-    await expect(page.locator('#count')).toHaveText(`Nalezeno: 1 položka z ${N}`);
+    await expect(page.locator('#count')).toHaveText(`Nalezeno: 1 hra z ${N}`);
     await expect(page).toHaveURL(/\?q=klavesove\+zkratky/);
 
     await search.fill('MYSAK KURZIK');                  // velká písmena, popis
@@ -35,17 +54,17 @@ test.describe('Katalog', () => {
     await search.fill('zirafy');                      // nic takového v katalogu není
     await expect(page.locator('.app-card')).toHaveCount(0);
     await expect(page.locator('#empty')).toBeVisible();
-    await expect(page.locator('#count')).toHaveText(`Nalezeno: 0 položek z ${N}`);
+    await expect(page.locator('#count')).toHaveText(`Nalezeno: 0 her z ${N}`);
 
     await page.locator('#empty').getByRole('button', { name: 'Vymazat filtry' }).click();
     await expect(search).toHaveValue('');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     await expect(page.locator('#empty')).toBeHidden();
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/hriste\/$/);
   });
 
   test('filtr podle ročníku, předmětu, tématu a obtížnosti', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/hriste/');
     const grade = page.getByLabel('Ročník', { exact: true });
     await expect(grade.locator('option')).toHaveCount(10); // „všechny“ + 1.–9.
     await grade.selectOption('7');
@@ -59,7 +78,7 @@ test.describe('Katalog', () => {
     await expect(card(page, 'klavesova-mise')).toBeVisible();
 
     // možnosti předmětu/tématu se generují z registru
-    const subjects = [...new Set(publishedApps().map(a => a.subject))];
+    const subjects = [...new Set(publishedApps().filter(a => (a.kind || 'hra') === 'hra').map(a => a.subject))];
     await expect(page.getByLabel('Předmět', { exact: true }).locator('option')).toHaveCount(subjects.length + 1);
     await page.getByLabel('Téma', { exact: true }).selectOption('Klávesové zkratky');
     await page.getByLabel('Obtížnost', { exact: true }).selectOption('stredni');
@@ -68,17 +87,17 @@ test.describe('Katalog', () => {
   });
 
   test('filtr z URL přežije obnovení stránky', async ({ page }) => {
-    await page.goto('/?rocnik=1');
+    await page.goto('/hriste/?rocnik=1');
     await expect(page.getByLabel('Ročník', { exact: true })).toHaveValue('1');
     await expect(page.locator('#empty')).toBeVisible();
-    await page.goto('/?q=klav&rocnik=7');
+    await page.goto('/hriste/?q=klav&rocnik=7');
     await expect(page.getByLabel('Hledat', { exact: true })).toHaveValue('klav');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     await page.reload();
     await expect(page.getByLabel('Ročník', { exact: true })).toHaveValue('7');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     // neplatná hodnota v URL nerozbije katalog
-    await page.goto('/?tema=neexistuje');
+    await page.goto('/hriste/?tema=neexistuje');
     await expect(page.getByLabel('Téma', { exact: true })).toHaveValue('');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
   });
@@ -86,7 +105,7 @@ test.describe('Katalog', () => {
   test('selhání načtení apps.json zobrazí chybu a jde zkusit znovu', async ({ page }) => {
     let fail = true;
     await page.route('**/apps.json', route => (fail ? route.fulfill({ status: 500, body: 'chyba' }) : route.continue()));
-    await page.goto('/');
+    await page.goto('/hriste/');
     await expect(page.locator('#error')).toBeVisible();
     await expect(page.locator('#error')).toContainText('Katalog se nepodařilo načíst');
     await expect(page.locator('.app-card')).toHaveCount(0);
@@ -98,7 +117,7 @@ test.describe('Katalog', () => {
 
   test('neplatný JSON zobrazí chybu', async ({ page }) => {
     await page.route('**/apps.json', route => route.fulfill({ status: 200, contentType: 'application/json', body: '{"apps": [' }));
-    await page.goto('/');
+    await page.goto('/hriste/');
     await expect(page.locator('#error')).toBeVisible();
   });
 
@@ -117,7 +136,7 @@ test.describe('Katalog', () => {
       contentType: 'application/json',
       body: JSON.stringify({ ...base, apps: [...base.apps, extra, draft, evil, badUrl] })
     }));
-    await page.goto('/');
+    await page.goto('/hriste/');
     await expect(page.locator('.app-card')).toHaveCount(N + 1);
     await expect(card(page, 'binarni-vyzva')).toContainText('7. a 9. ročník');
     await expect(card(page, 'binarni-vyzva')).toContainText('Obtížnost: Náročná');
@@ -134,7 +153,7 @@ test.describe('Katalog', () => {
   });
 
   test('kliknutí na kartu otevře samostatnou URL hry @smoke', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/hriste/');
     // klik kamkoli na kartu (odkaz „Spustit“ je roztažený přes celou kartu)
     await card(page, 'klavesova-mise').click({ position: { x: 40, y: 260 } });
     await expect(page).toHaveURL('/aplikace/klavesova-mise/');
@@ -142,7 +161,7 @@ test.describe('Katalog', () => {
   });
 
   test('klávesnicí: Tab dojde na odkaz Spustit a Enter hru otevře', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/hriste/');
     const link = card(page, 'klavesova-mise').getByRole('link', { name: /Spustit hru/ });
     await link.focus();
     await expect(link).toBeFocused();
@@ -154,20 +173,20 @@ test.describe('Katalog', () => {
 test.describe('Datoví detektivové a připravované hry v katalogu', () => {
   test('katalog → hra → zpět do katalogu @smoke', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/');
+    await page.goto('/hriste/');
     await expect(card(page, 'datovi-detektivove')).toContainText('6. ročník');
     await card(page, 'datovi-detektivove').getByRole('link', { name: 'Spustit hru Datoví detektivové' }).click();
     await expect(page).toHaveURL('/aplikace/datovi-detektivove/');
     await expect(page.getByRole('heading', { level: 1, name: 'Datoví detektivové' })).toBeVisible();
     await page.getByRole('link', { name: 'Zpět do katalogu her' }).click();
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/hriste/');
     await expect(card(page, 'datovi-detektivove')).toBeVisible();
     expect(errors).toEqual([]);
   });
 
   test('bez připravovaných her se sekce Připravujeme nezobrazí', async ({ page }) => {
     expect(registry().apps.filter(a => a.status === 'planned')).toEqual([]);
-    await page.goto('/');
+    await page.goto('/hriste/');
     await expect(page.locator('.app-card').first()).toBeVisible();
     await expect(page.locator('#planned')).toBeHidden();
   });
@@ -183,7 +202,7 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
     await page.route('**/apps.json', route => route.fulfill({
       contentType: 'application/json', body: JSON.stringify({ ...base, apps: [...base.apps, ...planned] })
     }));
-    await page.goto('/');
+    await page.goto('/hriste/');
     const section = page.locator('#planned');
     await expect(section.getByRole('heading', { name: 'Připravujeme' })).toBeVisible();
     await expect(section.locator('.plan-card')).toHaveCount(planned.length);
@@ -196,15 +215,15 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
     await expect(page.locator('.app-card')).toHaveCount(1);
     await expect(card(page, 'datovi-detektivove')).toBeVisible();
     await expect(section).toBeHidden();
-    await page.goto('/?rocnik=7');
+    await page.goto('/hriste/?rocnik=7');
     await expect(section.locator('.plan-card[data-id="prezentacni-studio"]')).toBeVisible();
-    await page.goto('/?rocnik=6');
+    await page.goto('/hriste/?rocnik=6');
     await expect(section).toBeHidden(); // prezentace jsou až od 7. ročníku
   });
 
   test('karta Pro učitele jde otevřít přímým odkazem a cituje ŠVP', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/');
+    await page.goto('/hriste/');
     await card(page, 'datovi-detektivove').getByRole('link', { name: 'Pro učitele: Datoví detektivové' }).click();
     await expect(page).toHaveURL('/pro-ucitele/#datovi-detektivove');
     const art = page.locator('article#datovi-detektivove');
@@ -226,14 +245,14 @@ test.describe('Datoví detektivové a připravované hry v katalogu', () => {
 test.describe('Nové hry v katalogu', () => {
   test('katalog načte obě nové hry, přímé URL fungují a odkazují zpět @smoke', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/');
+    await page.goto('/hriste/');
     for (const [id, title] of [['dokumentova-zachranka', 'Dokumentová záchranka'], ['roboti-dilna', 'Robotí dílna']]) {
       await expect(card(page, id)).toBeVisible();
       await card(page, id).getByRole('link', { name: `Spustit hru ${title}` }).click();
       await expect(page).toHaveURL(`/aplikace/${id}/`);
       await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
       await page.getByRole('link', { name: 'Zpět do katalogu her' }).click();
-      await expect(page).toHaveURL('/');
+      await expect(page).toHaveURL('/hriste/');
     }
     // přímý odkaz na konkrétní misi
     await page.goto('/aplikace/roboti-dilna/#start-motoru');
@@ -268,7 +287,7 @@ test.describe('Ostatní stránky', () => {
     const res = await page.goto('/tohle-neexistuje/');
     expect(res.status()).toBe(404);
     await expect(page.getByRole('heading', { name: 'Tuhle stránku jsme nenašli' })).toBeVisible();
-    await page.getByRole('link', { name: 'Zpět do katalogu' }).click();
+    await page.getByRole('link', { name: 'Zpět na úvod' }).click();
     await expect(page).toHaveURL('/');
   });
 
@@ -296,16 +315,16 @@ test.describe('Mobil', () => {
   for (const width of [320, 360, 390]) {
     test(`bez vodorovného scrollu na ${width} px @mobile`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 });
-      for (const url of ['/', '/o-projektu/', '/pro-ucitele/', '/tohle-neexistuje/', '/aplikace/klavesova-mise/', '/aplikace/datovi-detektivove/', '/aplikace/dokumentova-zachranka/', '/aplikace/roboti-dilna/']) {
+      for (const url of ['/', '/hriste/', '/vyklad/', '/o-projektu/', '/pro-ucitele/', '/tohle-neexistuje/', '/aplikace/klavesova-mise/', '/aplikace/datovi-detektivove/', '/aplikace/dokumentova-zachranka/', '/aplikace/roboti-dilna/']) {
         await page.goto(url);
-        if (url === '/') await expect(page.locator('.app-card').first()).toBeVisible();
+        if (url === '/hriste/') await expect(page.locator('.app-card').first()).toBeVisible();
         await expectNoHorizontalScroll(page);
       }
     });
   }
 
   test('na dotykovém zařízení se zobrazí upozornění na klávesnici, hra zůstane v katalogu @mobile', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/hriste/');
     await expect(card(page, 'klavesova-mise')).toBeVisible();
     await expect(page.locator('#touch-hint')).toBeVisible();
   });

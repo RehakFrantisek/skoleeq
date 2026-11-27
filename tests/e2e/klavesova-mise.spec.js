@@ -174,7 +174,7 @@ test.describe('Klávesová mise', () => {
       await page.goto(URL);
       const back = page.locator('.portal-back');
       await expect(back).toBeVisible();
-      await expect(back).toHaveAttribute('href', '/');
+      await expect(back).toHaveAttribute('href', '/hriste/');
       const [b, logo, sound] = await Promise.all([back, page.locator('#logoBtn'), page.locator('#soundBtn')].map(l => l.boundingBox()));
       const overlap = (p, q) => p.x < q.x + q.width && q.x < p.x + p.width && p.y < q.y + q.height && q.y < p.y + p.height;
       expect(overlap(b, logo), `${width}px: odkaz × logo`).toBe(false);
@@ -182,7 +182,7 @@ test.describe('Klávesová mise', () => {
       expect(sound.x + sound.width, `${width}px: zvuk mimo obrazovku`).toBeLessThanOrEqual(width);
     }
     await page.locator('.portal-back').click();
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/hriste/');
   });
 
   test('kapitola Bez myši skutečnou klávesnicí; starý postup s 5 kapitolami se doplní', async ({ page }) => {

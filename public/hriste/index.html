@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hřiště – Školeeq</title>
+  <meta name="application-name" content="Školeeq">
+  <meta name="description" content="Krátké výukové hry pro základní školy zdarma a bez registrace. Vyber podle ročníku, předmětu a tématu a hraj rovnou v prohlížeči.">
+  <meta name="theme-color" content="#0f766e">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Školeeq">
+  <meta property="og:title" content="Hřiště – Školeeq">
+  <meta property="og:description" content="Krátké výukové hry pro základní školy zdarma a bez registrace.">
+  <meta property="og:locale" content="cs_CZ">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/portal.css">
+  <link rel="modulepreload" href="/assets/registry.js">
+  <script type="module" src="/assets/portal.js"></script>
+</head>
+<body data-scope="hra">
+  <a class="skip-link" href="#katalog">Přeskočit na katalog</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="/" aria-label="Školeeq – úvod">
+        <img class="logo__mark" src="/favicon.svg" alt="" width="36" height="36">
+        <span class="logo__word" data-site-name>Školeeq</span>
+      </a>
+      <nav class="site-nav" aria-label="Hlavní navigace">
+        <a href="/">Úvod</a>
+        <a class="site-nav__kind" href="/vyklad/" data-kind="vyklad"><span aria-hidden="true">🎬 </span>Výklad</a>
+        <a class="site-nav__kind" href="/hriste/" data-kind="hra" aria-current="page"><span aria-hidden="true">🛝 </span>Hřiště</a>
+        <a href="/pro-ucitele/">Pro učitele</a>
+        <a href="/o-projektu/">O projektu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <section class="catalog catalog--page" id="katalog" aria-labelledby="katalog-title" tabindex="-1">
+      <div class="wrap">
+        <div class="catalog__head">
+          <div>
+            <h1 id="katalog-title"><span aria-hidden="true">🛝 </span>Hřiště</h1>
+            <p class="catalog__lead">Hry k procvičení: každý žák na svém zařízení, s úrovněmi, nápovědou bez trestu a uloženým postupem.</p>
+          </div>
+          <p class="catalog__count" id="count" role="status" aria-live="polite"></p>
+        </div>
+        <p class="catalog__switch"><a href="/vyklad/">Chceš látku nejdřív pochopit? <strong>🎬 Na Výklad →</strong></a></p>
+
+        <form class="filters" id="filters" role="search" aria-label="Hledání a filtry her">
+          <div class="field field--search">
+            <label for="q">Hledat</label>
+            <div class="search">
+              <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Název, téma, popis… (např. zkratky)">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-rocnik">Ročník</label>
+            <select id="f-rocnik" name="rocnik"><option value="">Všechny ročníky</option></select>
+          </div>
+          <div class="field">
+            <label for="f-predmet">Předmět</label>
+            <select id="f-predmet" name="predmet"><option value="">Všechny předměty</option></select>
+          </div>
+          <div class="field">
+            <label for="f-tema">Téma</label>
+            <select id="f-tema" name="tema"><option value="">Všechna témata</option></select>
+          </div>
+          <div class="field">
+            <label for="f-obtiznost">Obtížnost</label>
+            <select id="f-obtiznost" name="obtiznost"><option value="">Jakákoli obtížnost</option></select>
+          </div>
+          <button class="btn btn--ghost filters__reset" id="clear-filters" type="reset" hidden>Vymazat filtry</button>
+        </form>
+
+        <p class="touch-hint" id="touch-hint" hidden>
+          Používáš dotykové zařízení. Hry označené <strong>Vyžaduje klávesnici</strong> se nejlépe hrají na počítači nebo s připojenou klávesnicí.
+        </p>
+
+        <div class="grid" id="grid" aria-busy="true">
+          <div class="card-skeleton" aria-hidden="true"></div>
+          <div class="card-skeleton" aria-hidden="true"></div>
+          <div class="card-skeleton" aria-hidden="true"></div>
+        </div>
+
+        <section class="planned" id="planned" aria-labelledby="planned-title" hidden>
+          <h3 id="planned-title">Připravujeme</h3>
+          <p class="planned__note">Tyto hry zatím nejdou spustit. Cíle a návaznost na ŠVP najdete v části <a href="/pro-ucitele/">Pro učitele</a>.</p>
+          <div class="grid" id="planned-grid"></div>
+        </section>
+
+        <div class="state" id="empty" hidden>
+          <p class="state__title">Nic jsme nenašli.</p>
+          <p>Zkus jiné slovo nebo uvolni filtry.</p>
+          <button class="btn btn--primary" type="button" data-reset>Vymazat filtry</button>
+        </div>
+
+        <div class="state state--error" id="error" role="alert" hidden>
+          <p class="state__title">Katalog se nepodařilo načíst.</p>
+          <p>Zkontroluj připojení k internetu a zkus to znovu.</p>
+          <button class="btn btn--primary" type="button" id="retry">Zkusit znovu</button>
+        </div>
+
+        <noscript>
+          <div class="state">
+            <p class="state__title">Katalog potřebuje zapnutý JavaScript.</p>
+            <p>Zapni ho prosím v nastavení prohlížeče a stránku obnov. Samotné hry ho potřebují také.</p>
+          </div>
+        </noscript>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p><strong data-site-name>Školeeq</strong> – škola, školení a kolega v jednom. Hravé výukové miniaplikace pro základní školy.</p>
+      <nav aria-label="Odkazy v patičce">
+        <a href="/">Úvod</a>
+        <a href="/vyklad/">Výklad</a>
+        <a href="/hriste/">Hřiště</a>
+        <a href="/pro-ucitele/">Pro učitele</a>
+        <a href="/o-projektu/">O projektu</a>
+      </nav>
+      <p class="site-footer__small">Bez registrace, bez reklam a bez sledovacích cookies.</p>
+    </div>
+  </footer>
+</body>
+</html>

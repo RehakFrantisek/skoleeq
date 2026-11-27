@@ -1,4 +1,4 @@
-// Katalog her a výkladů – načte /apps.json, zvaliduje, vykreslí karty a lokálně filtruje.
+// Úvod (rozcestník) a katalogy /hriste/ a /vyklad/ – načte /apps.json, zvaliduje, vykreslí karty a lokálně filtruje.
 // Bezpečnost: veškerý text z registru jde do DOM přes textContent / atributy,
 // innerHTML se používá jen pro konstantní SVG ikony z whitelistu níže.
 import { validateRegistry, DIFFICULTIES, KINDS, kindOf } from './registry.js';
@@ -47,10 +47,15 @@ function gradesLabel(grades) {
   if (contiguous) return `${g[0]}.–${g[g.length - 1]}. ročník`;
   return g.slice(0, -1).map(n => n + '.').join(', ') + ` a ${g[g.length - 1]}. ročník`;
 }
+const plural = (n, [one, few, many]) => `${n} ${n === 1 ? one : n >= 2 && n <= 4 ? few : many}`;
+const WORDS = { hra: ['hra', 'hry', 'her'], vyklad: ['výklad', 'výklady', 'výkladů'], nastroj: ['nástroj', 'nástroje', 'nástrojů'] };
+// Rozsah stránky: <body data-scope="hra"> = Hřiště, "vyklad" = výklady a nástroje, bez atributu = úvod
+const SCOPE = document.body.dataset.scope || '';
+const SCOPE_KINDS = { hra: ['hra'], vyklad: ['vyklad', 'nastroj'] };
+const inScope = app => !SCOPE || SCOPE_KINDS[SCOPE].includes(kindOf(app));
+const kindBreakdown = list => SCOPE_KINDS.vyklad.map(k => [k, list.filter(a => kindOf(a) === k).length]).filter(([, c]) => c).map(([k, c]) => plural(c, WORDS[k])).join(' a ');
 function itemsLabel(n) {
-  if (n === 1) return '1 položka';
-  if (n >= 2 && n <= 4) return `${n} položky`;
-  return `${n} položek`;
+  return SCOPE === 'hra' ? plural(n, WORDS.hra) : plural(n, ['položka', 'položky', 'položek']);
 }
 // Text tlačítka a popisek pro čtečky podle druhu položky
 const LAUNCH = {
@@ -62,12 +67,11 @@ const LAUNCH = {
 /* ---------- Stav filtrů (synchronizovaný s URL) ---------- */
 const FILTERS = [
   { key: 'q', input: '#q' },
-  { key: 'druh', input: '#f-druh' },
   { key: 'rocnik', input: '#f-rocnik' },
   { key: 'predmet', input: '#f-predmet' },
   { key: 'tema', input: '#f-tema' },
   { key: 'obtiznost', input: '#f-obtiznost' }
-];
+].filter(f => document.querySelector(f.input)); // na stránce výkladů chybí obtížnost, na úvodu všechno
 let APPS = [];
 let PLANNED = [];
 
@@ -92,7 +96,6 @@ function writeUrl(state) {
 const isActive = s => FILTERS.some(f => s[f.key]);
 
 function matches(app, s) {
-  if (s.druh && kindOf(app) !== s.druh) return false;
   if (s.rocnik && !app.grades.includes(Number(s.rocnik))) return false;
   if (s.predmet && app.subject !== s.predmet) return false;
   if (s.tema && !app.topics.includes(s.tema)) return false;
@@ -117,13 +120,11 @@ function fillSelect(sel, values, labelOf = v => v) {
 }
 function buildFilterOptions() {
   const cs = (a, b) => a.localeCompare(b, 'cs');
-  const kinds = new Set(APPS.map(kindOf));
-  fillSelect('#f-druh', Object.keys(KINDS).filter(k => kinds.has(k)), k => KINDS[k].plural);
   fillSelect('#f-rocnik', [1, 2, 3, 4, 5, 6, 7, 8, 9], n => `${n}. ročník`);
   fillSelect('#f-predmet', [...new Set(APPS.map(a => a.subject))].sort(cs));
   fillSelect('#f-tema', [...new Set(APPS.flatMap(a => a.topics))].sort(cs));
   const used = new Set(APPS.map(a => a.difficulty));
-  fillSelect('#f-obtiznost', Object.keys(DIFFICULTIES).filter(d => used.has(d)), d => DIFFICULTIES[d]);
+  if ($('#f-obtiznost')) fillSelect('#f-obtiznost', Object.keys(DIFFICULTIES).filter(d => used.has(d)), d => DIFFICULTIES[d]);
 }
 function applyStateToForm(s) {
   for (const f of FILTERS) {
@@ -257,44 +258,26 @@ function renderFeatured() {
   box.hidden = false;
 }
 
-/* ---------- Rozcestník Výklad / Hřiště ---------- */
-function syncKindNav(druh) {
-  document.querySelectorAll('.site-nav a').forEach(a => {
-    const on = a.dataset.druhLink ? a.dataset.druhLink === druh : a.getAttribute('href') === '/' && !druh;
-    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
-  });
-}
-function doorCounts() {
-  const n = { vyklad: ['výklad', 'výklady', 'výkladů'], hra: ['hra', 'hry', 'her'] };
+/* ---------- Úvod: počty v dlaždicích Výklad / Hřiště ---------- */
+function doorCounts(all) {
   document.querySelectorAll('[data-door-count]').forEach(el => {
-    const k = el.dataset.doorCount;
-    const c = APPS.filter(a => kindOf(a) === k).length;
-    const w = n[k] || n.hra;
-    el.textContent = c ? `${c} ${c === 1 ? w[0] : c <= 4 ? w[1] : w[2]}` : '';
+    const kinds = SCOPE_KINDS[el.dataset.doorCount] || [];
+    const parts = kinds.map(k => [k, all.filter(a => kindOf(a) === k).length]).filter(([, c]) => c);
+    el.textContent = parts.map(([k, c]) => plural(c, WORDS[k])).join(' a ');
   });
-}
-function openKind(e) {
-  const druh = e.currentTarget.dataset.druhLink;
-  const select = $('#f-druh');
-  if (!APPS.length || ![...select.options].some(o => o.value === druh)) return; // necháme běžný odkaz
-  e.preventDefault();
-  select.value = druh;
-  render();
-  const kat = $('#katalog');
-  kat.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-  kat.focus({ preventScroll: true });
 }
 
 function render() {
   const s = readForm();
   writeUrl(s);
-  syncKindNav(s.druh);
   const list = APPS.filter(a => matches(a, s));
   const grid = $('#grid');
   grid.replaceChildren(...list.map(card));
   const planned = PLANNED.filter(a => matches(a, s));
-  $('#planned').hidden = planned.length === 0;
-  $('#planned-grid').replaceChildren(...planned.map(plannedCard));
+  if ($('#planned')) {
+    $('#planned').hidden = planned.length === 0;
+    $('#planned-grid').replaceChildren(...planned.map(plannedCard));
+  }
   // Malý katalog bez filtrů a bez připravovaných her: dlaždice „připravujeme“, ať jediná karta nepůsobí osaměle
   if (!isActive(s) && list.length > 0 && list.length < 3 && !PLANNED.length) grid.append(soonTile());
   grid.setAttribute('aria-busy', 'false');
@@ -303,8 +286,8 @@ function render() {
   $('#clear-filters').hidden = !isActive(s);
   $('#count').textContent = isActive(s)
     ? `Nalezeno: ${itemsLabel(list.length)} z ${APPS.length}`
-    : `${itemsLabel(APPS.length)} v katalogu`;
-  $('#touch-hint').hidden = !(isTouchOnly() && list.some(a => a.requiresKeyboard));
+    : `${SCOPE === "vyklad" ? kindBreakdown(APPS) : itemsLabel(APPS.length)} v katalogu`;
+  if ($('#touch-hint')) $('#touch-hint').hidden = !(isTouchOnly() && list.some(a => a.requiresKeyboard));
 }
 
 function isTouchOnly() {
@@ -327,12 +310,10 @@ async function load() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const { apps, problems } = validateRegistry(await res.json());
     for (const p of problems) console.warn('[katalog] přeskočen neplatný záznam', p.id ?? `#${p.index}`, p.errors);
-    APPS = apps.filter(a => a.status === 'published');
-    PLANNED = apps.filter(a => a.status === 'planned');
+    APPS = apps.filter(a => a.status === 'published' && inScope(a));
+    PLANNED = apps.filter(a => a.status === 'planned' && inScope(a));
     buildFilterOptions();
     applyStateToForm(readUrl());
-    renderFeatured();
-    doorCounts();
     render();
   } catch (err) {
     console.error('[katalog] načtení selhalo', err);
@@ -345,7 +326,25 @@ async function load() {
   }
 }
 
+/* ---------- Úvod (bez katalogu) ---------- */
+async function loadLanding() {
+  // staré odkazy /?druh=… vedou na podstránku
+  const druh = new URLSearchParams(location.search).get('druh');
+  if (druh === 'hra' || druh === 'vyklad' || druh === 'nastroj') { location.replace(druh === 'hra' ? '/hriste/' : '/vyklad/'); return; }
+  try {
+    const res = await fetch('/apps.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const { apps } = validateRegistry(await res.json());
+    APPS = apps.filter(a => a.status === 'published');
+    doorCounts(APPS);
+    renderFeatured();
+  } catch (err) {
+    console.error('[úvod] načtení registru selhalo', err); // dlaždice fungují i bez počtů
+  }
+}
+
 function init() {
+  if (!SCOPE) { loadLanding(); return; }
   const form = $('#filters');
   form.addEventListener('submit', e => e.preventDefault());
   form.addEventListener('input', render);
@@ -354,7 +353,6 @@ function init() {
   form.addEventListener('reset', () => setTimeout(() => { render(); $('#q').focus(); }, 0));
   document.querySelectorAll('[data-reset]').forEach(b => b.addEventListener('click', resetFilters));
   $('#retry').addEventListener('click', load);
-  document.querySelectorAll('a[data-druh-link]').forEach(a => a.addEventListener('click', openKind));
   load();
 }
 
