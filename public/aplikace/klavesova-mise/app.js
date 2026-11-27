@@ -196,7 +196,7 @@ const TASK_TEXT = {
   x: ['Vyjmi text', 'Odstavec je na špatném místě. Chceš ho přesunout jinam.'],
   a: ['Označ všechno', 'Chceš změnit písmo v celém dokumentu najednou.'],
   z: ['Vrať poslední změnu', 'Jejda, celý odstavec najednou zmizel! Rychle ho vrať.'],
-  y: ['Zopakuj vrácenou změnu', 'Změnu jsi vrátil zpátky, ale vlastně byla dobrá. Chceš ji obnovit.'],
+  y: ['Zopakuj vrácenou změnu', 'Změna se vrátila zpátky, ale vlastně byla dobrá. Chceš ji obnovit.'],
   s: ['Ulož dokument', 'Píšeš slohovku už hodinu. Ať o ni nepřijdeš!'],
   f: ['Najdi slovo', 'V dlouhém textu hledáš, kde se píše o dinosaurech.'],
   b: ['Tučné písmo', 'Nadpis má být výrazný a silný.'],

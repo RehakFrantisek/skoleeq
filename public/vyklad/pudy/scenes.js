@@ -271,7 +271,7 @@
           el('p', {}, c.text),
         );
         if (found.size === O.composition.length) {
-          info.appendChild(el('p', { class: 'success' }, '🎉 Našel jsi všech 7 složek půdy!'));
+          info.appendChild(el('p', { class: 'success' }, '🎉 Hotovo! Všech 7 složek půdy je objeveno.'));
         }
       });
       clump.appendChild(b);
@@ -361,7 +361,7 @@
           fb.textContent = 'Správně! Hlinitá půda udrží vodu i živiny, a přitom není moc těžká.';
         } else {
           b.classList.add('is-wrong');
-          fb.textContent = t.id === 'piscita' ? 'Ne tak docela: písčitá půda vodu nepodrží, musí se zalévat. Zkus to znovu.' : 'Ne tak docela: jílovitá půda je těžká a utažená, musí se kypřit. Zkus to znovu.';
+          fb.textContent = t.id === 'piscita' ? 'Ne tak docela: písčitá půda vodu nepodrží, musí se zalévat. Zkus to znovu.' : 'Ne tak docela: jílovitá půda je těžká a ulehlá, musí se kypřit. Zkus to znovu.';
         }
       });
       opts.appendChild(b);
@@ -761,7 +761,7 @@
     let i = 0, score = 0;
     function render() {
       if (i >= O.quiz.length) {
-        const msg = score === O.quiz.length ? '🏆 Bezchybně! Jsi expert na půdu.' : score >= O.quiz.length - 2 ? '👏 Skvělý výsledek!' : '🌱 Dobrý začátek. Projdi si výklad ještě jednou.';
+        const msg = score === O.quiz.length ? '🏆 Bezchybně! Půdu máš v malíčku.' : score >= O.quiz.length - 2 ? '👏 Skvělý výsledek!' : '🌱 Dobrý začátek. Projdi si výklad ještě jednou.';
         const again = el('button', { class: 'btn btn--primary', type: 'button' }, 'Zkusit znovu');
         again.addEventListener('click', () => { i = 0; score = 0; render(); });
         box.replaceChildren(el('p', { class: 'quiz__score' }, `${score} / ${O.quiz.length}`), el('p', {}, msg), again);

@@ -46,7 +46,7 @@ window.OBSAH = {
     { q: 'Morseova abeceda je…', a: ['kód', 'šifra'], ok: 0 },
     { q: 'U skytaly je klíčem…', a: ['barva pásku', 'tloušťka hole'], ok: 1 },
     { q: 'Caesar posune písmena o 3. Slovo VENI se zašifruje jako…', a: ['YHQL', 'SBKF'], ok: 0 },
-    { q: 'Kolik posunů musíš vyzkoušet, abys Caesarovu šifru (26 písmen) určitě prolomil?', a: ['asi tisíc', '25'], ok: 1 },
+    { q: 'Kolik posunů stačí vyzkoušet, aby Caesarova šifra (26 písmen) určitě padla?', a: ['asi tisíc', '25'], ok: 1 },
     { q: 'Velké písmeno A je v počítači (v tabulce ASCII) číslo…', a: ['65', '1'], ok: 0 },
     { q: 'Zámek u adresy webu znamená, že…', a: ['web je určitě poctivý', 'spojení s webem je šifrované'], ok: 1 },
   ],

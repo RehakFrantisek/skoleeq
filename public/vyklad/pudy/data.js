@@ -4,7 +4,7 @@ window.OBSAH = {
   horizons: [
     {
       id: 'povrch', name: 'Povrch', color: 'transparent', height: 0.5,
-      text: 'Tady stojíme. Pod trávou a poli je tenký obal Země, kterému říkáme pedosféra, neboli půdní obal. Posouvej dál a sestup do hloubky.',
+      text: 'Tady stojíme. Pod trávou a poli je tenký obal Země, kterému říkáme pedosféra neboli půdní obal. Posouvej dál a sestup do hloubky.',
       chips: ['pedosféra = půdní obal Země'],
     },
     {
@@ -21,7 +21,7 @@ window.OBSAH = {
     },
     {
       id: 'vrchni', name: 'Vrchní minerální půda', color: '#6f4f33', height: 0.8,
-      text: 'Méně humusu, víc rozdrobených nerostů: zrnka písku, jílu a drobné kamínky. Sem ještě dosáhnou delší kořeny.',
+      text: 'Méně humusu, víc rozdrobených nerostů: zrnka písku a jílu a drobné kamínky. Sem ještě dosáhnou delší kořeny.',
       chips: ['zrnka písku a jílu', 'kamínky', 'kořeny'],
       critters: ['🐜'],
     },
@@ -38,7 +38,7 @@ window.OBSAH = {
   ],
 
   composition: [
-    { id: 'nerosty', icon: '🪨', name: 'Pevné částice', text: 'Rozbité minerály (nerosty): zrna písku, štěrku a drobné kamínky. Uvidíš je i nahmatáš.' },
+    { id: 'nerosty', icon: '🪨', name: 'Pevné částice', text: 'Rozdrobené nerosty (minerály): zrnka písku, jílu a drobné kamínky. Uvidíš je i nahmatáš.' },
     { id: 'vzduch', icon: '💨', name: 'Půdní vzduch', text: 'Mezi zrnky jsou drobné póry se vzduchem. Dýchají ho kořeny i půdní živočichové.' },
     { id: 'voda', icon: '💧', name: 'Půdní voda', text: 'Voda s rozpuštěnými látkami, ze které rostliny berou živiny.' },
     { id: 'humus', icon: '🟫', name: 'Humus', text: 'Organická hmota z odumřelých organismů. Čím víc humusu, tím je půda úrodnější.' },
@@ -50,15 +50,15 @@ window.OBSAH = {
   textures: [
     {
       id: 'piscita', name: 'Písčitá', grain: 13, color: '#e0c48a', drain: 0.85, speed: 1.4,
-      text: 'Velká zrnka, viditelná pouhým okem. Půda je lehká a sypká, špatně drží vodu i živiny. Zemědělci musí zalévat.',
+      text: 'Velká zrnka, viditelná pouhým okem. Půda je lehká a sypká, špatně drží vodu i živiny. Zemědělci ji musí víc zalévat a hnojit.',
     },
     {
       id: 'hlinita', name: 'Hlinitá', grain: 7, color: '#a87a4c', drain: 0.45, speed: 3.2,
-      text: 'Zrnka jílu a písku ve vyrovnaném poměru. Středně těžká půda, udrží vodu i živiny. Zemědělci ji milují.',
+      text: 'Zrnka písku a jílu ve vyrovnaném poměru. Středně těžká půda, která udrží vodu i živiny. Zemědělci ji mají nejradši.',
     },
     {
       id: 'jilovita', name: 'Jílovitá', grain: 3, color: '#8a6a5a', drain: 0.12, speed: 6,
-      text: 'Nejmenší zrnka (mikroskopická). Dobře nasává vodu, je těžká a utažená. Zemědělci ji musí kypřit.',
+      text: 'Nejmenší zrnka, vidět jsou jen mikroskopem. Vodu nasaje a drží, je těžká a ulehlá. Zemědělci ji musí kypřit.',
     },
   ],
 
@@ -67,25 +67,25 @@ window.OBSAH = {
     {
       id: 'cernozem', name: 'Černozem', top: '#4f7a2c', where: 'Hlavně v nížinách, na spraších.',
       layers: [['#1c140e', 48, 'tmavý humus'], ['#3a2a1d', 14, 'přechod'], ['#cdb27a', 38, 'spraš']],
-      facts: ['Tmavá, bohatá na humus a živiny.', 'Nejúrodnější půda.'],
+      facts: ['Tmavá, bohatá na humus a živiny.', 'Nejúrodnější půda v Česku.'],
       grows: '🌾 pšenice · 🌽 kukuřice · cukrová řepa; v teplejších oblastech 🍇 vinná réva, 🍎 ovoce, zelenina, chmel',
       animals: '🐎 koně · 🐖 prasata · 🐓 drůbež',
     },
     {
-      id: 'hnedozem', name: 'Hnědozem', top: '#6c8f36', where: 'Vyskytuje se v nadmořských výškách nad 200 m.',
+      id: 'hnedozem', name: 'Hnědozem', top: '#6c8f36', where: 'V pahorkatinách, zhruba nad 200 m n. m.',
       layers: [['#4a3220', 22, 'humus'], ['#7d5634', 40, 'hnědá vrstva'], ['#b8936a', 38, 'podloží']],
-      facts: ['Obsahuje méně humusu než černozem.', 'Je méně úrodná.'],
+      facts: ['Obsahuje méně humusu než černozem.', 'Je o něco méně úrodná, ale pořád dobrá pro zemědělství.'],
       grows: 'oves · len · řepka olejka · 🥔 brambory',
       animals: '🐄 krávy · 🐖 prasata · 🐟 ryby',
     },
     {
-      id: 'kambizem', name: 'Kambizem', top: '#4d7d3a', where: 'Nejrozšířenější půda v mírném pásu.',
+      id: 'kambizem', name: 'Kambizem', top: '#4d7d3a', where: 'Nejrozšířenější půda v Česku, hlavně na vrchovinách.',
       layers: [['#3d2b1c', 12, 'tenký humus'], ['#8a6236', 52, 'hnědá vrstva s kameny'], ['#86857f', 36, 'hornina']],
       facts: ['Dříve se jí říkalo hnědá půda.', 'Má málo humusu.'],
       stones: true,
     },
     {
-      id: 'podzol', name: 'Podzol', top: '#3f6b3a', where: 'Častý v horských oblastech.',
+      id: 'podzol', name: 'Podzol', top: '#3f6b3a', where: 'Častý na horách, pod jehličnatými lesy.',
       layers: [['#2a2018', 10, 'tenký humus'], ['#c9c3b6', 20, 'šedá vyluhovaná vrstva'], ['#9b5a2a', 30, 'rezavá vrstva'], ['#7d7c77', 40, 'hornina']],
       facts: ['Vyluhovaná, šedá půda s nízkým obsahem živin.', 'Neúrodná.'],
       grows: 'na horských loukách pastviny',

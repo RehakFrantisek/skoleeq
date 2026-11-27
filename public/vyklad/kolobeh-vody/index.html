@@ -17,7 +17,7 @@
     <button type="button" class="stepper__btn" id="stepPrev" aria-label="Zpět o krok">◀</button>
     <button type="button" class="stepper__btn stepper__btn--next" id="stepNext" aria-label="Další krok">▶</button>
   </div>
-  <p class="keys-hint" id="keysHint">Posouvej, šipky ← →, klikr, nebo tlačítka ▶ vpravo dole</p>
+  <p class="keys-hint" id="keysHint">Posouvej, šipky ← →, klikr nebo tlačítka ▶ vpravo dole</p>
 
   <main>
     <!-- 0 · Úvod: kapka obejde krajinu (cesta po trase) -->
@@ -27,7 +27,7 @@
         <div class="intro__text">
           <p class="eyebrow">Interaktivní výklad · přírodopis a zeměpis</p>
           <h1>Kde byla tahle kapka <span>včera?</span></h1>
-          <p class="lead">Bez čeho by Země nevypadala modře? Bez vody. A ta pořád cestuje: z moře do oblaku, přes hory a pod zem až do kohoutku.</p>
+          <p class="lead">Bez čeho by Země nevypadala modře? Bez vody. A ta pořád cestuje: z moře do mraků, přes hory a pod zem až do kohoutku.</p>
         </div>
         <p class="intro__station" id="introStation" aria-live="polite"></p>
       </div>
@@ -88,12 +88,12 @@
       </div>
     </section>
 
-    <!-- 4 · Pokus: jak vzniká oblak -->
-    <section class="scene" id="oblak" data-title="Jak vzniká oblak">
+    <!-- 4 · Pokus: orosená sklenice -->
+    <section class="scene" id="oblak" data-title="Jak vzniká mrak">
       <div class="panel panel--wide">
         <p class="eyebrow">4 · Kondenzace</p>
-        <h2>Pokus: oblak ve sklenici</h2>
-        <p>Pára ve vzduchu je neviditelná. Když se ale ochladí, <strong>zkapalní</strong> (kondenzuje) na drobné kapičky. Vyzkoušej to.</p>
+        <h2>Pokus: proč se sklenice orosí?</h2>
+        <p>Vodní pára ve vzduchu je neviditelná. Když se ale ochladí, <strong>zkapalní</strong> (kondenzuje) na drobné kapičky. Vyzkoušej to se sklenicí ledové vody.</p>
         <div class="cloud-exp">
           <div class="card cloud-exp__view">
             <svg id="coldGlass" viewBox="0 0 220 240" role="img" aria-label="Sklenice s vodou, na které se po ochlazení srazí kapky"></svg>
@@ -106,7 +106,7 @@
             <p id="coolText" aria-live="polite">Sklenice má teplotu pokoje. Na skle nic není.</p>
             <div id="coolQ" hidden></div>
             <div class="sky-note" id="skyNote" hidden>
-              <p>☁️ <strong>Stejně vzniká oblak.</strong> Pára stoupá vzhůru, kde je chladněji. Tam zkapalní na miliardy kapiček a z nich je oblak. Když se kapky spojí a ztěžknou, padají jako srážky.</p>
+              <p>☁️ <strong>Stejně vzniká mrak.</strong> Vzduch s párou stoupá do výšky, kde je chladněji. Tam pára zkapalní na miliardy drobných kapiček a z nich je mrak (odborně oblak). Když se kapky spojí a ztěžknou, padají jako srážky.</p>
             </div>
           </div>
         </div>
@@ -118,18 +118,18 @@
       <div class="panel panel--wide">
         <p class="eyebrow">5 · Srážky</p>
         <h2>V jakém skupenství je voda?</h2>
-        <p>Z oblaků padají srážky: déšť, sníh nebo krupky. Zařaď každou věc podle skupenství.</p>
+        <p>Z mraků padají srážky: déšť, sníh nebo krupky. Voda kolem nás je ale i jinde. Zařaď každou věc podle skupenství.</p>
         <div id="sortBox"></div>
       </div>
     </section>
 
-    <!-- 6 · Průlet krajinou s oblakem -->
+    <!-- 6 · Průlet krajinou s mrakem -->
     <section class="scene scene--sticky" id="krajina" data-title="Cesta krajinou" data-length="440">
       <div class="stage land">
         <div class="land__viewport"><svg id="landSvg" class="land__svg" aria-hidden="true"></svg></div>
         <div class="land__cloud" id="landCloud" aria-hidden="true"><span class="land__cloudbody">☁️</span><span class="land__rain" id="landRain"></span></div>
         <div class="land__card">
-          <h2 class="land__title"><span class="eyebrow">6 · Krajina</span> S oblakem přes hory</h2>
+          <h2 class="land__title"><span class="eyebrow">6 · Krajina</span> S mrakem přes hory</h2>
           <div id="landCard" aria-live="polite"></div>
         </div>
       </div>
@@ -178,7 +178,7 @@
             <div class="jar jar--clean" id="cleanJar"><span></span></div>
           </div>
           <div class="card">
-            <p>Do lahve se seřízlým dnem dáme vrstvu vaty, písku a štěrku a přelijeme přes ni vodu s hlínou.</p>
+            <p>Do lahve s uříznutým dnem dáme hrdlem dolů vrstvu vaty, písku a štěrku a přelijeme přes ně vodu s hlínou.</p>
             <div class="actions"><button type="button" class="btn btn--primary" id="filterBtn">Přelít přes filtr</button></div>
             <p id="filterText" aria-live="polite"></p>
           </div>
@@ -208,7 +208,7 @@
     <section class="scene" id="kviz" data-title="Kvíz">
       <div class="panel">
         <p class="eyebrow">11 · Rozhodovačka</p>
-        <h2>Co sis zapamatoval?</h2>
+        <h2>Co si pamatuješ?</h2>
         <div id="quiz" class="quiz" aria-live="polite"></div>
       </div>
     </section>

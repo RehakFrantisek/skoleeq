@@ -287,6 +287,6 @@ export const MISSIONS = [
       { kind: 'image', src: 'knihy', position: 'center', label: 'Obrázek je na střed' }
     ],
     hints: [],
-    successExplanation: 'Redaktor kontroluje strukturu (nadpisy, seznamy, pořadí), typografii i obrázky. Sám jsi opravil celý článek – to je práce profesionála.'
+    successExplanation: 'Redaktor kontroluje strukturu (nadpisy, seznamy, pořadí), typografii i obrázky. Celý článek je opravený – to je práce profesionála.'
   }
 ];

@@ -27,7 +27,10 @@ const ICON_SVG = {
   chart: `<path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6" ${P}/>`,
   robot: `<rect x="4.5" y="8" width="15" height="11" rx="3" ${P}/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16h5M2.5 13v2M21.5 13v2" ${P}/><circle cx="12" cy="3.5" r="1" ${P}/>`,
   slides: `<rect x="3" y="4" width="18" height="12" rx="2" ${P}/><path d="M12 16v4M8 20h8M7 12l3-3 2 2 4-4" ${P}/>`,
-  document: `<path d="M6 3h8l4 4v14H6z" ${P}/><path d="M14 3v4h4M9 11h6M9 14.5h6M9 18h4" ${P}/>`
+  document: `<path d="M6 3h8l4 4v14H6z" ${P}/><path d="M14 3v4h4M9 11h6M9 14.5h6M9 18h4" ${P}/>`,
+  droplet: `<path d="M12 2.8C9 7 6 10.4 6 14.2a6 6 0 0 0 12 0C18 10.4 15 7 12 2.8z" ${P}/><path d="M9.2 14.6a2.9 2.9 0 0 0 2.6 2.6" ${P}/>`,
+  sprout: `<path d="M12 21v-9M12 12c0-3.6-2.6-6-7-6 0 4.2 2.8 6 7 6zM12 15c0-3.4 2.2-5.8 6.5-5.8 0 4-2.6 5.8-6.5 5.8z" ${P}/><path d="M6 21h12" ${P}/>`,
+  pen: `<path d="M15.5 4.5l4 4L9 19l-5 1 1-5z" ${P}/><path d="M13.5 6.5l4 4" ${P}/>`
 };
 function icon(name, cls = 'icon') {
   const span = el('span', cls);

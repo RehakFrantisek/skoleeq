@@ -53,7 +53,7 @@ Vytvoří `public/aplikace/binarni-vyzva/` ze šablony `templates/app/` (funkčn
    | `topics` | 1–8 krátkých textů. Jednotné názvy témat napříč hrami = lepší filtr |
    | `difficulty` | `lehka` · `stredni` · `narocna` |
    | `durationMinutes` | kladné celé číslo (orientační, ověř při testování ve třídě) |
-   | `icon` | `keyboard` `mouse` `binary` `code` `lock` `network` `globe` `puzzle` `book` `calculator` `chart` `robot` `slides` `document` |
+   | `icon` | `keyboard` `mouse` `binary` `code` `lock` `network` `globe` `puzzle` `book` `calculator` `chart` `robot` `slides` `document` `droplet` `sprout` `pen` |
    | `color` | `violet` `blue` `teal` `green` `orange` `red` `pink` `yellow` |
    | `featured` | volitelné; první `true` se ukáže v hero sekci jako „Doporučujeme“ |
    | `requiresKeyboard` | `true` = na kartě „Vyžaduje klávesnici“ a upozornění na dotykových zařízeních |

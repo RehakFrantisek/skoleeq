@@ -80,7 +80,7 @@
           { "grade": 6, "text": "filtrování, řazení a třídění dat" },
           { "grade": 6, "text": "porovnání dat v tabulce a grafu" }
         ],
-        "lesson": "Rychlý režim (6 úloh) zabere asi 10 minut – vhodný jako rozcvička. Celá mise (15 úloh) asi 20 minut, zbytek 45min hodiny lze věnovat reflexi a práci ve skutečném tabulkovém editoru. Dlouhá mise (18 úloh) vyplní asi 35 minut. Varianty A/B/C mají jiná čísla, takže sousedé nemají stejné výsledky. Pro promítání stačí otevřít hru – účet není potřeba.",
+        "lesson": "Rychlý režim (6 úloh) zabere asi 10 minut – vhodný jako rozcvička. Celá mise (15 úloh) asi 20 minut, zbytek 45minutové hodiny lze věnovat reflexi a práci ve skutečném tabulkovém editoru. Dlouhá mise (18 úloh) vyplní asi 35 minut. Varianty A/B/C mají jiná čísla, takže sousedé nemají stejné výsledky. Pro promítání stačí otevřít hru – účet není potřeba.",
         "prerequisites": [
           "Čtení s porozuměním krátkého zadání.",
           "Sčítání a násobení do tisíců, porovnání desetinných čísel.",
@@ -139,7 +139,7 @@
           "Kdy použiješ odrážky a kdy číslovaný seznam?",
           "Jaká typografická pravidla pro mezery a datum si pamatuješ?"
         ],
-        "differentiation": "Začínající: mise 1–4, nápověda ve třech úrovních (princip → kde hledat → postup). Rychlí: expertní mise 9 a 10 (v mise 10 není nápověda a kontrola řekne jen počet chyb). Učitel může v přehledu odemknout všechny mise.",
+        "differentiation": "Začínající: mise 1–4, nápověda ve třech úrovních (princip → kde hledat → postup). Rychlí: expertní mise 9 a 10 (v misi 10 není nápověda a kontrola řekne jen počet chyb). Učitel může v přehledu odemknout všechny mise.",
         "gradeNote": "Podle tematického plánu ICT školy: textový editor v 7. ročníku (září–prosinec) a znovu v 9. ročníku (říjen–listopad) při psaní absolventských prací."
       },
       "thumbnail": "nahled.svg"
@@ -188,7 +188,7 @@
           "Jak jsi krokováním zjistil(a), kde je v programu chyba?",
           "Proč musí jeden program fungovat na obou mapách – co by se stalo bez podmínky?"
         ],
-        "differentiation": "Začínající (6. roč.): kapitola 1 a 2 s nápovědou. Rychlí (8.–9. roč.): kapitola 3, snaha o 3 hvězdy (program nejvýš tak dlouhý jako autorské řešení, bez nápovědy). Učitel může v přehledu odemknout všechny mise.",
+        "differentiation": "Začínající (6. roč.): kapitola 1 a 2 s nápovědou. Rychlí (9. roč.): kapitola 3, snaha o 3 hvězdy (program nejvýš tak dlouhý jako autorské řešení, bez nápovědy). Učitel může v přehledu odemknout všechny mise.",
         "gradeNote": "Podle tematického plánu ICT školy: algoritmizace a cykly v 6. ročníku (prosinec–březen), blokové programování ve Scratchi v 9. ročníku (prosinec–březen). V 7. ročníku programování v plánu není."
       },
       "thumbnail": "nahled.svg"
@@ -318,7 +318,7 @@
         "Nesdělovat heslo, kód z SMS ani číslo karty",
         "Ověřit neobvyklou žádost jinou cestou",
         "Vytvořit silné heslo (dlouhá fráze) a chápat druhý krok přihlášení",
-        "Rozmyslet, co o sobě zveřejním a komu"
+        "Rozmyslet, co o sobě zveřejnit a komu"
       ],
       "teacher": {
         "goals": [
@@ -455,7 +455,7 @@
       "topics": ["Půda"],
       "difficulty": "lehka",
       "durationMinutes": 20,
-      "icon": "globe",
+      "icon": "sprout",
       "color": "orange",
       "requiresKeyboard": false,
       "status": "published"
@@ -465,14 +465,14 @@
       "kind": "vyklad",
       "title": "Kde byla tahle kapka včera?",
       "subtitle": "Koloběh vody od moře po kohoutek",
-      "description": "Kapka obejde koloběh: 100 kapek vody na Zemi, led, voda a pára s teploměrem, pokus s oblakem ve sklenici, průlet krajinou, podzemní voda, zimní rybník a cesta vody do kohoutku.",
+      "description": "Kapka obejde koloběh: 100 kapek vody na Zemi, led, voda a pára s teploměrem, pokus s orosenou sklenicí, průlet krajinou, podzemní voda, zimní rybník a cesta vody do kohoutku.",
       "url": "/vyklad/kolobeh-vody/",
       "subject": "Přírodopis",
       "grades": [6],
       "topics": ["Voda"],
       "difficulty": "lehka",
       "durationMinutes": 20,
-      "icon": "globe",
+      "icon": "droplet",
       "color": "teal",
       "requiresKeyboard": false,
       "status": "published"
@@ -506,7 +506,7 @@
       "topics": ["Azbuka", "Psací písmo"],
       "difficulty": "lehka",
       "durationMinutes": 10,
-      "icon": "document",
+      "icon": "pen",
       "color": "red",
       "requiresKeyboard": false,
       "status": "published",

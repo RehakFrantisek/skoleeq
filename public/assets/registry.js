@@ -8,7 +8,7 @@ export const DIFFICULTIES = { lehka: 'Lehká', stredni: 'Střední', narocna: 'N
 // planned = v katalogu jako „Připravujeme“ (neklikatelné), složka hry zatím nemusí existovat
 export const STATUSES = ['published', 'planned', 'draft', 'hidden'];
 export const COLORS = ['violet', 'blue', 'teal', 'green', 'orange', 'red', 'pink', 'yellow'];
-export const ICONS = ['keyboard', 'mouse', 'binary', 'code', 'lock', 'network', 'globe', 'puzzle', 'book', 'calculator', 'chart', 'robot', 'slides', 'document'];
+export const ICONS = ['keyboard', 'mouse', 'binary', 'code', 'lock', 'network', 'globe', 'puzzle', 'book', 'calculator', 'chart', 'robot', 'slides', 'document', 'droplet', 'sprout', 'pen'];
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 // Druh položky katalogu (volitelné pole "kind", výchozí "hra").
 // Hry leží v /aplikace/<id>/, výklady a nástroje (ne-hry, např. Psací azbuka) v /vyklad/<id>/.

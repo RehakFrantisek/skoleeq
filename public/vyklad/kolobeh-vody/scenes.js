@@ -106,7 +106,7 @@
         });
         const t = p < 0.33 ? 'Představ si všechnu vodu na Zemi jako 100 kapek…'
           : p < 0.72 ? `…asi ${O.salty} z nich je slaných: voda v mořích a oceánech.`
-          : `Sladká voda v řekách, jezerech, ledovcích a pod zemí jsou jen zbylé asi ${100 - O.salty} kapky.`;
+          : `Na sladkou vodu v řekách, jezerech, ledovcích a pod zemí zbývají jen asi ${100 - O.salty} kapky.`;
         if (t !== lastCap) { lastCap = t; cap.textContent = t; }
       },
     });
@@ -469,7 +469,7 @@
         const sink = seg(p, 0.65, 0.9);
         fish.setAttribute('transform', `translate(0 ${(sink * 70).toFixed(1)})`);
         const t = p < 0.33 ? 'Přichází zima a voda v rybníce chladne.'
-          : p < 0.66 ? 'Led má menší hustotu než kapalná voda, proto vzniká nahoře a plave. Rybník přikryje jako poklice.'
+          : p < 0.66 ? 'Led má menší hustotu než kapalná voda, proto vzniká nahoře a plave. Přikryje rybník jako poklice.'
           : 'Kapalná voda má největší hustotu asi při 4 °C (přesněji 3,95 °C). Taková voda klesne ke dnu a právě tam ryby přečkají zimu.';
         if (t !== last) { last = t; txt.textContent = t; }
       },
@@ -538,7 +538,7 @@
       const t = btns.find((x) => x.i === next);
       if (!t) return;
       t.b.classList.add('is-hint');
-      fb.textContent = 'Nápověda: zvýraznil jsem další krok.';
+      fb.textContent = 'Nápověda: další krok teď svítí.';
     });
   })();
 
