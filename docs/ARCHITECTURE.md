@@ -9,6 +9,7 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
         ├── /aplikace/klavesova-mise/   samostatná hra
         ├── /aplikace/datovi-detektivove/ samostatná hra (ES moduly: logic.js + app.js)
         ├── /aplikace/<další-hra>/      samostatná hra
+        ├── /vyklad/<slug>/             interaktivní výklad (scrollytelling) nebo nástroj, např. Psací azbuka
         ├── /pro-ucitele/               karty pro učitele (assets/teachers.js čte /apps.json)
         ├── /o-projektu/                informace o portálu
         └── 404.html                    skutečná 404 (žádný SPA fallback)
@@ -35,7 +36,16 @@ Cloudflare Pages (1 projekt, CDN + HTTPS), nasazuje se jen public/
   - Ročníky 1.–9. jsou ve filtru vždy. Předměty, témata a obtížnosti jen ty, které v registru opravdu jsou.
   - Malý katalog (1–2 hry bez filtru) doplní dlaždice „Další hry se připravují“, ať nepůsobí rozbitě.
   - Dotykové zařízení bez jemného ukazatele + hra s `requiresKeyboard` → nenásilné upozornění. Hra zůstává v katalogu.
-- `public/assets/registry.js`: schéma, whitelisty (`difficulty`, `status`, `color`, `icon`), pravidla URL (`/aplikace/<id>/`, bez `..`).
+- `public/assets/registry.js`: schéma, whitelisty (`difficulty`, `status`, `color`, `icon`, `kind`), pravidla URL (`/aplikace/<id>/` pro hry, `/vyklad/<id>/` pro výklady a nástroje, bez `..`).
+
+## Výklady a nástroje (od 2026-11-27)
+
+- Registr má volitelné pole `kind`: `hra` (výchozí), `vyklad` (interaktivní výklad řízený posouváním) a `nastroj` (pomůcka, která není hra, např. Psací azbuka).
+- Výklady a nástroje leží v `public/vyklad/<slug>/`, každý samostatně (vlastní kopie `engine.js`, `scenes.js`, CSS). Stejně jako hry nesmí sdílet kód s jinými výklady ani s portálem.
+- Katalog má filtr **Druh** (`?druh=hra|vyklad|nastroj`), karta výkladu ukazuje „Výklad · ročník“ a tlačítko „Spustit výklad“, nástroj „Otevřít“. Obtížnost se u výkladů a nástrojů nezobrazuje (v registru je kvůli schématu `lehka`).
+- Odkazy z výkladů vedou do katalogu: zpět `/?druh=vyklad#katalog`, téma `/?tema=<téma>#katalog`.
+- Výklady vznikly v soukromém repozitáři `skoleeq-lab` (skill `interaktivni-vyklad`). Ten teď slouží jen pro rozpracované návrhy (např. rozdělení webu na Výklad/Hřiště); hotové výklady se vyvíjejí tady.
+- Psací azbuka: sadu písmen „Písanka Školeeq“ generuje `scripts/build-azbuka-set.mjs` do `public/vyklad/psaci-azbuka/sada-skoleeq.json`. Testy: `tests/unit/psaci-azbuka*.test.mjs`, `tests/e2e/psaci-azbuka.spec.js`. Výklady: `tests/e2e/vyklady.spec.js`.
 
 ## Připravované hry a karty Pro učitele
 

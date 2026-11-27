@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kde byla tahle kapka včera? – interaktivní výklad o koloběhu vody</title>
+  <meta name="description" content="Interaktivní výklad o koloběhu vody pro 6. ročník.">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#kapky">Přeskočit úvod</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <nav class="dots" aria-label="Kapitoly výkladu"><ol id="dots"></ol></nav>
+  <a class="back" href="/?druh=vyklad#katalog"><span aria-hidden="true">←</span> Výklady</a>
+  <div class="stepper" role="group" aria-label="Posun výkladem">
+    <button type="button" class="stepper__btn" id="stepPrev" aria-label="Zpět o krok">◀</button>
+    <button type="button" class="stepper__btn stepper__btn--next" id="stepNext" aria-label="Další krok">▶</button>
+  </div>
+  <p class="keys-hint" id="keysHint">Posouvej, šipky ← →, klikr, nebo tlačítka ▶ vpravo dole</p>
+
+  <main>
+    <!-- 0 · Úvod: kapka obejde krajinu (cesta po trase) -->
+    <section class="scene scene--sticky" id="uvod" data-title="Úvod" data-length="260">
+      <div class="stage intro">
+        <svg class="intro__map" id="introMap" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        <div class="intro__text">
+          <p class="eyebrow">Interaktivní výklad · přírodopis a zeměpis</p>
+          <h1>Kde byla tahle kapka <span>včera?</span></h1>
+          <p class="lead">Bez čeho by Země nevypadala modře? Bez vody. A ta pořád cestuje: z moře do oblaku, přes hory a pod zem až do kohoutku.</p>
+        </div>
+        <p class="intro__station" id="introStation" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 1 · Kolik vody je na Zemi -->
+    <section class="scene scene--sticky" id="kapky" data-title="Kolik vody" data-length="260" data-stops="0 .5 1">
+      <div class="stage split">
+        <div class="split__text">
+          <p class="eyebrow">1 · Hydrosféra</p>
+          <h2>Vody je dost. Ale není voda jako voda.</h2>
+          <p><strong>Hydrosféra</strong> je vodní obal Země. Voda je v mořích, řekách, ve vzduchu, v mracích i v našich buňkách.</p>
+          <p class="drops-caption" id="dropsCap" aria-live="polite">Představ si všechnu vodu na Zemi jako 100 kapek…</p>
+        </div>
+        <div class="split__art"><div class="drops" id="drops" aria-hidden="true"></div></div>
+      </div>
+    </section>
+
+    <!-- 2 · Skupenství: teploměr + 3D kostka ledu -->
+    <section class="scene" id="skupenstvi" data-title="Led, voda, pára">
+      <div class="panel panel--wide">
+        <p class="eyebrow">2 · Skupenství</p>
+        <h2>Led, voda, pára</h2>
+        <p>Voda je sloučenina vodíku a kyslíku (H₂O). Na Zemi ji najdeš ve třech skupenstvích. Posuň teploměr a sleduj, co se stane.</p>
+        <div class="states">
+          <div class="states__view" id="stateView" aria-hidden="true">
+            <div class="cube-scene"><div class="cube" id="iceCube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+            <svg class="glass" viewBox="0 0 200 220">
+              <path d="M30 20 L45 200 Q46 210 56 210 L144 210 Q154 210 155 200 L170 20" fill="rgba(255,255,255,.55)" stroke="#5b7f99" stroke-width="5"/>
+              <path id="glassWater" d="M39 90 L45 200 Q46 210 56 210 L144 210 Q154 210 155 200 L161 90 Z" fill="#4aa3df" opacity=".85"/>
+              <g id="bubbles" fill="#fff" opacity=".8"></g>
+              <g id="steam" fill="none" stroke="#c9d6df" stroke-width="6" stroke-linecap="round"></g>
+            </svg>
+          </div>
+          <div class="card states__info">
+            <label class="thermo" for="temp"><span>Teplota</span><output id="tempOut">20 °C</output></label>
+            <input type="range" id="temp" min="-20" max="120" step="1" value="20" aria-describedby="stateText">
+            <div class="thermo__scale" aria-hidden="true"><span style="left:0%">−20 °C</span><span style="left:14.29%">0 °C</span><span style="left:85.71%">100 °C</span><span style="left:100%">120 °C</span></div>
+            <h3 id="stateName"></h3>
+            <p id="stateText"></p>
+            <p class="small muted">Teploty tání (0 °C) a varu (100 °C) platí za běžného tlaku. Na horách voda vře při nižší teplotě.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · Výpar -->
+    <section class="scene scene--sticky" id="vypar" data-title="Výpar" data-length="300" data-stops="0 .32 .56 .85">
+      <div class="stage split">
+        <div class="split__text">
+          <p class="eyebrow">3 · Výpar</p>
+          <h2>Slunce zvedá vodu</h2>
+          <ol class="steps" id="vyparSteps"></ol>
+        </div>
+        <div class="split__art">
+          <svg id="vyparArt" viewBox="0 0 400 420" role="img" aria-label="Moře a strom ve slunci, z hladiny a z listů stoupá pára, sůl zůstává v moři"></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · Pokus: jak vzniká oblak -->
+    <section class="scene" id="oblak" data-title="Jak vzniká oblak">
+      <div class="panel panel--wide">
+        <p class="eyebrow">4 · Kondenzace</p>
+        <h2>Pokus: oblak ve sklenici</h2>
+        <p>Pára ve vzduchu je neviditelná. Když se ale ochladí, <strong>zkapalní</strong> (kondenzuje) na drobné kapičky. Vyzkoušej to.</p>
+        <div class="cloud-exp">
+          <div class="card cloud-exp__view">
+            <svg id="coldGlass" viewBox="0 0 220 240" role="img" aria-label="Sklenice s vodou, na které se po ochlazení srazí kapky"></svg>
+            <div class="actions">
+              <button type="button" class="btn btn--primary" id="coolBtn">🧊 Přidat led do sklenice</button>
+              <button type="button" class="btn" id="coolReset" hidden>Znovu</button>
+            </div>
+          </div>
+          <div class="card">
+            <p id="coolText" aria-live="polite">Sklenice má teplotu pokoje. Na skle nic není.</p>
+            <div id="coolQ" hidden></div>
+            <div class="sky-note" id="skyNote" hidden>
+              <p>☁️ <strong>Stejně vzniká oblak.</strong> Pára stoupá vzhůru, kde je chladněji. Tam zkapalní na miliardy kapiček a z nich je oblak. Když se kapky spojí a ztěžknou, padají jako srážky.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · Srážky a skupenství -->
+    <section class="scene" id="srazky" data-title="Co padá z nebe">
+      <div class="panel panel--wide">
+        <p class="eyebrow">5 · Srážky</p>
+        <h2>V jakém skupenství je voda?</h2>
+        <p>Z oblaků padají srážky: déšť, sníh nebo krupky. Zařaď každou věc podle skupenství.</p>
+        <div id="sortBox"></div>
+      </div>
+    </section>
+
+    <!-- 6 · Průlet krajinou s oblakem -->
+    <section class="scene scene--sticky" id="krajina" data-title="Cesta krajinou" data-length="440">
+      <div class="stage land">
+        <div class="land__viewport"><svg id="landSvg" class="land__svg" aria-hidden="true"></svg></div>
+        <div class="land__cloud" id="landCloud" aria-hidden="true"><span class="land__cloudbody">☁️</span><span class="land__rain" id="landRain"></span></div>
+        <div class="land__card">
+          <h2 class="land__title"><span class="eyebrow">6 · Krajina</span> S oblakem přes hory</h2>
+          <div id="landCard" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Pod zemí: sestup vrstvami -->
+    <section class="scene scene--sticky" id="podzemi" data-title="Pod zemí" data-length="440">
+      <div class="stage descent">
+        <div class="descent__shaft" id="shaft" aria-hidden="true"></div>
+        <div class="descent__card" aria-live="polite">
+          <p class="eyebrow">7 · Podzemní voda <span id="depthLabel"></span></p>
+          <h2 id="layerName">Povrch</h2>
+          <p id="layerText"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · Rybník v zimě -->
+    <section class="scene scene--sticky" id="rybnik" data-title="Rybník v zimě" data-length="240" data-stops="0 .5 1">
+      <div class="stage split split--reverse">
+        <div class="split__text">
+          <p class="eyebrow">8 · Zvláštní voda</p>
+          <h2>Proč ryby v zimě nezmrznou?</h2>
+          <p id="pondText" aria-live="polite"></p>
+        </div>
+        <div class="split__art">
+          <svg id="pondArt" viewBox="0 0 400 420" role="img" aria-label="Řez rybníkem v zimě: led nahoře, nejhustší voda u dna, ryby u dna"></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · Voda z kohoutku -->
+    <section class="scene" id="kohoutek" data-title="Voda z kohoutku">
+      <div class="panel panel--wide">
+        <p class="eyebrow">9 · Voda a lidé</p>
+        <h2>Cesta vody do kohoutku a zpátky</h2>
+        <p>Klikni na jednotlivé zastávky.</p>
+        <ol class="pipeline" id="pipeline"></ol>
+        <div class="card pipeline__info" id="pipeInfo" aria-live="polite"><p class="muted">Vyber zastávku.</p></div>
+
+        <h3 class="filter-title">Pokus: filtr z písku a štěrku</h3>
+        <div class="filter-exp">
+          <div class="filter-exp__view" aria-hidden="true">
+            <div class="jar jar--dirty" id="dirtyJar"><span></span></div>
+            <div class="filter"><i class="f-vata">vata</i><i class="f-pisek">písek</i><i class="f-strk">štěrk</i><span class="filter__flow" id="flow"></span></div>
+            <div class="jar jar--clean" id="cleanJar"><span></span></div>
+          </div>
+          <div class="card">
+            <p>Do lahve se seřízlým dnem dáme vrstvu vaty, písku a štěrku a přelijeme přes ni vodu s hlínou.</p>
+            <div class="actions"><button type="button" class="btn btn--primary" id="filterBtn">Přelít přes filtr</button></div>
+            <p id="filterText" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · Mise: poskládej cestu kapky -->
+    <section class="scene" id="mise" data-title="Mise">
+      <div class="panel panel--wide">
+        <p class="eyebrow">10 · Mise</p>
+        <h2>Poskládej cestu kapky</h2>
+        <p>Klikej na kroky ve správném pořadí. Koloběh začíná v moři.</p>
+        <div class="order">
+          <div class="order__pool" id="orderPool" aria-label="Kroky k seřazení"></div>
+          <ol class="order__list" id="orderList" aria-label="Tvoje pořadí"></ol>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="orderUndo">↶ Vrátit poslední</button>
+          <button type="button" class="btn" id="orderHint">Nápověda</button>
+        </div>
+        <p class="feedback" id="orderFb" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 11 · Kvíz -->
+    <section class="scene" id="kviz" data-title="Kvíz">
+      <div class="panel">
+        <p class="eyebrow">11 · Rozhodovačka</p>
+        <h2>Co sis zapamatoval?</h2>
+        <div id="quiz" class="quiz" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Co dál -->
+    <section class="scene next" id="dal" data-title="Co dál?">
+      <div class="panel panel--wide">
+        <p class="eyebrow">Hotovo 🎉</p>
+        <h2>Co dál?</h2>
+        <p class="tags-line" aria-label="Štítky výkladu"><span class="tag">Přírodopis</span><span class="tag">Zeměpis</span><span class="tag tag--grade">6. ročník</span><a class="tag tag--topic" href="/?tema=Voda#katalog"># Voda</a></p>
+        <div class="next__grid">
+          <div class="next__card next__card--task"><span class="next__icon" aria-hidden="true">🪣</span><strong>Výzva: ušetři kbelík vody</strong><span>Během jednoho dne ušetři kbelík vody a využij ho dál: zalij květiny v bytě nebo strom před domem.</span></div>
+          <a class="next__card" href="/vyklad/pudy/"><span class="next__icon" aria-hidden="true">🌱</span><strong>Výklad: Co máme pod nohama?</strong><span>Jak voda prosakuje půdou a proč na tom záleží.</span></a>
+          <a class="next__card" href="/?druh=vyklad#katalog"><span class="next__icon" aria-hidden="true">🎬</span><strong>Další výklady</strong><span>Vyber si další téma.</span></a>
+          <a class="next__card" href="#uvod"><span class="next__icon" aria-hidden="true">↺</span><strong>Projít znovu</strong><span>Zpátky na začátek výkladu.</span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>Podklady: Umíme fakta – Voda: základy a koloběh, Využívání vody; ZŠ Kunratice – Zeměpis 6, „Kbelík vody“; Naučme – Mezipředmětový projekt Voda (pokus s filtrací); Učíme o klimatu – Voda kolem nás.</p>
+      <p>Krajina, řez rybníkem a podzemím jsou ilustrace. 100 kapek je zaokrouhlený model.</p>
+    </footer>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="kit.js"></script>
+  <script src="engine.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>

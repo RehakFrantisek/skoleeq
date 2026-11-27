@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Co máme pod nohama? Interaktivní výklad o půdě</title>
+  <meta name="description" content="Interaktivní výklad o půdě: jak vzniká, z čeho se skládá, půdní druhy a typy a kde je najdeme.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#vznik">Přeskočit úvod</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <nav class="dots" aria-label="Kapitoly výkladu">
+    <ol id="dots"></ol>
+  </nav>
+
+  <a class="back" href="/?druh=vyklad#katalog"><span aria-hidden="true">←</span> Výklady</a>
+
+  <div class="stepper" role="group" aria-label="Posun výkladem">
+    <button type="button" class="stepper__btn" id="stepPrev" aria-label="Zpět o krok">◀</button>
+    <button type="button" class="stepper__btn stepper__btn--next" id="stepNext" aria-label="Další krok">▶</button>
+  </div>
+
+  <p class="keys-hint" id="keysHint">Posouvej, šipky ← →, klikr, nebo tlačítka ▶ vpravo dole</p>
+
+  <main>
+    <!-- 0 · Úvod: krajina s paralaxou, na konci se „ponoříme“ pod povrch -->
+    <section class="scene scene--sticky" id="uvod" data-title="Úvod" data-length="220" data-stops="0 1">
+      <div class="stage hero">
+        <svg class="hero__art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#9fd3f0"/><stop offset="1" stop-color="#f4e8c8"/>
+            </linearGradient>
+          </defs>
+          <rect width="1600" height="900" fill="url(#sky)"/>
+          <circle class="hero__sun" cx="1240" cy="190" r="70" fill="#ffd66b"/>
+          <g class="hero__layer" data-depth="0.15">
+            <path d="M0 560 L160 380 L300 470 L470 300 L640 480 L800 360 L980 500 L1150 330 L1330 470 L1480 380 L1600 450 L1600 900 L0 900Z" fill="#8aa3b5"/>
+            <path d="M470 300 L520 345 L490 340 L470 360 L445 342 L420 350Z M1150 330 L1200 372 L1170 368 L1150 385 L1128 368 L1100 375Z" fill="#f4f7fa"/>
+          </g>
+          <g class="hero__layer" data-depth="0.35">
+            <path d="M0 640 C200 560 380 600 560 560 C760 515 900 600 1100 560 C1300 520 1450 580 1600 550 L1600 900 L0 900Z" fill="#6f9a52"/>
+          </g>
+          <g class="hero__layer" data-depth="0.6">
+            <path d="M0 720 C260 680 520 700 800 690 C1080 680 1340 700 1600 680 L1600 900 L0 900Z" fill="#c9a74a"/>
+            <g id="heroField" stroke="#a8862f" stroke-width="3"></g>
+          </g>
+          <g class="hero__ground">
+            <rect y="790" width="1600" height="400" fill="#3a2a1c"/>
+            <path d="M0 790 C300 775 600 800 900 788 C1200 776 1400 795 1600 785 L1600 805 L0 805Z" fill="#5b8a3c"/>
+          </g>
+        </svg>
+        <div class="hero__text">
+          <p class="eyebrow">Interaktivní výklad · zeměpis a přírodopis</p>
+          <h1>Co máme <span>pod nohama?</span></h1>
+          <p class="lead">Výprava do půdy: jak vzniká, z čeho je, proč není všude stejná a&nbsp;proč ji musíme chránit.</p>
+          <p class="scroll-cue" aria-hidden="true"><span></span>Posuň dolů a ponoř se pod povrch</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 · Vznik půdy: časosběr řízený scrollem -->
+    <section class="scene scene--sticky" id="vznik" data-title="Jak vzniká půda" data-length="320" data-stops="0 .3 .55 .8 1">
+      <div class="stage split">
+        <div class="split__text">
+          <p class="eyebrow">1 · Vznik</p>
+          <h2>Půda vzniká z&nbsp;kamene</h2>
+          <p>Na začátku je <strong>matečná hornina</strong>. Postupně se rozpadá, tomu říkáme <strong>zvětrávání</strong>.</p>
+          <ol class="steps" id="vznikSteps">
+            <li>💧 <strong>Voda a vítr</strong> obrušují a rozrušují horninu.</li>
+            <li>🌡️ <strong>Střídání tepla a mrazu</strong> v ní vytváří praskliny.</li>
+            <li>🌱 <strong>Kořeny rostlin</strong> praskliny dál rozšiřují.</li>
+            <li>🪱 <strong>Živočichové a rozkladači</strong> mění zbytky rostlin na humus.</li>
+          </ol>
+          <div class="counter" aria-live="off">
+            <span class="counter__label">Tloušťka nové půdy</span>
+            <span class="counter__value"><span id="cm">0</span> cm</span>
+            <span class="counter__sub">to trvá asi <span id="years">0</span> let</span>
+          </div>
+          <p class="note">V mírném pásu vznikne 1&nbsp;cm půdy asi za 100–150 let.</p>
+        </div>
+        <div class="split__art">
+          <svg id="vznikArt" viewBox="0 0 400 420" role="img" aria-label="Hornina, která se postupně rozpadá a mění v půdu s rostlinami">
+            <rect width="400" height="420" rx="18" fill="#dfeef6"/>
+            <g id="rain" stroke="#4a90c8" stroke-width="3" stroke-linecap="round"></g>
+            <g id="frost" fill="#ffffff" stroke="#8ec5e8" stroke-width="2" opacity="0"></g>
+            <rect id="rock" x="0" y="200" width="400" height="220" fill="#8b8b86"/>
+            <g id="cracks" stroke="#4b4b47" stroke-width="4" fill="none" stroke-linecap="round"></g>
+            <g id="grains"></g>
+            <rect id="soilLayer" x="0" y="200" width="400" height="0" fill="#4a3322"/>
+            <g id="roots" stroke="#e8d7b0" stroke-width="3" fill="none" stroke-linecap="round"></g>
+            <g id="plants"></g>
+            <g id="critters" font-size="22"></g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · Sestup půdním profilem -->
+    <section class="scene scene--sticky" id="profil" data-title="Půdní profil" data-length="480" data-stops="0 .2 .4 .6 .8 1">
+      <div class="stage descent">
+        <div class="descent__shaft" id="shaft" aria-hidden="true"></div>
+        <div class="descent__card" aria-live="polite">
+          <p class="eyebrow">2 · Půdní profil <span id="depthLabel"></span></p>
+          <h2 id="horizonName">Povrch</h2>
+          <p id="horizonText"></p>
+          <ul class="chips" id="horizonChips"></ul>
+        </div>
+        <div class="depth" aria-hidden="true"><span id="depthNeedle"></span><b>hloubka</b></div>
+      </div>
+    </section>
+
+    <!-- 3 · Složení půdy -->
+    <section class="scene" id="slozeni" data-title="Z čeho je půda">
+      <div class="panel">
+        <p class="eyebrow">3 · Složení</p>
+        <h2>Z čeho se půda skládá?</h2>
+        <p>Klikni na části hrsti půdy a zjisti, co v ní je.</p>
+        <div class="compose">
+          <div class="compose__clump" id="clump"></div>
+          <div class="compose__info" id="composeInfo" aria-live="polite">
+            <p class="muted">Vyber některou část.</p>
+          </div>
+        </div>
+        <p class="found">Objeveno: <span id="foundCount">0</span> ze 7</p>
+      </div>
+    </section>
+
+    <!-- 4 · Půdní druhy: pokus se zaléváním -->
+    <section class="scene" id="druhy" data-title="Půdní druhy">
+      <div class="panel">
+        <p class="eyebrow">4 · Půdní druhy</p>
+        <h2>Pokus: která půda udrží vodu?</h2>
+        <p><strong>Půdní druhy</strong> se liší velikostí zrníček. Zalij všechny tři sklenice stejným množstvím vody a sleduj, kolik jí proteče dolů.</p>
+        <div class="jars" id="jars"></div>
+        <div class="actions">
+          <button class="btn btn--primary" id="pour" type="button">💧 Zalít všechny sklenice</button>
+          <button class="btn" id="pourReset" type="button" hidden>Znovu</button>
+        </div>
+        <div class="question" id="druhyQ" hidden>
+          <p><strong>Otázka:</strong> Kterou půdu mají zemědělci nejradši?</p>
+          <div class="options" id="druhyOpts"></div>
+          <p class="feedback" id="druhyFb" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · Půdní typy: 3D blok -->
+    <section class="scene" id="typy" data-title="Půdní typy">
+      <div class="panel panel--wide">
+        <p class="eyebrow">5 · Půdní typy</p>
+        <h2>Půdní typy: každý má jiný profil</h2>
+        <p><strong>Půdní typy</strong> rozlišujeme podle půdního profilu, tedy podle vrstev, které uvidíme ve svislém řezu půdou. Blokem otáčej myší, prstem nebo šipkami.</p>
+        <div class="types">
+          <div class="types__tabs" role="tablist" aria-label="Půdní typy" id="typeTabs"></div>
+          <div class="types__viewer">
+            <div class="block-scene" id="blockScene" tabindex="0" role="img" aria-label="3D blok půdy">
+              <div class="block" id="block">
+                <div class="face face--front"></div>
+                <div class="face face--back"></div>
+                <div class="face face--right"></div>
+                <div class="face face--left"></div>
+                <div class="face face--top"></div>
+                <div class="face face--bottom"></div>
+              </div>
+              <div class="block-shadow"></div>
+            </div>
+          </div>
+          <div class="types__info" role="tabpanel" id="typeInfo" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Krajina: kde se která půda najde -->
+    <section class="scene scene--sticky" id="krajina" data-title="Kde je najdeme" data-length="420" data-stops="0 .2 .4 .6 .8 1">
+      <div class="stage land">
+        <div class="land__viewport"><svg id="landSvg" class="land__svg" aria-hidden="true"></svg></div>
+        <div class="land__card">
+          <h2 class="land__title"><span class="eyebrow">6 · Krajina</span> Od hor až k řece</h2>
+          <div id="landCard" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Mise: přiřaď půdy ke krajině -->
+    <section class="scene" id="mise" data-title="Mise">
+      <div class="panel panel--wide">
+        <p class="eyebrow">7 · Mise</p>
+        <h2>Přiřaď půdu ke krajině</h2>
+        <p>Vyber kartičku s půdou a pak klikni na místo v krajině, kam patří. Chybu můžeš klidně opravit.</p>
+        <div class="pool" id="pool" aria-label="Kartičky s půdami"></div>
+        <div class="zones" id="zones"></div>
+        <div class="actions">
+          <button class="btn btn--primary" id="checkMission" type="button">Zkontrolovat</button>
+          <button class="btn" id="hintMission" type="button">Nápověda</button>
+        </div>
+        <p class="feedback" id="missionFb" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 8 · Eroze: scrub scrollem -->
+    <section class="scene scene--sticky" id="eroze" data-title="Ochrana půdy" data-length="260" data-stops="0 1">
+      <div class="stage split split--reverse">
+        <div class="split__text">
+          <p class="eyebrow">8 · Ochrana</p>
+          <h2>Liják na dvou polích</h2>
+          <p>Posouvej dál a sleduj, co udělá déšť s holým polem a s polem pokrytým rostlinami.</p>
+          <div class="meter">
+            <span>Úrodná vrstva na holém svahu</span>
+            <b><i id="meterLeft"></i></b>
+            <span>Úrodná vrstva na svahu s&nbsp;rostlinami</span>
+            <b><i id="meterRight"></i></b>
+          </div>
+          <ul class="facts">
+            <li><strong>Vodní a větrná eroze</strong> odnáší úrodnou vrchní vrstvu.</li>
+            <li>Půdu poškozují i <strong>chemické látky</strong> z hnojiv a postřiků.</li>
+            <li>Půdu ničí také <strong>stavby</strong>, které ji zakryjí.</li>
+            <li>Půda vzniká velmi pomalu, proto je <strong>těžko nahraditelná</strong>.</li>
+          </ul>
+        </div>
+        <div class="split__art">
+          <svg id="erozeArt" viewBox="0 0 400 420" role="img" aria-label="Dva svahy v dešti: holý svah ztrácí půdu, svah s trávou ji udrží">
+            <rect width="400" height="420" rx="18" fill="#cfd8de"/>
+            <g id="erRain" stroke="#4a78a8" stroke-width="2" stroke-linecap="round"></g>
+            <text x="100" y="40" text-anchor="middle" class="svg-label">Holé pole</text>
+            <text x="300" y="40" text-anchor="middle" class="svg-label">S rostlinami</text>
+            <line x1="200" y1="50" x2="200" y2="410" stroke="#fff" stroke-width="2" stroke-dasharray="6 6"/>
+            <g id="erLeft"></g>
+            <g id="erRight"></g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · Kvíz -->
+    <section class="scene" id="kviz" data-title="Kvíz">
+      <div class="panel">
+        <p class="eyebrow">9 · Rozhodovačka</p>
+        <h2>Co sis zapamatoval?</h2>
+        <div id="quiz" class="quiz" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Co dál: rozcestník na konci výkladu -->
+    <section class="scene next" id="dal" data-title="Co dál?">
+      <div class="panel panel--wide">
+        <p class="eyebrow">Hotovo 🎉</p>
+        <h2>Co dál?</h2>
+        <p class="tags-line" aria-label="Štítky výkladu">
+          <span class="tag">Vlastivěda</span><span class="tag">Zeměpis</span><span class="tag">Přírodopis</span>
+          <span class="tag tag--grade">4.–6. ročník</span><a class="tag tag--topic" href="/?tema=P%C5%AFda#katalog"># Půda</a>
+        </p>
+        <div class="next__grid">
+          <a class="next__card next__card--hra" href="/?druh=hra#katalog">
+            <span class="next__icon" aria-hidden="true">🛝</span>
+            <strong>Procvič ve hře</strong>
+            <span>Hru k tématu Půda připravujeme. Zatím můžeš zkusit jiné hry.</span>
+          </a>
+          <a class="next__card next__card--tema" href="/?tema=P%C5%AFda#katalog">
+            <span class="next__icon" aria-hidden="true">#</span>
+            <strong>Téma Půda</strong>
+            <span>Všechno k tématu na jednom místě: výklady i hry.</span>
+          </a>
+          <a class="next__card next__card--vyklad" href="/?druh=vyklad#katalog">
+            <span class="next__icon" aria-hidden="true">🎬</span>
+            <strong>Další výklady</strong>
+            <span>Vyber si další téma k výkladu.</span>
+          </a>
+          <a class="next__card" href="#uvod">
+            <span class="next__icon" aria-hidden="true">↺</span>
+            <strong>Projít znovu</strong>
+            <span>Zpátky na začátek výkladu.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>Zjednodušeno pro základní školu. Krajina a barvy profilů jsou ilustrační.</p>
+      <p>Podklady: VY_32_INOVACE_D49_VL4-5 Půda a zemědělství ČR (ZŠ a MŠ Velké Losiny), Zeměpis 6. třída 014 Pedosféra I. (ZŠ Zborovice), ČT edu: Půdní typy, Umíme fakta: Půdy.</p>
+    </footer>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="engine.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>

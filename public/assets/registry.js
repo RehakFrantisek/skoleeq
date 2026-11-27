@@ -10,9 +10,18 @@ export const STATUSES = ['published', 'planned', 'draft', 'hidden'];
 export const COLORS = ['violet', 'blue', 'teal', 'green', 'orange', 'red', 'pink', 'yellow'];
 export const ICONS = ['keyboard', 'mouse', 'binary', 'code', 'lock', 'network', 'globe', 'puzzle', 'book', 'calculator', 'chart', 'robot', 'slides', 'document'];
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// Druh položky katalogu (volitelné pole "kind", výchozí "hra").
+// Hry leží v /aplikace/<id>/, výklady a nástroje (ne-hry, např. Psací azbuka) v /vyklad/<id>/.
+export const KINDS = {
+  hra: { label: 'Hra', plural: 'Hry', dir: 'aplikace' },
+  vyklad: { label: 'Výklad', plural: 'Výklady', dir: 'vyklad' },
+  nastroj: { label: 'Nástroj', plural: 'Nástroje', dir: 'vyklad' }
+};
+export const kindOf = app => (app && Object.hasOwn(KINDS, app.kind) ? app.kind : 'hra');
+export const appDir = app => KINDS[kindOf(app)].dir;
 
 const REQUIRED = ['id', 'title', 'description', 'url', 'subject', 'grades', 'topics', 'difficulty', 'durationMinutes', 'icon', 'color', 'requiresKeyboard', 'status'];
-const OPTIONAL = ['subtitle', 'featured', 'thumbnail', 'skills', 'teacher'];
+const OPTIONAL = ['kind', 'subtitle', 'featured', 'thumbnail', 'skills', 'teacher'];
 const KNOWN = new Set([...REQUIRED, ...OPTIONAL]);
 
 const isText = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[<>]/.test(v);
@@ -25,9 +34,11 @@ export function validateApp(app) {
   for (const k of Object.keys(app)) if (!KNOWN.has(k)) e.push(`neznámé pole "${k}" (překlep?)`);
 
   if ('id' in app && (typeof app.id !== 'string' || !SLUG_RE.test(app.id) || app.id.length > 60)) e.push('"id" musí být slug: malá písmena bez diakritiky, číslice a pomlčky (např. "binarni-vyzva")');
+  if ('kind' in app && !Object.hasOwn(KINDS, app.kind)) e.push(`"kind" musí být jedno z: ${Object.keys(KINDS).join(', ')}`);
   if ('url' in app) {
-    if (typeof app.url !== 'string' || app.url.includes('..') || app.url.includes('\\') || !/^\/aplikace\/[a-z0-9-]+\/$/.test(app.url)) e.push('"url" musí mít tvar /aplikace/<slug>/ (začíná i končí lomítkem, bez "..")');
-    else if (typeof app.id === 'string' && app.url !== `/aplikace/${app.id}/`) e.push(`"url" musí odpovídat id: /aplikace/${app.id}/`);
+    const dir = appDir(app);
+    if (typeof app.url !== 'string' || app.url.includes('..') || app.url.includes('\\') || !/^\/(?:aplikace|vyklad)\/[a-z0-9-]+\/$/.test(app.url)) e.push(`"url" musí mít tvar /${dir}/<slug>/ (začíná i končí lomítkem, bez "..")`);
+    else if (typeof app.id === 'string' && app.url !== `/${dir}/${app.id}/`) e.push(`"url" musí odpovídat id a druhu: /${dir}/${app.id}/`);
   }
   if ('title' in app && !isText(app.title, 60)) e.push('"title" musí být neprázdný text do 60 znaků (bez < >)');
   if ('subtitle' in app && !isText(app.subtitle, 80)) e.push('"subtitle" musí být neprázdný text do 80 znaků');

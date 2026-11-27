@@ -18,7 +18,7 @@
   <script type="module" src="/assets/portal.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#katalog">Přeskočit na katalog her</a>
+  <a class="skip-link" href="#katalog">Přeskočit na katalog</a>
 
   <header class="site-header">
     <div class="wrap site-header__inner">
@@ -55,17 +55,21 @@
     <section class="catalog" id="katalog" aria-labelledby="katalog-title" tabindex="-1">
       <div class="wrap">
         <div class="catalog__head">
-          <h2 id="katalog-title">Katalog her</h2>
+          <h2 id="katalog-title">Katalog her a výkladů</h2>
           <p class="catalog__count" id="count" role="status" aria-live="polite"></p>
         </div>
 
-        <form class="filters" id="filters" role="search" aria-label="Hledání a filtry her">
+        <form class="filters" id="filters" role="search" aria-label="Hledání a filtry katalogu">
           <div class="field field--search">
             <label for="q">Hledat</label>
             <div class="search">
               <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
               <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Název, téma, popis… (např. zkratky)">
             </div>
+          </div>
+          <div class="field">
+            <label for="f-druh">Druh</label>
+            <select id="f-druh" name="druh"><option value="">Hry i výklady</option></select>
           </div>
           <div class="field">
             <label for="f-rocnik">Ročník</label>

@@ -52,8 +52,17 @@ const bad = {
   'ikona mimo whitelist': a => { a.icon = 'skull'; },
   'requiresKeyboard jako text': a => { a.requiresKeyboard = 'ano'; },
   'thumbnail s cestou': a => { a.thumbnail = '../../favicon.svg'; },
-  'prázdná témata': a => { a.topics = []; }
+  'prázdná témata': a => { a.topics = []; },
+  'druh mimo whitelist': a => { a.kind = 'kviz'; },
+  'výklad s url hry': a => { a.kind = 'vyklad'; },
+  'hra s url výkladu': a => { a.url = '/vyklad/binarni-vyzva/'; }
 };
+
+test('výklad a nástroj leží v /vyklad/<id>/', () => {
+  assert.deepEqual(validateApp({ ...good(), kind: 'vyklad', url: '/vyklad/binarni-vyzva/' }), []);
+  assert.deepEqual(validateApp({ ...good(), kind: 'nastroj', url: '/vyklad/binarni-vyzva/' }), []);
+  assert.deepEqual(validateApp({ ...good(), kind: 'hra' }), []);
+});
 for (const [name, mutate] of Object.entries(bad)) {
   test(`odmítne: ${name}`, () => {
     const a = good();

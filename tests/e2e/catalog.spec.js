@@ -3,7 +3,7 @@ import { watchErrors, expectNoHorizontalScroll, card, registry, publishedApps } 
 
 // Počty se berou z registru, aby testy nebylo nutné upravovat při přidání hry.
 const N = publishedApps().length;
-const hry = n => (n === 1 ? '1 hra' : n >= 2 && n <= 4 ? `${n} hry` : `${n} her`);
+const hry = n => (n === 1 ? '1 položka' : n >= 2 && n <= 4 ? `${n} položky` : `${n} položek`);
 
 test.describe('Katalog', () => {
   test('homepage zobrazí Klávesovou misi bez chyb @smoke', async ({ page }) => {
@@ -26,7 +26,7 @@ test.describe('Katalog', () => {
     const search = page.getByLabel('Hledat', { exact: true });
     await search.fill('klavesove zkratky');           // bez háčků a čárek
     await expect(card(page, 'klavesova-mise')).toBeVisible();
-    await expect(page.locator('#count')).toHaveText(`Nalezeno: 1 hra z ${N}`);
+    await expect(page.locator('#count')).toHaveText(`Nalezeno: 1 položka z ${N}`);
     await expect(page).toHaveURL(/\?q=klavesove\+zkratky/);
 
     await search.fill('MYSAK KURZIK');                  // velká písmena, popis
@@ -35,7 +35,7 @@ test.describe('Katalog', () => {
     await search.fill('zirafy');                      // nic takového v katalogu není
     await expect(page.locator('.app-card')).toHaveCount(0);
     await expect(page.locator('#empty')).toBeVisible();
-    await expect(page.locator('#count')).toHaveText(`Nalezeno: 0 her z ${N}`);
+    await expect(page.locator('#count')).toHaveText(`Nalezeno: 0 položek z ${N}`);
 
     await page.locator('#empty').getByRole('button', { name: 'Vymazat filtry' }).click();
     await expect(search).toHaveValue('');

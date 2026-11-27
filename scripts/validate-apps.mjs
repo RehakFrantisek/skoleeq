@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Validace registru public/apps.json:
 //  - schéma každého záznamu (sdílené s katalogem: public/assets/registry.js)
-//  - unikátní id, URL /aplikace/<id>/
-//  - existuje public/aplikace/<id>/index.html (+ případný thumbnail)
-//  - složka v public/aplikace/ bez záznamu v registru = varování
+//  - unikátní id, URL /aplikace/<id>/ (hry) nebo /vyklad/<id>/ (výklady a nástroje)
+//  - existuje public/<složka>/<id>/index.html (+ případný thumbnail)
+//  - složka v public/aplikace/ nebo public/vyklad/ bez záznamu v registru = varování
 // Návratový kód 1 při chybě => CI selže.
 
 import { readFile, readdir } from 'node:fs/promises';
@@ -12,7 +12,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { validateRegistry } = await import(pathToFileURL(path.join(ROOT, 'public/assets/registry.js')).href);
+const { validateRegistry, appDir, KINDS } = await import(pathToFileURL(path.join(ROOT, 'public/assets/registry.js')).href);
 
 /** Čistá funkce kvůli unit testům: vrací { errors[], warnings[], apps[] }. */
 export async function checkRegistry(publicDir, registryJson) {
@@ -24,16 +24,18 @@ export async function checkRegistry(publicDir, registryJson) {
     for (const e of p.errors) errors.push(`${who}: ${e}`);
   }
   for (const app of apps) {
-    const dir = path.join(publicDir, 'aplikace', app.id);
+    const sub = appDir(app);
+    const dir = path.join(publicDir, sub, app.id);
     if (app.status === 'planned') continue; // připravovaná hra: složka zatím nemusí existovat
-    if (!existsSync(path.join(dir, 'index.html'))) errors.push(`"${app.id}": chybí soubor public/aplikace/${app.id}/index.html`);
-    if (app.thumbnail && !existsSync(path.join(dir, app.thumbnail))) errors.push(`"${app.id}": chybí náhled public/aplikace/${app.id}/${app.thumbnail}`);
+    if (!existsSync(path.join(dir, 'index.html'))) errors.push(`"${app.id}": chybí soubor public/${sub}/${app.id}/index.html`);
+    if (app.thumbnail && !existsSync(path.join(dir, app.thumbnail))) errors.push(`"${app.id}": chybí náhled public/${sub}/${app.id}/${app.thumbnail}`);
   }
-  const appsDir = path.join(publicDir, 'aplikace');
-  if (existsSync(appsDir)) {
-    const ids = new Set((registryJson?.apps || []).map(a => a?.id));
+  for (const sub of new Set(Object.values(KINDS).map(k => k.dir))) {
+    const appsDir = path.join(publicDir, sub);
+    if (!existsSync(appsDir)) continue;
+    const ids = new Set((registryJson?.apps || []).filter(a => a && appDir(a) === sub).map(a => a.id));
     for (const d of await readdir(appsDir, { withFileTypes: true })) {
-      if (d.isDirectory() && !ids.has(d.name)) warnings.push(`složka public/aplikace/${d.name}/ nemá záznam v apps.json (v katalogu se nezobrazí)`);
+      if (d.isDirectory() && !ids.has(d.name)) warnings.push(`složka public/${sub}/${d.name}/ nemá záznam v apps.json (v katalogu se nezobrazí)`);
     }
   }
   if (!apps.some(a => a.status === 'published') && !errors.length) warnings.push('v registru není žádná publikovaná aplikace');

@@ -66,6 +66,7 @@ public/                  ← jediná složka, která se nasazuje (Cloudflare Pag
   apps.json              registr her (published / planned / draft / hidden)
   assets/                portal.css, portal.js, teachers.js, registry.js (sdílené schéma registru)
   aplikace/<slug>/       samostatné hry
+  vyklad/<slug>/         interaktivní výklady a nástroje (apps.json: "kind": "vyklad" | "nastroj")
   pro-ucitele/           karty pro učitele (generované z apps.json)
   o-projektu/, 404.html, _headers, robots.txt, favicon.svg
 scripts/                 serve, validate-apps, check-links, sync-site, new-app

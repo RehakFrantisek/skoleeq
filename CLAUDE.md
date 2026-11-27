@@ -1,6 +1,6 @@
 # CLAUDE.md – pravidla projektu Školeeq
 
-Školeeq je **statický** portál výukových miniaplikací pro ZŠ (Cloudflare Pages, GitHub). Tato pravidla platí pro každou změnu a hlavně pro **generování nových her**.
+Školeeq je **statický** portál výukových miniaplikací pro ZŠ (Cloudflare Pages, GitHub): hry v `public/aplikace/`, interaktivní výklady a nástroje v `public/vyklad/` (v `apps.json` s polem `"kind": "vyklad"` nebo `"nastroj"`). Tato pravidla platí pro každou změnu a hlavně pro **generování nových her**.
 
 ## Nepřekročitelná pravidla
 
@@ -34,6 +34,10 @@ Pak podle [docs/ADD_NEW_APP.md](docs/ADD_NEW_APP.md); vzhled a průběh podle [d
 - Zachytávej `keydown` jen když je hra aktivní, `preventDefault()` jen pro zkratky, které hra opravdu používá.
 - Rozhoduj podle `event.key` (české QWERTZ), `event.code` jen jako záloha. Podporuj `ctrlKey || metaKey` (Mac ⌘).
 - Neslibuj zkratky vyhrazené prohlížečem/OS (`Ctrl+N/T/W`, `⌘+Q/W`).
+
+## Větve
+
+`main` = živý web (každý push se nasadí). Ladí se ve větvi `dev` nebo v tématické větvi, do `main` jen po `npm run check`. Rozpracované návrhy, které nemají být ani v `dev`, patří do soukromého repozitáře `skoleeq-lab`.
 
 ## Příkazy
 

@@ -147,7 +147,7 @@ p { margin: 0; }
 .catalog__count { color: var(--muted); font-weight: 600; }
 
 .filters {
-  display: grid; grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(130px, 1fr)) auto;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
   gap: .75rem; align-items: end;
   padding: 1rem; margin-bottom: 1.5rem;
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm);
@@ -171,6 +171,7 @@ p { margin: 0; }
 .search input { padding-left: 2.4rem; }
 .search input::-webkit-search-cancel-button { cursor: pointer; }
 .filters__reset { align-self: end; }
+.filters > .field--search { grid-column: 1 / -1; }
 
 .touch-hint {
   margin: -0.5rem 0 1.25rem; padding: .75rem 1rem; border-radius: var(--radius-sm);
@@ -207,6 +208,7 @@ p { margin: 0; }
 }
 .app-card__body { display: flex; flex-direction: column; flex: 1; padding: 1.1rem 1.25rem 1.25rem; }
 .app-card__grades { font-size: .85rem; font-weight: 700; color: var(--c-ink, var(--c)); margin-bottom: .3rem; }
+.app-card__kind { text-transform: uppercase; letter-spacing: .04em; }
 .app-card__title { font-size: 1.35rem; font-weight: 800; }
 .app-card__subtitle { color: var(--muted); font-weight: 600; margin-top: .1rem; }
 .app-card__desc { color: var(--ink-2); margin-top: .6rem; }

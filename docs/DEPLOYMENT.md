@@ -62,6 +62,16 @@ Otevři a zkontroluj:
 
 Doporučený postup: větev → PR → zelená **Kontrola** + proklikání preview → merge.
 
+### Větve (od 2026-11-27)
+
+| Větev | K čemu |
+|---|---|
+| `main` | **jediná živá verze** – co je tady, to je na webu |
+| `dev` | ladění a testování; sem se slučuje rozpracovaná práce, odtud se po `npm run check` a proklikání slučuje do `main` |
+| `<téma>` (např. `vyklad-fotosynteza`) | jedna rozpracovaná hra nebo výklad; slučuje se do `dev` |
+
+Preview adresy pro jiné větve než `main` vznikají jen tehdy, když jsou v Cloudflare zapnuté buildy i pro neprodukční větve (u projektu: **Settings → Builds → Branch control**). Bez toho se ostatní větve zkoušejí lokálně přes `npm run dev`.
+
 ## 5. Vlastní doména
 
 Doménu můžeš připojit kdykoli později. Do té doby web normálně běží na `*.pages.dev`.

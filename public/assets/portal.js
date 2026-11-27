@@ -1,7 +1,7 @@
-// Katalog her – načte /apps.json, zvaliduje, vykreslí karty a lokálně filtruje.
+// Katalog her a výkladů – načte /apps.json, zvaliduje, vykreslí karty a lokálně filtruje.
 // Bezpečnost: veškerý text z registru jde do DOM přes textContent / atributy,
 // innerHTML se používá jen pro konstantní SVG ikony z whitelistu níže.
-import { validateRegistry, DIFFICULTIES } from './registry.js';
+import { validateRegistry, DIFFICULTIES, KINDS, kindOf } from './registry.js';
 
 const $ = sel => document.querySelector(sel);
 const el = (tag, cls, text) => {
@@ -47,15 +47,22 @@ function gradesLabel(grades) {
   if (contiguous) return `${g[0]}.–${g[g.length - 1]}. ročník`;
   return g.slice(0, -1).map(n => n + '.').join(', ') + ` a ${g[g.length - 1]}. ročník`;
 }
-function hryLabel(n) {
-  if (n === 1) return '1 hra';
-  if (n >= 2 && n <= 4) return `${n} hry`;
-  return `${n} her`;
+function itemsLabel(n) {
+  if (n === 1) return '1 položka';
+  if (n >= 2 && n <= 4) return `${n} položky`;
+  return `${n} položek`;
 }
+// Text tlačítka a popisek pro čtečky podle druhu položky
+const LAUNCH = {
+  hra: { text: 'Spustit', aria: 'Spustit hru' },
+  vyklad: { text: 'Spustit výklad', aria: 'Spustit výklad' },
+  nastroj: { text: 'Otevřít', aria: 'Otevřít nástroj' }
+};
 
 /* ---------- Stav filtrů (synchronizovaný s URL) ---------- */
 const FILTERS = [
   { key: 'q', input: '#q' },
+  { key: 'druh', input: '#f-druh' },
   { key: 'rocnik', input: '#f-rocnik' },
   { key: 'predmet', input: '#f-predmet' },
   { key: 'tema', input: '#f-tema' },
@@ -85,6 +92,7 @@ function writeUrl(state) {
 const isActive = s => FILTERS.some(f => s[f.key]);
 
 function matches(app, s) {
+  if (s.druh && kindOf(app) !== s.druh) return false;
   if (s.rocnik && !app.grades.includes(Number(s.rocnik))) return false;
   if (s.predmet && app.subject !== s.predmet) return false;
   if (s.tema && !app.topics.includes(s.tema)) return false;
@@ -109,6 +117,8 @@ function fillSelect(sel, values, labelOf = v => v) {
 }
 function buildFilterOptions() {
   const cs = (a, b) => a.localeCompare(b, 'cs');
+  const kinds = new Set(APPS.map(kindOf));
+  fillSelect('#f-druh', Object.keys(KINDS).filter(k => kinds.has(k)), k => KINDS[k].plural);
   fillSelect('#f-rocnik', [1, 2, 3, 4, 5, 6, 7, 8, 9], n => `${n}. ročník`);
   fillSelect('#f-predmet', [...new Set(APPS.map(a => a.subject))].sort(cs));
   fillSelect('#f-tema', [...new Set(APPS.flatMap(a => a.topics))].sort(cs));
@@ -129,6 +139,8 @@ function card(app) {
   const a = el('article', 'app-card');
   a.dataset.color = app.color;
   a.dataset.id = app.id;
+  const kind = kindOf(app);
+  a.dataset.kind = kind;
 
   const media = el('div', 'app-card__media');
   if (app.thumbnail) {
@@ -146,7 +158,10 @@ function card(app) {
   media.append(el('span', 'app-card__subject', app.subject));
 
   const body = el('div', 'app-card__body');
-  body.append(el('p', 'app-card__grades', gradesLabel(app.grades)));
+  const grades = el('p', 'app-card__grades');
+  if (kind !== 'hra') grades.append(el('span', 'app-card__kind', KINDS[kind].label), document.createTextNode(' · '));
+  grades.append(document.createTextNode(gradesLabel(app.grades)));
+  body.append(grades);
   body.append(el('h3', 'app-card__title', app.title));
   if (app.subtitle) body.append(el('p', 'app-card__subtitle', app.subtitle));
   body.append(el('p', 'app-card__desc', app.description));
@@ -161,7 +176,7 @@ function card(app) {
   time.append(el('span', 'meta__ico', '⏱'), document.createTextNode(`asi ${app.durationMinutes} min`));
   time.firstChild.setAttribute('aria-hidden', 'true');
   meta.append(time);
-  meta.append(el('li', 'meta__item', `Obtížnost: ${DIFFICULTIES[app.difficulty]}`));
+  if (kind === 'hra') meta.append(el('li', 'meta__item', `Obtížnost: ${DIFFICULTIES[app.difficulty]}`));
   if (app.requiresKeyboard) {
     const kb = el('li', 'meta__item meta__item--kb');
     kb.append(icon('keyboard', 'meta__svg'), document.createTextNode('Vyžaduje klávesnici'));
@@ -170,9 +185,9 @@ function card(app) {
   body.append(meta);
 
   const foot = el('div', 'app-card__foot');
-  const link = el('a', 'btn btn--primary app-card__link', 'Spustit');
+  const link = el('a', 'btn btn--primary app-card__link', LAUNCH[kind].text);
   link.href = app.url;
-  link.setAttribute('aria-label', `Spustit hru ${app.title}`);
+  link.setAttribute('aria-label', `${LAUNCH[kind].aria} ${app.title}`);
   foot.append(link);
   if (app.teacher) foot.append(teacherLink(app));
   body.append(foot);
@@ -258,8 +273,8 @@ function render() {
   $('#empty').hidden = list.length !== 0;
   $('#clear-filters').hidden = !isActive(s);
   $('#count').textContent = isActive(s)
-    ? `Nalezeno: ${hryLabel(list.length)} z ${APPS.length}`
-    : `${hryLabel(APPS.length)} v katalogu`;
+    ? `Nalezeno: ${itemsLabel(list.length)} z ${APPS.length}`
+    : `${itemsLabel(APPS.length)} v katalogu`;
   $('#touch-hint').hidden = !(isTouchOnly() && list.some(a => a.requiresKeyboard));
 }
 

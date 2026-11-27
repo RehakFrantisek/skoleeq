@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jak se schovává zpráva? Interaktivní výklad o kódech a šifrách</title>
+  <meta name="description" content="Interaktivní výklad: kód a šifra, skytala, Caesarova šifra, Morseova abeceda, písmena v počítači a QR kód.">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#kod-sifra">Přeskočit úvod</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <nav class="dots" aria-label="Kapitoly výkladu"><ol id="dots"></ol></nav>
+  <a class="back" href="/?druh=vyklad#katalog"><span aria-hidden="true">←</span> Výklady</a>
+  <div class="stepper" role="group" aria-label="Posun výkladem">
+    <button type="button" class="stepper__btn" id="stepPrev" aria-label="Zpět o krok">◀</button>
+    <button type="button" class="stepper__btn stepper__btn--next" id="stepNext" aria-label="Další krok">▶</button>
+  </div>
+  <p class="keys-hint" id="keysHint">Posouvej, šipky ← →, klikr, nebo tlačítka ▶ vpravo dole</p>
+
+  <main>
+    <!-- 0 · Úvod: obálka putuje dějinami (posun obálky po cestě řízený scrollem) -->
+    <section class="scene scene--sticky" id="uvod" data-title="Úvod" data-length="260" data-stops="0 .33 .66 1">
+      <div class="stage intro">
+        <svg class="intro__map" id="introMap" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        <div class="intro__text">
+          <p class="eyebrow">Interaktivní výklad · informatika</p>
+          <h1>Jak se schovává <span>zpráva?</span></h1>
+          <p class="lead">Od spartské hole po zámek v prohlížeči. Jak poslat zprávu, aby ji přečetl jen ten, komu patří?</p>
+        </div>
+        <p class="intro__station" id="introStation" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 1 · Kód, nebo šifra? -->
+    <section class="scene" id="kod-sifra" data-title="Kód, nebo šifra?">
+      <div class="panel panel--wide">
+        <p class="eyebrow">1 · Kód, nebo šifra?</p>
+        <h2>Dvě slova, která se pletou</h2>
+        <div class="duo">
+          <div class="card duo__item"><p class="duo__icon" aria-hidden="true">📖</p><h3>Kód</h3><p>Domluvený <strong>jiný zápis</strong> zprávy. Pravidla zná každý, kdo má tabulku. Nic netají, jen převádí.</p></div>
+          <div class="card duo__item"><p class="duo__icon" aria-hidden="true">🔑</p><h3>Šifra</h3><p>Zprávu <strong>schovává</strong>. Přečte ji jen ten, kdo zná <strong>klíč</strong>.</p></div>
+        </div>
+        <p><strong>Zkus to:</strong> zařaď každou věc.</p>
+        <div id="sortBox"></div>
+      </div>
+    </section>
+
+    <!-- 2 · Skytala: páska se namotá na 3D hůl -->
+    <section class="scene scene--sticky" id="skytala" data-title="Skytala" data-length="460" data-stops="0 .35 .66 .77 .88 1">
+      <div class="stage scy">
+        <div class="scy__text">
+          <p class="eyebrow">2 · Sparta</p>
+          <h2>Skytala: šifra na holi</h2>
+          <p id="scyPhase">Posel nese pásek s písmeny. Kdo ho chytí, přečte jen změť.</p>
+          <p class="scy__read">Čteš: <strong id="scyRead">—</strong></p>
+        </div>
+        <div class="scy__view" aria-hidden="true">
+          <div class="scy__rod" id="scyRod"><div class="scy__stick"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · Caesarova šifra: otáčecí kolečko -->
+    <section class="scene" id="caesar" data-title="Caesarova šifra">
+      <div class="panel panel--wide">
+        <p class="eyebrow">3 · Řím</p>
+        <h2>Caesarovo kolečko</h2>
+        <p>Každé písmeno se posune v abecedě o stejný počet míst. Počet míst je <strong>klíč</strong>. Caesar prý používal posun o 3: A → D, B → E… (Pracujeme bez háčků a čárek, s 26 písmeny.)</p>
+        <div class="wheel-grid">
+          <div class="wheel-box">
+            <svg id="wheel" class="wheel" viewBox="-160 -160 320 320" role="img" aria-label="Šifrovací kolečko"></svg>
+            <div class="wheel-ctrl">
+              <button type="button" class="btn" id="keyMinus" aria-label="Zmenšit posun">−</button>
+              <label class="key-label" for="keyRange">Posun <output id="keyOut">3</output></label>
+              <button type="button" class="btn" id="keyPlus" aria-label="Zvětšit posun">+</button>
+            </div>
+            <input type="range" id="keyRange" min="0" max="25" value="3" aria-label="Posun (klíč)">
+          </div>
+          <div class="card">
+            <label class="field" for="plainIn"><span>Napiš zprávu (třeba své jméno)</span>
+              <input id="plainIn" type="text" maxlength="40" value="AHOJ" autocomplete="off" spellcheck="false"></label>
+            <p class="out">Zašifrováno: <strong id="cipherOut"></strong></p>
+            <hr>
+            <h3>Zpráva od Caesara</h3>
+            <p>Přišla tahle zpráva: <code class="cipher" id="challenge"></code></p>
+            <p>Otáčej kolečkem, dokud nebude dávat smysl. Vidíš: <strong id="challengeOut"></strong></p>
+            <p class="feedback" id="challengeFb" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · Prolomení hrubou silou -->
+    <section class="scene scene--sticky" id="prolomeni" data-title="Prolomení" data-length="320">
+      <div class="stage split">
+        <div class="split__text">
+          <p class="eyebrow">4 · Jak šifru prolomit</p>
+          <h2>Zkus všechny klíče</h2>
+          <p>Zachytili jsme zprávu, ale neznáme klíč. U Caesarovy šifry je jen <strong>25 možných posunů</strong>. Prostě je vyzkoušíme všechny.</p>
+          <p class="big"><span id="bruteKey">1</span><small> / 25 vyzkoušeno</small></p>
+          <p class="feedback" id="bruteFb" aria-live="polite"></p>
+          <p class="note hide-mobile">Počítač vyzkouší všech 25 klíčů za zlomek sekundy. Proto se dnes používají šifry s ohromným počtem možných klíčů.</p>
+        </div>
+        <div class="split__art">
+          <div class="brute" id="brute" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · Morseova abeceda -->
+    <section class="scene" id="morse" data-title="Morseovka">
+      <div class="panel panel--wide">
+        <p class="eyebrow">5 · Telegraf</p>
+        <h2>Morseova abeceda: krátká a dlouhá</h2>
+        <p>Každé písmeno je skupina krátkých (·) a dlouhých (−) signálů. Šlo je posílat drátem, světlem i zvukem. Je to <strong>kód</strong>, ne šifra: tabulku zná každý.</p>
+        <div class="morse-grid">
+          <div class="card morse-lamp-box">
+            <div class="lamp" id="lamp" aria-hidden="true"></div>
+            <p class="morse-now" id="morseNow" aria-live="polite">&nbsp;</p>
+            <div class="actions">
+              <button type="button" class="btn btn--primary" id="broadcast">📡 Vysílat záhadné slovo</button>
+              <button type="button" class="btn" id="reveal" hidden>Ukázat slovo</button>
+            </div>
+            <p class="feedback" id="broadcastFb" aria-live="polite"></p>
+          </div>
+          <div class="card">
+            <h3>Vysílej sám</h3>
+            <p class="small muted">Krátce klikni (nebo stiskni mezerník) pro tečku, podrž pro čárku. Po chvilce ticha se písmeno přeloží.</p>
+            <button type="button" class="key" id="morseKey" data-own-keys>Telegrafní klíč</button>
+            <p class="out">Signál: <strong id="tapSignal">—</strong></p>
+            <p class="out">Napsáno: <strong id="tapText">—</strong></p>
+            <button type="button" class="btn btn--sm" id="tapClear">Smazat</button>
+          </div>
+          <details class="card morse-table">
+            <summary>Tabulka Morseovy abecedy</summary>
+            <ul id="morseTable"></ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Písmeno v počítači: A → 65 → 01000001 -->
+    <section class="scene scene--sticky" id="binar" data-title="Písmeno v počítači" data-length="280" data-stops="0 .5 1">
+      <div class="stage bin">
+        <p class="eyebrow">6 · Počítač</p>
+        <h2 class="bin__title">Počítač zná jen čísla</h2>
+        <div class="bin__morph" aria-live="polite">
+          <span class="bin__state" id="binA">A</span>
+          <span class="bin__state" id="bin65">65</span>
+          <span class="bin__state bin__state--bits" id="binBits"></span>
+        </div>
+        <p class="bin__caption" id="binCap">Písmeno A…</p>
+      </div>
+    </section>
+
+    <!-- 7 · Vypínače -->
+    <section class="scene" id="bity" data-title="Vypínače">
+      <div class="panel">
+        <p class="eyebrow">7 · Osm vypínačů</p>
+        <h2>Poskládej písmeno z nul a jedniček</h2>
+        <p>Každý vypínač má svou hodnotu. Zapnuté hodnoty se sečtou a číslo určí písmeno.</p>
+        <div class="bits" id="bits"></div>
+        <p class="bits__sum">Součet: <strong id="bitSum">0</strong> → písmeno: <strong class="bits__letter" id="bitLetter">—</strong></p>
+        <p class="card task">🎯 Úkol: poskládej písmeno <strong>K</strong> (číslo 75). <span class="feedback" id="bitFb" aria-live="polite"></span></p>
+      </div>
+    </section>
+
+    <!-- 8 · QR kód -->
+    <section class="scene" id="qr" data-title="QR kód">
+      <div class="panel panel--wide">
+        <p class="eyebrow">8 · QR kód</p>
+        <h2>QR kód pod lupou</h2>
+        <div class="qr-grid">
+          <div class="qr-box">
+            <svg id="qrSvg" viewBox="0 0 25 25" role="img" aria-label="Ilustrace QR kódu se zvýrazněnými částmi"></svg>
+            <p class="small muted">Ilustrace, nečte se.</p>
+          </div>
+          <div class="card">
+            <div class="options" id="qrParts"></div>
+            <p id="qrInfo" aria-live="polite">Klikni na část QR kódu, o které se chceš dozvědět víc.</p>
+            <div class="actions">
+              <button type="button" class="btn" id="qrSticker">🩹 Přelepit kus kódu</button>
+            </div>
+            <p class="small" id="qrStickerInfo" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · Zámek v prohlížeči -->
+    <section class="scene" id="zamek" data-title="Šifry dnes">
+      <div class="panel">
+        <p class="eyebrow">9 · Dnes</p>
+        <h2>Šifry používáš každý den</h2>
+        <div class="browser" aria-hidden="true">
+          <div class="browser__bar"><span class="browser__dots"><i></i><i></i><i></i></span><span class="browser__url"><b>🔒</b> https://skola.example/rozvrh</span></div>
+          <div class="browser__page"><span class="packet">🔐</span><span class="packet">🔐</span><span class="packet">🔐</span></div>
+        </div>
+        <ul class="facts">
+          <li><strong>Zámek u adresy</strong> znamená, že spojení mezi tebou a webem je <strong>šifrované</strong>. Cestou ho nikdo nepřečte.</li>
+          <li>Zámek ale <strong>neznamená</strong>, že je web poctivý. Šifrované spojení si umí zařídit i podvodník.</li>
+          <li>Šifrují se i zprávy v chatech nebo platby kartou. Klíče mají tak obrovské množství možností, že je nejde všechny vyzkoušet.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 10 · Mise -->
+    <section class="scene" id="mise" data-title="Mise">
+      <div class="panel panel--wide">
+        <p class="eyebrow">10 · Mise</p>
+        <h2>Odemkni tři zámky a zjisti heslo</h2>
+        <p>Spolužák poslal vzkaz ve třech částech. Každá je zapsaná jinak. Odpovědi spoj a vznikne heslo.</p>
+        <div class="locks" id="locks"></div>
+        <p class="final" id="missionFinal" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 11 · Kvíz -->
+    <section class="scene" id="kviz" data-title="Kvíz">
+      <div class="panel">
+        <p class="eyebrow">11 · Rozhodovačka</p>
+        <h2>Co sis zapamatoval?</h2>
+        <div id="quiz" class="quiz" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Co dál -->
+    <section class="scene next" id="dal" data-title="Co dál?">
+      <div class="panel panel--wide">
+        <p class="eyebrow">Hotovo 🎉</p>
+        <h2>Co dál?</h2>
+        <p class="tags-line" aria-label="Štítky výkladu"><span class="tag">Informatika</span><span class="tag tag--grade">6. ročník</span><a class="tag tag--topic" href="/?tema=K%C3%B3dov%C3%A1n%C3%AD%20a%20%C5%A1ifry#katalog"># Kódování a šifry</a></p>
+        <div class="next__grid">
+          <a class="next__card next__card--hra" href="/aplikace/sifrovaci-laborator/"><span class="next__icon" aria-hidden="true">🛝</span><strong>Šifrovací laboratoř</strong><span>Procvič si šifrování a luštění ve hře.</span></a>
+          <a class="next__card next__card--hra" href="/aplikace/signal-ze-sondy/"><span class="next__icon" aria-hidden="true">📡</span><strong>Signál ze sondy</strong><span>Nuly a jedničky v praxi, zase ve hře.</span></a>
+          <a class="next__card" href="/?druh=vyklad#katalog"><span class="next__icon" aria-hidden="true">🎬</span><strong>Další výklady</strong><span>Vyber si další téma.</span></a>
+          <a class="next__card" href="#uvod"><span class="next__icon" aria-hidden="true">↺</span><strong>Projít znovu</strong><span>Zpátky na začátek výkladu.</span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>Zjednodušeno pro základní školu: šifry bez diakritiky, QR kód jako ilustrace.</p>
+    </footer>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="kit.js"></script>
+  <script src="engine.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>
